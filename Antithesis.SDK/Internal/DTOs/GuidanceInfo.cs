@@ -11,13 +11,6 @@ internal class GuidanceInfoWrapper(GuidanceInfo guidance)
 
 internal class GuidanceInfo
 {
-    internal static GuidanceInfoWrapper ConstructForCatalogWrite(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo) =>
-        new(
-            new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, locationInfo))
-            {
-                Hit = false,
-            });
-
     internal static GuidanceInfoWrapper ConstructForAssertWrite(AssertionMethodType methodType, string idIsTheMessage, JsonObject? data) =>
         new(
             new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
