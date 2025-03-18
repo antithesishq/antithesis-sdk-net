@@ -21,12 +21,12 @@ public static class Assert
         NoGuidanceHelper(AssertionVerboseType.Sometimes, condition, idIsTheMessage, details);
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void Unreachable(bool condition, string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.Unreachable, condition, idIsTheMessage, details);
+    public static void Unreachable(string idIsTheMessage, JsonObject? details = default) =>
+        NoGuidanceHelper(AssertionVerboseType.Unreachable, false, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void Reachable(bool condition, string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.Reachable, condition, idIsTheMessage, details);
+    public static void Reachable(string idIsTheMessage, JsonObject? details = default) =>
+        NoGuidanceHelper(AssertionVerboseType.Reachable, true, idIsTheMessage, details);
 
     private static void NoGuidanceHelper(AssertionVerboseType verboseType, bool condition, string idIsTheMessage, JsonObject? details)
     {
