@@ -23,6 +23,11 @@ public sealed class CatalogGeneratorTest
 
         var compilation = CSharpCompilation.Create(
             assemblyName: "SomeCompany.SomeProject",
+            references: new[]
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Dictionary<,>).Assembly.Location)
+            },
             syntaxTrees: new[] { syntaxTree });
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new CatalogGenerator());
