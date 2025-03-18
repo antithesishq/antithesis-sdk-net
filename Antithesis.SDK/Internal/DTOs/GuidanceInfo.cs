@@ -11,25 +11,25 @@ internal class GuidanceInfoWrapper(GuidanceInfo guidance)
 
 internal class GuidanceInfo
 {
-    internal static GuidanceInfoWrapper ConstructForCatalogWrite(AssertionVerboseType verboseType, string idIsTheMessage, LocationInfo locationInfo) =>
+    internal static GuidanceInfoWrapper ConstructForCatalogWrite(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo) =>
         new(
-            new(verboseType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, locationInfo))
+            new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, locationInfo))
             {
                 Hit = false,
             });
 
-    internal static GuidanceInfoWrapper ConstructForAssertWrite(AssertionVerboseType verboseType, string idIsTheMessage, JsonObject? data) =>
+    internal static GuidanceInfoWrapper ConstructForAssertWrite(AssertionMethodType methodType, string idIsTheMessage, JsonObject? data) =>
         new(
-            new(verboseType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
+            new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
             {
                 Hit = true,
                 Data = data
             });
 
-    private GuidanceInfo(AssertionVerboseType verboseType, string idIsTheMessage, LocationInfo locationInfo)
+    private GuidanceInfo(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo)
     {
-        GuidanceType = verboseType.GetGuidanceType();
-        GuidanceMaximize = verboseType.GetGuidanceMaximize();
+        GuidanceType = methodType.GetGuidanceType();
+        GuidanceMaximize = methodType.GetGuidanceMaximize();
         Id = idIsTheMessage;
         Message = idIsTheMessage;
         Location = locationInfo;

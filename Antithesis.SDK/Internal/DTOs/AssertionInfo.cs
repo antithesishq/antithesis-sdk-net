@@ -11,27 +11,27 @@ internal class AssertionInfoWrapper(AssertionInfo assertion)
 
 internal class AssertionInfo
 {
-    internal static AssertionInfoWrapper ConstructForCatalogWrite(AssertionVerboseType verboseType, string idIsTheMessage, LocationInfo locationInfo) =>
+    internal static AssertionInfoWrapper ConstructForCatalogWrite(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo) =>
         new(
-            new(verboseType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, locationInfo))
+            new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, locationInfo))
             {
                 Hit = false,
                 Condition = false
             });
 
-    internal static AssertionInfoWrapper ConstructForAssertWrite(AssertionVerboseType verboseType, string idIsTheMessage, bool condition, JsonObject? details) =>
+    internal static AssertionInfoWrapper ConstructForAssertWrite(AssertionMethodType methodType, string idIsTheMessage, bool condition, JsonObject? details) =>
         new(
-            new(verboseType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
+            new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
             {
                 Hit = true,
                 Condition = condition,
                 Details = details
             });
 
-    private AssertionInfo(AssertionVerboseType verboseType, string idIsTheMessage, LocationInfo locationInfo)
+    private AssertionInfo(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo)
     {
-        AssertType = verboseType.GetAssertType();
-        DisplayType = verboseType.GetDisplayType();
+        AssertType = methodType.GetAssertType();
+        DisplayType = methodType.GetDisplayType();
         Id = idIsTheMessage;
         Message = idIsTheMessage;
         Location = locationInfo;

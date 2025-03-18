@@ -16,7 +16,7 @@ internal enum AssertionDisplayType
     Reachable
 }
 
-internal enum AssertionVerboseType
+internal enum AssertionMethodType
 {
     Always,
     AlwaysOrUnreachable,
@@ -59,99 +59,99 @@ internal static class AssertionDisplayTypeExtensions
     };
 }
 
-internal static class AssertionVerboseTypeExtensions
+internal static class AssertionMethodTypeExtensions
 {
-    internal static AssertionAssertType GetAssertType(this AssertionVerboseType verboseType) => verboseType switch
+    internal static AssertionAssertType GetAssertType(this AssertionMethodType methodType) => methodType switch
     {
-        AssertionVerboseType.Always or
-        AssertionVerboseType.AlwaysOrUnreachable or
-        AssertionVerboseType.AlwaysGreaterThan or
-        AssertionVerboseType.AlwaysGreaterThanOrEqualTo or
-        AssertionVerboseType.AlwaysLessThan or
-        AssertionVerboseType.AlwaysLessThanOrEqualTo or
-        AssertionVerboseType.AlwaysSome =>
+        AssertionMethodType.Always or
+        AssertionMethodType.AlwaysOrUnreachable or
+        AssertionMethodType.AlwaysGreaterThan or
+        AssertionMethodType.AlwaysGreaterThanOrEqualTo or
+        AssertionMethodType.AlwaysLessThan or
+        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        AssertionMethodType.AlwaysSome =>
             AssertionAssertType.Always,
 
-        AssertionVerboseType.Sometimes or
-        AssertionVerboseType.SometimesGreaterThan or
-        AssertionVerboseType.SometimesGreaterThanOrEqualTo or
-        AssertionVerboseType.SometimesLessThan or
-        AssertionVerboseType.SometimesLessThanOrEqualTo or
-        AssertionVerboseType.SometimesAll =>
+        AssertionMethodType.Sometimes or
+        AssertionMethodType.SometimesGreaterThan or
+        AssertionMethodType.SometimesGreaterThanOrEqualTo or
+        AssertionMethodType.SometimesLessThan or
+        AssertionMethodType.SometimesLessThanOrEqualTo or
+        AssertionMethodType.SometimesAll =>
             AssertionAssertType.Sometimes,
 
-        AssertionVerboseType.Unreachable or
-        AssertionVerboseType.Reachable =>
+        AssertionMethodType.Unreachable or
+        AssertionMethodType.Reachable =>
             AssertionAssertType.Reachability,
 
-        _ => throw new NotImplementedException(verboseType.ToString())
+        _ => throw new NotImplementedException(methodType.ToString())
     };
 
-    internal static AssertionDisplayType GetDisplayType(this AssertionVerboseType verboseType) => verboseType switch
+    internal static AssertionDisplayType GetDisplayType(this AssertionMethodType methodType) => methodType switch
     {
-        AssertionVerboseType.Always or
-        AssertionVerboseType.AlwaysGreaterThan or
-        AssertionVerboseType.AlwaysGreaterThanOrEqualTo or
-        AssertionVerboseType.AlwaysLessThan or
-        AssertionVerboseType.AlwaysLessThanOrEqualTo or
-        AssertionVerboseType.AlwaysSome =>
+        AssertionMethodType.Always or
+        AssertionMethodType.AlwaysGreaterThan or
+        AssertionMethodType.AlwaysGreaterThanOrEqualTo or
+        AssertionMethodType.AlwaysLessThan or
+        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        AssertionMethodType.AlwaysSome =>
             AssertionDisplayType.Always,
 
-        AssertionVerboseType.AlwaysOrUnreachable =>
+        AssertionMethodType.AlwaysOrUnreachable =>
             AssertionDisplayType.AlwaysOrUnreachable,
 
-        AssertionVerboseType.Sometimes or
-        AssertionVerboseType.SometimesGreaterThan or
-        AssertionVerboseType.SometimesGreaterThanOrEqualTo or
-        AssertionVerboseType.SometimesLessThan or
-        AssertionVerboseType.SometimesLessThanOrEqualTo or
-        AssertionVerboseType.SometimesAll =>
+        AssertionMethodType.Sometimes or
+        AssertionMethodType.SometimesGreaterThan or
+        AssertionMethodType.SometimesGreaterThanOrEqualTo or
+        AssertionMethodType.SometimesLessThan or
+        AssertionMethodType.SometimesLessThanOrEqualTo or
+        AssertionMethodType.SometimesAll =>
             AssertionDisplayType.Sometimes,
 
-        AssertionVerboseType.Unreachable =>
+        AssertionMethodType.Unreachable =>
             AssertionDisplayType.Unreachable,
 
-        AssertionVerboseType.Reachable =>
+        AssertionMethodType.Reachable =>
             AssertionDisplayType.Reachable,
 
-        _ => throw new NotImplementedException(verboseType.ToString())
+        _ => throw new NotImplementedException(methodType.ToString())
     };
 
-    internal static GuidanceType GetGuidanceType(this AssertionVerboseType verboseType) => verboseType switch
+    internal static GuidanceType GetGuidanceType(this AssertionMethodType methodType) => methodType switch
     {
-        AssertionVerboseType.AlwaysGreaterThan or
-        AssertionVerboseType.AlwaysGreaterThanOrEqualTo or
-        AssertionVerboseType.AlwaysLessThan or
-        AssertionVerboseType.AlwaysLessThanOrEqualTo or
-        AssertionVerboseType.SometimesGreaterThan or
-        AssertionVerboseType.SometimesGreaterThanOrEqualTo or
-        AssertionVerboseType.SometimesLessThan or
-        AssertionVerboseType.SometimesLessThanOrEqualTo =>
+        AssertionMethodType.AlwaysGreaterThan or
+        AssertionMethodType.AlwaysGreaterThanOrEqualTo or
+        AssertionMethodType.AlwaysLessThan or
+        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        AssertionMethodType.SometimesGreaterThan or
+        AssertionMethodType.SometimesGreaterThanOrEqualTo or
+        AssertionMethodType.SometimesLessThan or
+        AssertionMethodType.SometimesLessThanOrEqualTo =>
             GuidanceType.Numeric,
         
-        AssertionVerboseType.AlwaysSome or
-        AssertionVerboseType.SometimesAll =>
+        AssertionMethodType.AlwaysSome or
+        AssertionMethodType.SometimesAll =>
             GuidanceType.Boolean,
 
-        _ => throw new NotSupportedException(verboseType.ToString())
+        _ => throw new NotSupportedException(methodType.ToString())
     };
 
-    internal static bool GetGuidanceMaximize(this AssertionVerboseType verboseType) => verboseType switch
+    internal static bool GetGuidanceMaximize(this AssertionMethodType methodType) => methodType switch
     {
-        AssertionVerboseType.AlwaysGreaterThan or
-        AssertionVerboseType.AlwaysGreaterThanOrEqualTo or
-        AssertionVerboseType.SometimesGreaterThan or
-        AssertionVerboseType.SometimesGreaterThanOrEqualTo or
-        AssertionVerboseType.AlwaysSome  =>
+        AssertionMethodType.AlwaysGreaterThan or
+        AssertionMethodType.AlwaysGreaterThanOrEqualTo or
+        AssertionMethodType.SometimesGreaterThan or
+        AssertionMethodType.SometimesGreaterThanOrEqualTo or
+        AssertionMethodType.AlwaysSome  =>
             false,
 
-        AssertionVerboseType.AlwaysLessThan or
-        AssertionVerboseType.AlwaysLessThanOrEqualTo or
-        AssertionVerboseType.SometimesLessThan or
-        AssertionVerboseType.SometimesLessThanOrEqualTo or
-        AssertionVerboseType.SometimesAll =>
+        AssertionMethodType.AlwaysLessThan or
+        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        AssertionMethodType.SometimesLessThan or
+        AssertionMethodType.SometimesLessThanOrEqualTo or
+        AssertionMethodType.SometimesAll =>
             true,
 
-        _ => throw new NotSupportedException(verboseType.ToString())
+        _ => throw new NotSupportedException(methodType.ToString())
     };
 }

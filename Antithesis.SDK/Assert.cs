@@ -10,31 +10,31 @@ public static class Assert
 
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Always(bool condition, string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.Always, condition, idIsTheMessage, details);
+        NoGuidanceHelper(AssertionMethodType.Always, condition, idIsTheMessage, details);
 
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysOrUnreachable(bool condition, string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.AlwaysOrUnreachable, condition, idIsTheMessage, details);
+        NoGuidanceHelper(AssertionMethodType.AlwaysOrUnreachable, condition, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Sometimes(bool condition, string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.Sometimes, condition, idIsTheMessage, details);
+        NoGuidanceHelper(AssertionMethodType.Sometimes, condition, idIsTheMessage, details);
 
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Unreachable(string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.Unreachable, false, idIsTheMessage, details);
+        NoGuidanceHelper(AssertionMethodType.Unreachable, false, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Reachable(string idIsTheMessage, JsonObject? details = default) =>
-        NoGuidanceHelper(AssertionVerboseType.Reachable, true, idIsTheMessage, details);
+        NoGuidanceHelper(AssertionMethodType.Reachable, true, idIsTheMessage, details);
 
-    private static void NoGuidanceHelper(AssertionVerboseType verboseType, bool condition, string idIsTheMessage, JsonObject? details)
+    private static void NoGuidanceHelper(AssertionMethodType methodType, bool condition, string idIsTheMessage, JsonObject? details)
     {
         if (string.IsNullOrEmpty(idIsTheMessage))
             throw new ArgumentNullException(nameof(idIsTheMessage));
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(verboseType, idIsTheMessage, condition, details));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, details));
     }
 
     // Numeric Guidance
@@ -42,52 +42,52 @@ public static class Assert
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.AlwaysGreaterThan, compareTo => compareTo > 0,
+        NumericGuidanceHelper(AssertionMethodType.AlwaysGreaterThan, compareTo => compareTo > 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.AlwaysGreaterThanOrEqualTo, compareTo => compareTo >= 0,
+        NumericGuidanceHelper(AssertionMethodType.AlwaysGreaterThanOrEqualTo, compareTo => compareTo >= 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.AlwaysLessThan, compareTo => compareTo < 0,
+        NumericGuidanceHelper(AssertionMethodType.AlwaysLessThan, compareTo => compareTo < 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.AlwaysLessThanOrEqualTo, compareTo => compareTo <= 0,
+        NumericGuidanceHelper(AssertionMethodType.AlwaysLessThanOrEqualTo, compareTo => compareTo <= 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.SometimesGreaterThan, compareTo => compareTo > 0,
+        NumericGuidanceHelper(AssertionMethodType.SometimesGreaterThan, compareTo => compareTo > 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.SometimesGreaterThanOrEqualTo, compareTo => compareTo >= 0,
+        NumericGuidanceHelper(AssertionMethodType.SometimesGreaterThanOrEqualTo, compareTo => compareTo >= 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.SometimesLessThan, compareTo => compareTo < 0,
+        NumericGuidanceHelper(AssertionMethodType.SometimesLessThan, compareTo => compareTo < 0,
             left, right, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
             where T : struct, IComparable, IConvertible =>
-        NumericGuidanceHelper(AssertionVerboseType.SometimesLessThanOrEqualTo, compareTo => compareTo <= 0,
+        NumericGuidanceHelper(AssertionMethodType.SometimesLessThanOrEqualTo, compareTo => compareTo <= 0,
             left, right, idIsTheMessage, details);
 
-    private static void NumericGuidanceHelper<T>(AssertionVerboseType verboseType, Func<int, bool> compareToOperation,
+    private static void NumericGuidanceHelper<T>(AssertionMethodType methodType, Func<int, bool> compareToOperation,
             T left, T right, string idIsTheMessage, JsonObject? details)
         where T : struct, IComparable, IConvertible
     {
@@ -110,10 +110,10 @@ public static class Assert
         bool converted = leftDouble.Success && rightDouble.Success;
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(verboseType, idIsTheMessage, condition, SetGuidanceData(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetGuidanceData(details)));
 
-        if (converted && GuidanceTracker.ShouldNumericWrite(verboseType.GetGuidanceMaximize(), idIsTheMessage, leftDouble.Value, rightDouble.Value))
-            Sink.Write(GuidanceInfo.ConstructForAssertWrite(verboseType, idIsTheMessage, SetGuidanceData(null)));
+        if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), idIsTheMessage, leftDouble.Value, rightDouble.Value))
+            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
 
         JsonObject? SetGuidanceData(JsonObject? json)
         {
@@ -133,13 +133,13 @@ public static class Assert
 
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysSome(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default) =>
-        BooleanGuidanceHelper(AssertionVerboseType.AlwaysSome, values => values.Any(v => v), conditions, idIsTheMessage, details);
+        BooleanGuidanceHelper(AssertionMethodType.AlwaysSome, values => values.Any(v => v), conditions, idIsTheMessage, details);
     
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesAll(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default) =>
-        BooleanGuidanceHelper(AssertionVerboseType.SometimesAll, values => !values.Any(v => !v), conditions, idIsTheMessage, details);
+        BooleanGuidanceHelper(AssertionMethodType.SometimesAll, values => !values.Any(v => !v), conditions, idIsTheMessage, details);
 
-    private static void BooleanGuidanceHelper(AssertionVerboseType verboseType, Func<IEnumerable<bool>, bool> operation, 
+    private static void BooleanGuidanceHelper(AssertionMethodType methodType, Func<IEnumerable<bool>, bool> operation, 
         IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details)
     {
         if (conditions == null)
@@ -151,10 +151,10 @@ public static class Assert
         bool condition = operation(conditions.Values);
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(verboseType, idIsTheMessage, condition, SetGuidanceData(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetGuidanceData(details)));
 
         if (GuidanceTracker.ShouldBooleanWrite())
-            Sink.Write(GuidanceInfo.ConstructForAssertWrite(verboseType, idIsTheMessage, SetGuidanceData(null)));
+            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
 
         JsonObject? SetGuidanceData(JsonObject? json)
         {
