@@ -1,0 +1,99 @@
+﻿{
+  Diagnostics: [
+    {
+      Location: /*
+        {
+            Assert.Always(true, Ids.Ambiguous);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, Ids.NotAccessible1);
+*/
+ : (16,12)-(16,25),
+      Message: The expression passed as an argument to this Assert "idIsTheMessage" parameter is ambiguous.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS003,
+        Title: "idIsTheMessage" is ambiguous.,
+        MessageFormat: The expression passed as an argument to this Assert "idIsTheMessage" parameter is ambiguous.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, Ids.Ambiguous);
+            Assert.Always(true, Ids.NotAccessible1);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, Ids.NotAccessible2);
+*/
+ : (17,12)-(17,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS004,
+        Title: "idIsTheMessage" must be accessible.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, Ids.NotAccessible1);
+            Assert.Always(true, Ids.NotAccessible2);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, Ids.NotField);
+*/
+ : (18,12)-(18,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS004,
+        Title: "idIsTheMessage" must be accessible.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, Ids.NotAccessible2);
+            Assert.Always(true, Ids.NotField);
+            ^^^^^^^^^^^^^
+            Antithesis.SDK.Assert.Always(true, Ids.NotConst);
+*/
+ : (19,12)-(19,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, Ids.NotField);
+            Antithesis.SDK.Assert.Always(true, Ids.NotConst);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        }
+*/
+ : (20,12)-(20,40),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    }
+  ]
+}

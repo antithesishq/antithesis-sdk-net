@@ -3,6 +3,7 @@ namespace Antithesis.SDK;
 using System.Diagnostics;
 using System.Text.Json.Nodes;
 
+// LOAD BEARING : typeof(Assert).FullName and the "string idIsTheMessage" Parameters' names are load bearing for the CatalogGenerator.
 public static class Assert
 {
     // No Guidance

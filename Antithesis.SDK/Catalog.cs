@@ -2,6 +2,7 @@ namespace Antithesis.SDK;
 
 using System.Diagnostics;
 
+// LOAD BEARING : All public method signatures in this class are load bearing for the CatalogGenerator.
 // TODO : Determine if Guidance is Cataloged.
 public static class Catalog
 {

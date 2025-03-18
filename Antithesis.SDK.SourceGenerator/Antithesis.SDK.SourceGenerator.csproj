@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <!-- Source Generators must target .NET Standard 2.0 because they are loaded by the Roslyn compiler. -->
+        <TargetFramework>netstandard2.0</TargetFramework>
+
+        <ImplicitUsings>disable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+        <IsRoslynComponent>true</IsRoslynComponent>
+
+        <!-- RS1036 : A project containing analyzers or source generators should specify this property -->
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>       
+
+        <!-- SourceLink: https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/ -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+        <!-- NuGet Symbols Package: https://learn.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg -->
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+        <!-- NuGet Best Practices: https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices -->
+        <Authors>Antithesis Operations LLC</Authors>
+        <Copyright>Copyright (c) 2025 Antithesis Operations LLC</Copyright>
+        <Description>This .NET library contains a Source Generator that adds a corresponding Catalog call for every Assert call.</Description>
+        <PackageIcon>00-03 antithesis mark_ universal color@4x_opaque.png</PackageIcon>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
+
+    <!-- Deterministic Builds -->
+    <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>$(MSBuildProjectName).Test</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="System" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../00-03 antithesis mark_ universal color@4x_opaque.png" Pack="true" PackagePath="" />
+        <None Include="../LICENSE" Pack="true" PackagePath="" />
+        <None Include="../README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+</Project>

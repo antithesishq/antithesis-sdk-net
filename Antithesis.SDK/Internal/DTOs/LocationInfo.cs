@@ -2,6 +2,7 @@ namespace Antithesis.SDK;
 
 using System.Text.Json.Serialization;
 
+// LOAD BEARING : All public property names in this class are load bearing for the CatalogGenerator.
 public class LocationInfo
 {
     internal static LocationInfo Unknown { get; } = new();
