@@ -33,7 +33,10 @@ public sealed class CatalogGeneratorTest
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new CatalogGenerator());
         driver = driver.RunGenerators(compilation);
 
-        return Verifier.Verify(driver).UseParameters(fileNameNoExtension);
+        // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
+        return Verifier.Verify(driver)
+            .UseParameters(fileNameNoExtension)
+            .ScrubLinesContaining("System.CodeDom.Compiler.GeneratedCode");
     }
 
     public static IEnumerable<object[]> GetFiles()

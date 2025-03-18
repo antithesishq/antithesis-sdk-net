@@ -195,16 +195,16 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         foreach (var assemblyAssertCallSites in assertCallSites.GroupBy(acs => acs!.Caller.AssemblyName))
         {
             string assemblyName = assemblyAssertCallSites.Key!;
-            string antithesisSuffix = "." + typeof(CatalogGenerator).FullName.Replace(".", "_");
+            string antithesisSuffix = typeof(CatalogGenerator).FullName.Replace(".", "_");
 
-            string fileName = assemblyName + antithesisSuffix + ".generated.cs";
+            string fileName = $"{assemblyName}.{antithesisSuffix}.generated.cs";
+            string generatedCodeAttribute = $@"[global::System.CodeDom.Compiler.GeneratedCode(""{typeof(CatalogGenerator).FullName}"", ""{ThisAssembly.AssemblyInformationalVersion}"")]";
 
-            string source = "namespace " + assemblyName + antithesisSuffix + ";" +
-@"
-
-internal static class CatalogAssertCallSites
+            string source = $"namespace {assemblyName}.{antithesisSuffix};\n\n{generatedCodeAttribute}" + @"
+internal static class Catalog
 {
-    internal static void CatalogAll()
+    [global::System.Runtime.CompilerServices.ModuleInitializer]
+    internal static void Initialize()
     {
         " + string.Join("\n\n        ", assemblyAssertCallSites.Select(acs => acs!.ToGeneratedCode())) + @"
     }

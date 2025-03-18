@@ -1,9 +1,10 @@
 ﻿//HintName: SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator.generated.cs
 namespace SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator;
 
-internal static class CatalogAssertCallSites
+internal static class Catalog
 {
-    internal static void CatalogAll()
+    [global::System.Runtime.CompilerServices.ModuleInitializer]
+    internal static void Initialize()
     {
         /*global::Antithesis.SDK.Catalog.Always(
             ,
