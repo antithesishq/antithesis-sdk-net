@@ -9,6 +9,9 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
+        <!-- I cannot find this Property documented; however, I see it in some example projects. -->
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <!-- RS1036 : A project containing analyzers or source generators should specify this property -->
@@ -37,11 +40,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" PrivateAssets="all" />
         <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
             <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
@@ -61,6 +67,9 @@
         <None Include="../00-03 antithesis mark_ universal color@4x_opaque.png" Pack="true" PackagePath="" />
         <None Include="../LICENSE" Pack="true" PackagePath="" />
         <None Include="../README.md" Pack="true" PackagePath="" />
+
+        <!-- This is responsible for packaging the actual Analyzer / Source Generator. -->
+        <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
 </Project>
