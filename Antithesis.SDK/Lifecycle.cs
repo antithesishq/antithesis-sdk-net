@@ -5,6 +5,10 @@ using System.Text.Json.Nodes;
 
 public static class Lifecycle
 {
+    // https://antithesis.com/docs/environment/the_antithesis_environment/#detecting-whether-you-are-running-within-antithesis
+    private const string OutputDirectoryEnvironmentVariableName = "ANTITHESIS_OUTPUT_DIR";
+    public static bool IsAntithesis { get; } = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(OutputDirectoryEnvironmentVariableName));
+
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SetupComplete(JsonObject? details)
     {
