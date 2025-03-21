@@ -34,7 +34,7 @@ public static class Assert
             throw new ArgumentNullException(nameof(idIsTheMessage));
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, details)));
     }
 
     // Numeric Guidance
@@ -110,7 +110,7 @@ public static class Assert
         bool converted = leftDouble.Success && rightDouble.Success;
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(SetGuidanceData(details))));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, SetGuidanceData(details))));
 
         if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), idIsTheMessage, leftDouble.Value, rightDouble.Value))
             Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
@@ -151,7 +151,7 @@ public static class Assert
         bool condition = operation(conditions.Values);
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(SetGuidanceData(details))));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, SetGuidanceData(details))));
 
         if (GuidanceTracker.ShouldBooleanWrite())
             Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
@@ -172,8 +172,12 @@ public static class Assert
 
     // Common
 
-    private static JsonObject SetStackTrace(JsonObject? json)
+    private static JsonObject? SetStackTrace(bool condition, JsonObject? json)
     {
+        // Do not call the potentially expensive Environment.StackTrace for passing Assertions.
+        if (condition)
+            return json;
+
         json ??= new();
 
         json["stack_trace"] = Environment.StackTrace;
