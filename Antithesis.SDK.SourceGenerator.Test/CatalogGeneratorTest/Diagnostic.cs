@@ -27,12 +27,20 @@ namespace SomeCompany.SomeProject
             Assert.Always(true, _idReadonly);
             Assert.Always(true, _idStaticReadonly);
             Assert.Always(true, _idConst);
+
+            Assert.Always(true, Id);
+            Assert.Always(true, IdReadonly);
+            Assert.Always(true, IdStaticReadonly);
         }
 
         private string _id = string.Empty;
         private readonly string _idReadonly = string.Empty;
         private static readonly string _idStaticReadonly = string.Empty;
         private const string _idConst = string.Empty;
+
+        public string Id = string.Empty;
+        public readonly string IdReadonly = string.Empty;
+        public static readonly string IdStaticReadonly = string.Empty;
     }
 
     public static class Ids

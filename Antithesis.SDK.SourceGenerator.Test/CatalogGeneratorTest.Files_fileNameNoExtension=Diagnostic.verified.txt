@@ -176,7 +176,7 @@
             Assert.Always(true, _idStaticReadonly);
             Assert.Always(true, _idConst);
             ^^^^^^^^^^^^^
-        }
+
 */
  : (28,12)-(28,25),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
@@ -185,6 +185,63 @@
         Id: ANTITHESIS004,
         Title: "idIsTheMessage" must be accessible.,
         MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+
+            Assert.Always(true, Id);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, IdReadonly);
+*/
+ : (30,12)-(30,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, Id);
+            Assert.Always(true, IdReadonly);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, IdStaticReadonly);
+*/
+ : (31,12)-(31,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, IdReadonly);
+            Assert.Always(true, IdStaticReadonly);
+            ^^^^^^^^^^^^^
+        }
+*/
+ : (32,12)-(32,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
