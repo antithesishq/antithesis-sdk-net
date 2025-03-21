@@ -45,4 +45,8 @@
         <Compile Remove="CatalogGeneratorTest/*" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="CatalogGeneratorTest/*" />
+    </ItemGroup>
+
 </Project>

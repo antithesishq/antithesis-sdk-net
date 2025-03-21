@@ -17,7 +17,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             .Where(assertCallSite => assertCallSite != null)
             .Collect();
 
-        context.RegisterSourceOutput(assertCallSites, SourceOutput);
+        context.RegisterImplementationSourceOutput(assertCallSites, SourceOutput);
     }
 
     private static bool IsPossibleAssertCallSite(SyntaxNode node, CancellationToken _) =>
@@ -116,30 +116,28 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
             var idIsTheMessageMemberAccess = idIsTheMessageArgument.ChildNodes().SingleOrDefault(n => n is MemberAccessExpressionSyntax);
 
-            if (idIsTheMessageMemberAccess != null)
-            {               
-                var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageMemberAccess, cancellationToken);
-                
-                if (idIsTheMessageMember.Symbol == null)
-                {
-                    if (idIsTheMessageMember.CandidateSymbols.Length == 0)
-                        return (null, DiagnosticId.IdIsTheMessageSymbolNotFound);
-                    else if (idIsTheMessageMember.CandidateSymbols.Any(IsSymbolAccessible))
-                        return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
-                    else
-                        return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
-                }
-
-                if (!IsSymbolAccessible(idIsTheMessageMember.Symbol))
+            if (idIsTheMessageMemberAccess == null)
+                return (null, DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField);
+       
+            var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageMemberAccess, cancellationToken);
+            
+            if (idIsTheMessageMember.Symbol == null)
+            {
+                if (idIsTheMessageMember.CandidateSymbols.Length == 0)
+                    return (null, DiagnosticId.IdIsTheMessageSymbolNotFound);
+                else if (idIsTheMessageMember.CandidateSymbols.Any(IsSymbolAccessible))
+                    return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
+                else
                     return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
-
-                if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
-                    return (null, DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField);
-                
-                return (GetSymbolFullName(idIsTheMessageField), null);
             }
 
-            return (null, DiagnosticId.SyntaxNotSupported);
+            if (!IsSymbolAccessible(idIsTheMessageMember.Symbol))
+                return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
+
+            if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
+                return (null, DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField);
+            
+            return (GetSymbolFullName(idIsTheMessageField), null);
         }
     }
 
