@@ -13,6 +13,8 @@
         <DevelopmentDependency>true</DevelopmentDependency>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <IsRoslynComponent>true</IsRoslynComponent>
+        <!-- False positive when packaging a Roslyn Analyzer: https://github.com/NuGet/Home/issues/11354 -->
+        <NoWarn>NU5128</NoWarn>
 
         <!-- RS1036 : A project containing analyzers or source generators should specify this property -->
         <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>       
@@ -20,10 +22,6 @@
         <!-- SourceLink: https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/ -->
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
-
-        <!-- NuGet Symbols Package: https://learn.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg -->
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
         <!-- NuGet Best Practices: https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices -->
         <Authors>Antithesis Operations LLC</Authors>
