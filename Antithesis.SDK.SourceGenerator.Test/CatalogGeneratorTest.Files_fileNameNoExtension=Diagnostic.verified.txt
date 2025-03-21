@@ -81,7 +81,7 @@
             Assert.Always(true, Ids.NotField);
             Antithesis.SDK.Assert.Always(true, Ids.NotConst);
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        }
+
 */
  : (20,12)-(20,40),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
@@ -90,6 +90,101 @@
         Id: ANTITHESIS005,
         Title: "idIsTheMessage" must be a literal or a const field.,
         MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            string id = string.Empty;
+            Assert.Always(true, id);
+            ^^^^^^^^^^^^^
+
+*/
+ : (23,12)-(23,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+
+            Assert.Always(true, _id);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, _idReadonly);
+*/
+ : (25,12)-(25,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS004,
+        Title: "idIsTheMessage" must be accessible.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, _id);
+            Assert.Always(true, _idReadonly);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, _idStaticReadonly);
+*/
+ : (26,12)-(26,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS004,
+        Title: "idIsTheMessage" must be accessible.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, _idReadonly);
+            Assert.Always(true, _idStaticReadonly);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, _idConst);
+*/
+ : (27,12)-(27,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS004,
+        Title: "idIsTheMessage" must be accessible.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, _idStaticReadonly);
+            Assert.Always(true, _idConst);
+            ^^^^^^^^^^^^^
+        }
+*/
+ : (28,12)-(28,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS004,
+        Title: "idIsTheMessage" must be accessible.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true

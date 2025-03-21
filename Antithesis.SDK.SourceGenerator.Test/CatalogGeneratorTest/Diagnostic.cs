@@ -12,14 +12,27 @@ namespace SomeCompany.SomeProject
 
     public class SomeClass
     {
-        public static void SomeMethod()
+        public void SomeMethod()
         {
             Assert.Always(true, Ids.Ambiguous);
             Assert.Always(true, Ids.NotAccessible1);
             Assert.Always(true, Ids.NotAccessible2);
             Assert.Always(true, Ids.NotField);
             Antithesis.SDK.Assert.Always(true, Ids.NotConst);
+
+            string id = string.Empty;
+            Assert.Always(true, id);
+
+            Assert.Always(true, _id);
+            Assert.Always(true, _idReadonly);
+            Assert.Always(true, _idStaticReadonly);
+            Assert.Always(true, _idConst);
         }
+
+        private string _id = string.Empty;
+        private readonly string _idReadonly = string.Empty;
+        private static readonly string _idStaticReadonly = string.Empty;
+        private const string _idConst = string.Empty;
     }
 
     public static class Ids

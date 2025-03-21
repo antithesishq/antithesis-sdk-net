@@ -67,6 +67,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         (string? CallerClassName, string? CallerMethodName) GetCallerClassAndMethodNames()
         {
             const string dotnetConstructorName = ".ctor";
+            const string dotnetIndexerName = "indexer";
 
             string? callerMethodName = null;
 
@@ -79,12 +80,14 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
                 if (string.IsNullOrEmpty(callerMethodName))
                 {
-                    if (callerCrawlParent is MethodDeclarationSyntax method)
+                    if (callerCrawlParent is ConstructorDeclarationSyntax constructor)
+                        callerMethodName = dotnetConstructorName;
+                    else if (callerCrawlParent is IndexerDeclarationSyntax indexer)
+                        callerMethodName = dotnetIndexerName;
+                    else if (callerCrawlParent is MethodDeclarationSyntax method)
                         callerMethodName = method.Identifier.ValueText;
                     else if (callerCrawlParent is PropertyDeclarationSyntax property)
                         callerMethodName = property.Identifier.ValueText;
-                    else if (callerCrawlParent is ConstructorDeclarationSyntax constructor)
-                        callerMethodName = dotnetConstructorName;
                 }
 
                 callerCrawlParent = callerCrawlParent.Parent;
@@ -114,12 +117,13 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             if (idIsTheMessageLiteral != null)
                 return (idIsTheMessageLiteral.ToString(), null);
 
-            var idIsTheMessageMemberAccess = idIsTheMessageArgument.ChildNodes().SingleOrDefault(n => n is MemberAccessExpressionSyntax);
+            var idIsTheMessageReference = idIsTheMessageArgument.ChildNodes()
+                .SingleOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
 
-            if (idIsTheMessageMemberAccess == null)
+            if (idIsTheMessageReference == null)
                 return (null, DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField);
        
-            var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageMemberAccess, cancellationToken);
+            var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageReference, cancellationToken);
             
             if (idIsTheMessageMember.Symbol == null)
             {

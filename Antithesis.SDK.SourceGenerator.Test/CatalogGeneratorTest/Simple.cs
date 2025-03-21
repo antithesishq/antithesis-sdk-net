@@ -45,6 +45,10 @@ namespace SomeCompany.SomeProject
             }
             set => Antithesis.SDK.Assert.Sometimes(true, Ids.Field2);
         }
+
+        public string this[int i] { get { Assert.Reachable(Id); return i.ToString(); } }
+
+        internal const string Id = "Class Member Const Field";
     }
 
     public static class Ids
