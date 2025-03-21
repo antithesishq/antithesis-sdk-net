@@ -38,10 +38,4 @@ internal class FFI
 
     [DllImport(FilePath)]
     protected static extern void fuzz_flush();
-
-    [DllImport(FilePath)]
-    protected static extern ulong init_coverage_module(ulong edgeCount, [MarshalAs(UnmanagedType.LPUTF8Str)] string symbolFilePath);
-
-    [DllImport(FilePath)]
-    protected static extern bool notify_coverage(ulong edgePlusModule);
 }
