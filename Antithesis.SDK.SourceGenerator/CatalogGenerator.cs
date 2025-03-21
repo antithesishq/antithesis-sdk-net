@@ -198,17 +198,23 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             string antithesisSuffix = typeof(CatalogGenerator).FullName.Replace(".", "_");
 
             string fileName = $"{assemblyName}.{antithesisSuffix}.generated.cs";
-            string generatedCodeAttribute = $@"[global::System.CodeDom.Compiler.GeneratedCode(""{typeof(CatalogGenerator).FullName}"", ""{ThisAssembly.AssemblyInformationalVersion}"")]";
 
-            string source = $"namespace {assemblyName}.{antithesisSuffix};\n\n{generatedCodeAttribute}" + @"
+            string source =
+$@"#if !ANTITHESIS && !ANTITHESIS_REMOVE
+#define ANTITHESIS
+#endif
+
+namespace {assemblyName}.{antithesisSuffix};
+
+[global::System.CodeDom.Compiler.GeneratedCode(""{typeof(CatalogGenerator).FullName}"", ""{ThisAssembly.AssemblyInformationalVersion}"")]
 internal static class Catalog
-{
+{{
     [global::System.Runtime.CompilerServices.ModuleInitializer]
     internal static void Initialize()
-    {
-        " + string.Join("\n\n        ", assemblyAssertCallSites.Select(acs => acs!.ToGeneratedCode())) + @"
-    }
-}";
+    {{
+        {string.Join("\n\n        ", assemblyAssertCallSites.Select(acs => acs!.ToGeneratedCode()))} 
+    }}
+}}";
 
             context.AddSource(fileName, source);
         }       

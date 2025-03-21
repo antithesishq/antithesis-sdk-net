@@ -1,4 +1,8 @@
 ﻿//HintName: SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator.generated.cs
+#if !ANTITHESIS && !ANTITHESIS_REMOVE
+#define ANTITHESIS
+#endif
+
 namespace SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator;
 
 internal static class Catalog
@@ -28,6 +32,6 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Sometimes(
             global::SomeCompany.SomeProject.Ids.Field2,
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", FunctionName = @"SomeProperty", FileName = @"file", BeginLine = 46, BeginColumn = 20});
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", FunctionName = @"SomeProperty", FileName = @"file", BeginLine = 46, BeginColumn = 20}); 
     }
 }

@@ -1,4 +1,8 @@
 ﻿//HintName: SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator.generated.cs
+#if !ANTITHESIS && !ANTITHESIS_REMOVE
+#define ANTITHESIS
+#endif
+
 namespace SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator;
 
 internal static class Catalog
@@ -24,6 +28,6 @@ internal static class Catalog
 
         /*global::Antithesis.SDK.Catalog.Always(
             ,
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", FunctionName = @"SomeMethod", FileName = @"file", BeginLine = 21, BeginColumn = 13});*/
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", FunctionName = @"SomeMethod", FileName = @"file", BeginLine = 21, BeginColumn = 13});*/ 
     }
 }
