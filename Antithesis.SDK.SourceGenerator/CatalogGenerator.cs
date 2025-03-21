@@ -17,7 +17,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             .Where(assertCallSite => assertCallSite != null)
             .Collect();
 
-        context.RegisterImplementationSourceOutput(assertCallSites, SourceOutput);
+        context.RegisterSourceOutput(assertCallSites, SourceOutput);
     }
 
     private static bool IsPossibleAssertCallSite(SyntaxNode node, CancellationToken _) =>
