@@ -10,7 +10,7 @@ public static class Lifecycle
     public static bool IsAntithesis { get; } = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(OutputDirectoryEnvironmentVariableName));
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SetupComplete(JsonObject? details)
+    public static void SetupComplete(JsonObject? details = null)
     {
         var json = new JsonObject()
         {
@@ -25,7 +25,7 @@ public static class Lifecycle
     }
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SendEvent(string? name, JsonObject? details)
+    public static void SendEvent(string? name, JsonObject? details = null)
     {
         var json = new JsonObject()
         {
