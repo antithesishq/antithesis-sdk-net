@@ -71,7 +71,7 @@ public static class Catalog
     public static void SometimesAll(string idIsTheMessage, LocationInfo location) =>
         Helper(AssertionMethodType.SometimesAll, idIsTheMessage, location);
 
-    // Helper
+    // Common
 
     private static void Helper(AssertionMethodType methodType, string idIsTheMessage, LocationInfo location)
     {

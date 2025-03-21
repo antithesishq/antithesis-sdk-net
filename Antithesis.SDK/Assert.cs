@@ -34,7 +34,7 @@ public static class Assert
             throw new ArgumentNullException(nameof(idIsTheMessage));
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, details));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(details)));
     }
 
     // Numeric Guidance
@@ -110,7 +110,7 @@ public static class Assert
         bool converted = leftDouble.Success && rightDouble.Success;
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetGuidanceData(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(SetGuidanceData(details))));
 
         if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), idIsTheMessage, leftDouble.Value, rightDouble.Value))
             Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
@@ -151,7 +151,7 @@ public static class Assert
         bool condition = operation(conditions.Values);
 
         if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetGuidanceData(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(SetGuidanceData(details))));
 
         if (GuidanceTracker.ShouldBooleanWrite())
             Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
@@ -168,5 +168,16 @@ public static class Assert
 
             return json;
         }
+    }
+
+    // Common
+
+    private static JsonObject SetStackTrace(JsonObject? json)
+    {
+        json ??= new();
+
+        json["stack_trace"] = Environment.StackTrace;
+
+        return json;
     }
 }
