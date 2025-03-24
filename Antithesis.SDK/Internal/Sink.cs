@@ -1,12 +1,21 @@
 namespace Antithesis.SDK;
 
 using System.IO;
+using System.Text.Json.Nodes;
 
 internal interface ISink { void Write(string message); }
 
 internal static class Sink
 {
-    static Sink() => Write(VersionInfoWrapper.Singleton);
+    static Sink()
+    {
+        Write(VersionInfoWrapper.Singleton);
+
+        Lifecycle.SendEvent("antithesis_sdk_sink", new JsonObject()
+        {
+            ["type"] = _singleton.GetType().FullName
+        });
+    }
 
     internal static void Write(object message) =>
         _singleton.Write(Serializer.Serialize(message));
