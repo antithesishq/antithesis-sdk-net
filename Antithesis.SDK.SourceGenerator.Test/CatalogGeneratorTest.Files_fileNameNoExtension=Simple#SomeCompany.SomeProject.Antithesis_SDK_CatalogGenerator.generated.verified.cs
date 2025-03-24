@@ -1,8 +1,4 @@
 ﻿//HintName: SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator.generated.cs
-#if !ANTITHESIS && !ANTITHESIS_REMOVE
-#define ANTITHESIS
-#endif
-
 namespace SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator;
 
 internal static class Catalog

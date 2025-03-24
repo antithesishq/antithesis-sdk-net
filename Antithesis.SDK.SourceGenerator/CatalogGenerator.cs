@@ -202,11 +202,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             string fileName = $"{assemblyName}.{antithesisSuffix}.generated.cs";
 
             string source =
-$@"#if !ANTITHESIS && !ANTITHESIS_REMOVE
-#define ANTITHESIS
-#endif
-
-namespace {assemblyName}.{antithesisSuffix};
+$@"namespace {assemblyName}.{antithesisSuffix};
 
 [global::System.CodeDom.Compiler.GeneratedCode(""{typeof(CatalogGenerator).FullName}"", ""{ThisAssembly.AssemblyInformationalVersion}"")]
 internal static class Catalog
