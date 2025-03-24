@@ -10,9 +10,11 @@ public static class Lifecycle
     public static bool IsAntithesis { get; } = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(OutputDirectoryEnvironmentVariableName));
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SetupComplete(JsonObject? details = null)
-    {
-        var json = new JsonObject()
+    public static void SetupComplete(JsonObject? details = null) =>
+        Sink.Write(SetupCompleteJson(details));
+
+    internal static JsonObject SetupCompleteJson(JsonObject? details = null) =>
+        new JsonObject()
         {
             ["antithesis_setup"] = new JsonObject()
             {
@@ -21,17 +23,13 @@ public static class Lifecycle
             }
         };
 
-        Sink.Write(json);
-    }
-
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SendEvent(string? name, JsonObject? details = null)
-    {
-        var json = new JsonObject()
+    public static void SendEvent(string? name, JsonObject? details = null) =>
+        Sink.Write(SendEventJson(name, details));
+
+    internal static JsonObject SendEventJson(string? name, JsonObject? details = null) =>
+        new JsonObject()
         {
             [string.IsNullOrWhiteSpace(name) ? "anonymous" : name.Trim()] = details
         };
-
-        Sink.Write(json);
-    }
 }
