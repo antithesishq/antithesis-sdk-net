@@ -35,6 +35,7 @@ public sealed class CatalogGeneratorTest
 
         // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
         return Verifier.Verify(driver)
+            .UseDirectory(Path.Combine(nameof(CatalogGeneratorTest), "Verify"))
             .UseParameters(fileNameNoExtension)
             .ScrubLinesContaining("System.CodeDom.Compiler.GeneratedCode");
     }
