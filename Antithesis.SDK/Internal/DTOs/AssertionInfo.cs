@@ -44,10 +44,12 @@ internal class AssertionInfo
 
     [JsonPropertyName("assert_type")]
     public string AssertTypeConverted => AssertType.ToString().ToLowerInvariant();
+    [JsonIgnore]
     public AssertionAssertType AssertType { get; }
 
     [JsonPropertyName("display_type")]
     public string DisplayTypeConverted => DisplayType.ToString();
+    [JsonIgnore]
     public AssertionDisplayType DisplayType { get; }
     
     [JsonPropertyName("id")]

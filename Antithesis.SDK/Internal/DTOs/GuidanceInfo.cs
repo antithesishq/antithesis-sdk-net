@@ -34,6 +34,7 @@ internal class GuidanceInfo
 
     [JsonPropertyName("guidance_type")]
     public string GuidanceTypeConverted => GuidanceType.ToString().ToLowerInvariant();
+    [JsonIgnore]
     public GuidanceType GuidanceType { get; }
 
     [JsonPropertyName("maximize")]
