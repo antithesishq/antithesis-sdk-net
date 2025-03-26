@@ -1,10 +1,11 @@
 namespace Antithesis.SDK;
 
 using Microsoft.CodeAnalysis;
+using System.IO;
 
 internal record class Caller(string? AssemblyName, string? ClassName, string? MethodName, Location Location)
 {
-    internal string ToGeneratedCode()
+    internal string ToGeneratedCode(string? projectDirectory)
     {
         // LinePosition.Line and Character both use 0-based indexing, so we add 1 to each in the generated code.
         var line = Location.GetLineSpan();
@@ -12,11 +13,27 @@ internal record class Caller(string? AssemblyName, string? ClassName, string? Me
 
         string className = EmptyToNull(ClassName) ?? "class";
         string functionName = EmptyToNull(MethodName) ?? "function";
-        string fileName = EmptyToNull(line.Path) ?? "file";
+        string filePath = EmptyToNull(TryGetSolutionRelativeFilePath()) ?? "file";
 
-        return $@"new global::Antithesis.SDK.LocationInfo() {{ ClassName = @""{className}"", FunctionName = @""{functionName}"", FileName = @""{fileName}"", BeginLine = {start.Line + 1}, BeginColumn = {start.Character + 1}}}";
+        return $@"new global::Antithesis.SDK.LocationInfo() {{ ClassName = @""{className}"", FunctionName = @""{functionName}"", FilePath = @""{filePath}"", BeginLine = {start.Line + 1}, BeginColumn = {start.Character + 1}}}";
 
         static string? EmptyToNull(string? s) => string.IsNullOrEmpty(s) ? null : s;
+
+        string? TryGetSolutionRelativeFilePath()
+        {
+            if (string.IsNullOrEmpty(line.Path) || string.IsNullOrEmpty(projectDirectory))
+                return line.Path;
+
+            // If projectDirectory ends with a directory separator, Path.GetDirectoryName will return the projectDirectory
+            // without the trailing separator, which is not what we want here.
+            projectDirectory = projectDirectory!.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            string solutionDirectory = Path.GetDirectoryName(projectDirectory);
+
+            // We trim any leading directory separators to not give the false impression of an absolute path.
+            return (!string.IsNullOrEmpty(solutionDirectory) && line.Path.Length > solutionDirectory.Length && line.Path.StartsWith(solutionDirectory))
+                ? line.Path.Substring(solutionDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                : line.Path;
+        }
     }
 }
 
@@ -27,13 +44,13 @@ internal record class AssertCallSite(Caller Caller, string AssertMethodName, str
             ? Diagnostic.Create(DiagnosticDescriptors.ById[DiagnosticId.Value], Caller.Location)
             : throw new NotSupportedException();
 
-    internal string ToGeneratedCode()
+    internal string ToGeneratedCode(string? projectDirectory)
     {
         const string nlIndent = "\n            ";
         
         string prefix = DiagnosticId != null ? "/*" : string.Empty;
         string suffix = DiagnosticId != null ? "*/" : string.Empty; 
 
-        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertIdIsTheMessage},{nlIndent}{Caller.ToGeneratedCode()});{suffix}";
+        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertIdIsTheMessage},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
     }
 }

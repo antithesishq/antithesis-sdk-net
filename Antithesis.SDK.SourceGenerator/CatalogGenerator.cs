@@ -2,6 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using System.Threading;
 
@@ -10,6 +11,9 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
+        var projectDirectory = context.AnalyzerConfigOptionsProvider
+            .Select(TryGetProjectDirectory);
+
         var assertCallSites = context.SyntaxProvider
             .CreateSyntaxProvider(
                 IsPossibleAssertCallSite,
@@ -17,8 +21,21 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             .Where(assertCallSite => assertCallSite != null)
             .Collect();
 
-        context.RegisterImplementationSourceOutput(assertCallSites, SourceOutput);
+        var projectAssertCallSites = projectDirectory.Combine(assertCallSites);
+    
+        context.RegisterImplementationSourceOutput(projectAssertCallSites, SourceOutput);
     }
+
+    // For the magic keys: https://stackoverflow.com/questions/65070796/source-generator-information-about-referencing-project
+    private const string ProjectDirectoryMagicKey1 = "build_property.MSBuildProjectDirectory";
+    private const string ProjectDirectoryMagicKey2 = "build_property.projectdir";
+
+    private static string? TryGetProjectDirectory(AnalyzerConfigOptionsProvider provider, CancellationToken _) =>
+        provider.GlobalOptions.TryGetValue(ProjectDirectoryMagicKey1, out string? projectDirectory1)
+            ? projectDirectory1
+            : (provider.GlobalOptions.TryGetValue(ProjectDirectoryMagicKey2, out string? projectDirectory2)
+                ? projectDirectory2
+                : null);
 
     private static bool IsPossibleAssertCallSite(SyntaxNode node, CancellationToken _) =>
         node is MemberAccessExpressionSyntax memberAccess && _assertMethodNames.Contains(memberAccess.Name.Identifier.ValueText);
@@ -188,13 +205,14 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         return "global::" + string.Join(".", namePartsReverse);
     }
 
-    private static void SourceOutput(SourceProductionContext context, ImmutableArray<AssertCallSite?> assertCallSites)
+    private static void SourceOutput(SourceProductionContext context,
+        (string? ProjectDirectory, ImmutableArray<AssertCallSite?> AssertCallSites) provider)
     {
-        foreach (var assertCallSite in assertCallSites.Where(acs => acs!.DiagnosticId != null))
+        foreach (var assertCallSite in provider.AssertCallSites.Where(acs => acs!.DiagnosticId != null))
             context.ReportDiagnostic(assertCallSite!.ToDiagnostic());
 
         // We include AssertCallSites with DiagnosticIds because ToGeneratedCode will comment out those lines.
-        foreach (var assemblyAssertCallSites in assertCallSites.GroupBy(acs => acs!.Caller.AssemblyName))
+        foreach (var assemblyAssertCallSites in provider.AssertCallSites.GroupBy(acs => acs!.Caller.AssemblyName))
         {
             string assemblyName = assemblyAssertCallSites.Key!;
             string antithesisSuffix = typeof(CatalogGenerator).FullName.Replace(".", "_");
@@ -210,7 +228,7 @@ internal static class Catalog
     [global::System.Runtime.CompilerServices.ModuleInitializer]
     internal static void Initialize()
     {{
-        {string.Join("\n\n        ", assemblyAssertCallSites.Select(acs => acs!.ToGeneratedCode()))} 
+        {string.Join("\n\n        ", assemblyAssertCallSites.Select(acs => acs!.ToGeneratedCode(provider.ProjectDirectory)))} 
     }}
 }}";
 

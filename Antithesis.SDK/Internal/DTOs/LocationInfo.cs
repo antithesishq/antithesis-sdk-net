@@ -14,7 +14,7 @@ public class LocationInfo
     public string FunctionName { get; init; } = "function";
 
     [JsonPropertyName("file")]
-    public string FileName { get; init; } = "file";
+    public string FilePath { get; init; } = "file";
 
     [JsonPropertyName("begin_line")]
     public int BeginLine { get; init; }
