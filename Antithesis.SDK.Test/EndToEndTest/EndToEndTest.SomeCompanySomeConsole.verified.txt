@@ -1,3 +1,3 @@
-﻿{"antithesis_sdk":{"language":{"name":"C#","version":".NET 8.0.14"},"sdk_version":"0.1.30-alpha\u002Bcc4bab485b","protocol_version":"1.1.0"}}
+﻿{"antithesis_sdk":{"language":{"name":"C#","version":".NET
 {"antithesis_assert":{"assert_type":"reachability","display_type":"Reachable","id":"Console Started","message":"Console Started","location":{"class":"class","function":"function","file":"SomeCompany.SomeConsole/Program.cs","begin_line":3,"begin_column":1},"must_hit":true,"hit":false,"condition":false,"details":null}}
 {"antithesis_assert":{"assert_type":"reachability","display_type":"Reachable","id":"Console Started","message":"Console Started","location":{"class":"class","function":"function","file":"SomeCompany.SomeConsole/Program.cs","begin_line":3,"begin_column":1},"must_hit":true,"hit":true,"condition":true,"details":null}}

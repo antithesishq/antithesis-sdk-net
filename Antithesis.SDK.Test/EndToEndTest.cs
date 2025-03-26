@@ -10,7 +10,7 @@ public class EndToEndTest
 {
     // Follow the Verify naming convention so that our gitignore applies; however, Verify includes
     // the test's name in addition to the class's, so we should never collide.
-    private static readonly string _tempOutputFilePath = 
+    private static readonly string _tempOutputFilePath =
         CurrentFile.Relative($"{nameof(EndToEndTest)}.received.txt");
 
     private static void DeleteTempOutputFile()
@@ -35,8 +35,12 @@ public class EndToEndTest
             // unload an Assembly, we can only perform one test with this Assembly.
             AppDomain.CurrentDomain.ExecuteAssembly("SomeCompany.SomeConsole.dll");
 
+            // We preserve as much of the antithesis_sdk JSONL as possible for minimal effort.
+            const string sdkSentinel = "{\"antithesis_sdk\":{\"language\":{\"name\":\"C#\",\"version\":\".NET";
+
             return Verifier.VerifyFile(_tempOutputFilePath)
-                .UseDirectory(nameof(EndToEndTest));
+                .UseDirectory(nameof(EndToEndTest))
+                .ScrubLinesWithReplace(s => s.StartsWith(sdkSentinel) ? sdkSentinel : s);
         }
         finally { DeleteTempOutputFile(); }
     }
