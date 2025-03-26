@@ -8,68 +8,113 @@ public static class Catalog
     // No Guidance
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void Always(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.Always, idIsTheMessage, location);
+    public static void Always(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.Always, idIsTheMessage, location);
+    }
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void AlwaysOrUnreachable(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.AlwaysOrUnreachable, idIsTheMessage, location);
-    
-    [Conditional(ConditionalCompilation.SymbolName)]
-    public static void Sometimes(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.Sometimes, idIsTheMessage, location);
+    public static void AlwaysOrUnreachable(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.AlwaysOrUnreachable, idIsTheMessage, location);
+    }
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void Unreachable(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.Unreachable, idIsTheMessage, location);
-    
+    public static void Sometimes(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.Sometimes, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void Reachable(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.Reachable, idIsTheMessage, location);
+    public static void Unreachable(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.Unreachable, idIsTheMessage, location);
+    }
+
+    [Conditional(ConditionalCompilation.SymbolName)]
+    public static void Reachable(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.Reachable, idIsTheMessage, location);
+    }
 
     // Numeric Guidance
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void AlwaysGreaterThan(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.AlwaysGreaterThan, idIsTheMessage, location);
-    
+    public static void AlwaysGreaterThan(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.AlwaysGreaterThan, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void AlwaysGreaterThanOrEqualTo(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.AlwaysGreaterThanOrEqualTo, idIsTheMessage, location);
-    
+    public static void AlwaysGreaterThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.AlwaysGreaterThanOrEqualTo, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void AlwaysLessThan(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.AlwaysLessThan, idIsTheMessage, location);
-    
+    public static void AlwaysLessThan(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.AlwaysLessThan, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void AlwaysLessThanOrEqualTo(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.AlwaysLessThanOrEqualTo, idIsTheMessage, location);
-    
+    public static void AlwaysLessThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.AlwaysLessThanOrEqualTo, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SometimesGreaterThan(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.SometimesGreaterThan, idIsTheMessage, location);
-    
+    public static void SometimesGreaterThan(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.SometimesGreaterThan, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SometimesGreaterThanOrEqualTo(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.SometimesGreaterThanOrEqualTo, idIsTheMessage, location);
-    
+    public static void SometimesGreaterThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.SometimesGreaterThanOrEqualTo, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SometimesLessThan(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.SometimesLessThan, idIsTheMessage, location);
-    
+    public static void SometimesLessThan(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.SometimesLessThan, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SometimesLessThanOrEqualTo(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.SometimesLessThanOrEqualTo, idIsTheMessage, location);
+    public static void SometimesLessThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.SometimesLessThanOrEqualTo, idIsTheMessage, location);
+    }
 
     // Boolean Guidance
 
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void AlwaysSome(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.AlwaysSome, idIsTheMessage, location);
-    
+    public static void AlwaysSome(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.AlwaysSome, idIsTheMessage, location);
+    }
+
     [Conditional(ConditionalCompilation.SymbolName)]
-    public static void SometimesAll(string idIsTheMessage, LocationInfo location) =>
-        Helper(AssertionMethodType.SometimesAll, idIsTheMessage, location);
+    public static void SometimesAll(string idIsTheMessage, LocationInfo location)
+    {
+        if (!Sink.IsNoop)
+            Helper(AssertionMethodType.SometimesAll, idIsTheMessage, location);
+    }
 
     // Common
 

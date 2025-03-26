@@ -27,12 +27,15 @@ internal static class Sink
                 ? new LocalSink()
                 : new NoopSink());
 
+    // Must be placed after _singleton because of field initializer ordering.
+    internal static bool IsNoop { get; } = _singleton.GetType() == typeof(NoopSink);
+
     private sealed class LocalSink : ISink
     {
         private const string FilePathEnvironmentVariableName = "ANTITHESIS_SDK_LOCAL_OUTPUT";
         private static readonly string? FilePath = Environment.GetEnvironmentVariable(FilePathEnvironmentVariableName);
         
-        internal static bool FileExists = !string.IsNullOrEmpty(FilePath) && File.Exists(FilePath);
+        internal static bool FileExists { get; } = !string.IsNullOrEmpty(FilePath) && File.Exists(FilePath);
 
         void ISink.Write(string message) 
         {
