@@ -23,31 +23,57 @@ internal static class Sink
     private static readonly ISink _singleton =
         FFI.FileExists
             ? new FFISink()
-            : (LocalSink.FileExists
+            : (LocalSink.FileOrDirectoryExists
                 ? new LocalSink()
                 : new NoopSink());
 
     // Must be placed after _singleton because of field initializer ordering.
+    // 
+    // We are making this a readonly property with a readonly backing field in order to short-circuit
+    // all Assert, Catalog, and Lifecyle public static method calls with as minimal performance impact
+    // as possible. This may be a premature optimization.
     internal static bool IsNoop { get; } = _singleton.GetType() == typeof(NoopSink);
 
     private sealed class LocalSink : ISink
     {
         private const string FilePathEnvironmentVariableName = "ANTITHESIS_SDK_LOCAL_OUTPUT";
-        private static readonly string? FilePath = Environment.GetEnvironmentVariable(FilePathEnvironmentVariableName);
         
-        internal static bool FileExists { get; } = !string.IsNullOrEmpty(FilePath) && File.Exists(FilePath);
+        // The File will be created during File.AppendText; however, the Directory must exist to do so.
+        internal static bool FileOrDirectoryExists
+        {
+            get
+            {
+                string? filePath = Environment.GetEnvironmentVariable(FilePathEnvironmentVariableName);
+
+                if (string.IsNullOrEmpty(filePath))
+                    return false;
+
+                if (File.Exists(filePath))
+                    return true;
+
+                string? directory = Path.GetDirectoryName(filePath);
+
+                return !string.IsNullOrEmpty(directory) && Directory.Exists(directory);
+            }
+        }
+
+        internal LocalSink() => _filePath = Environment.GetEnvironmentVariable(FilePathEnvironmentVariableName)!;
+
+        private readonly string _filePath;
+        private readonly object _padlock = new();
 
         void ISink.Write(string message) 
         {
-            // This is not thread-safe; however, LocalSink should never be used under normal circumstances (the FFISink will be used instead);
-            // it is simply provided for parity with the Java SDK.
-            try
+            lock(_padlock)
             {
-                using var writer = File.AppendText(FilePath!);
+                try
+                {
+                    using var writer = File.AppendText(_filePath);
 
-                writer.WriteLine(message);
+                    writer.WriteLine(message);
+                }
+                catch (IOException) { /* Ignored. */ }
             }
-            catch (IOException) { /* Ignored. */ }
         }
     }
 
