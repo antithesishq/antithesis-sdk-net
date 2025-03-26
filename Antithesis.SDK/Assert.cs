@@ -235,7 +235,11 @@ public static class Assert
 
     private static JsonObject? SetStackTrace(bool condition, JsonObject? json)
     {
-        // Do not call the potentially expensive Environment.StackTrace for passing Assertions.
+        // TODO : Revisit this for AssertType.Sometimes and Reachability.
+        //
+        // Do not call the potentially expensive Environment.StackTrace for passing Assertions; however,
+        // since AssertionTracker.ShouldWrite only returns true for the first pass and the first fail, this
+        // is probably a premature optimization.
         if (condition)
             return json;
 
