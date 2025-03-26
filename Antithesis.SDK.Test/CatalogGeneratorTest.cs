@@ -33,11 +33,14 @@ public sealed class CatalogGeneratorTest
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new CatalogGenerator());
         driver = driver.RunGenerators(compilation);
 
+        // We preserve as much of the GeneratedCodeAttibute line as possible for minimal effort.
+        const string generatedCodeSentinel = "[global::System.CodeDom.Compiler.GeneratedCode(\"Antithesis.SDK.CatalogGenerator\",";
+
         // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
         return Verifier.Verify(driver)
             .UseDirectory(Path.Combine(nameof(CatalogGeneratorTest), "Verify"))
             .UseParameters(fileNameNoExtension)
-            .ScrubLinesContaining("System.CodeDom.Compiler.GeneratedCode");
+            .ScrubLinesWithReplace(s => s.StartsWith(generatedCodeSentinel) ? (generatedCodeSentinel + " ... SCRUBBED VERSION INFO") : s);
     }
 
     public static IEnumerable<object[]> GetFiles()

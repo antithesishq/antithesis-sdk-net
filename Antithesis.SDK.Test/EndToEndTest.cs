@@ -40,7 +40,7 @@ public class EndToEndTest
 
             return Verifier.VerifyFile(_tempOutputFilePath)
                 .UseDirectory(nameof(EndToEndTest))
-                .ScrubLinesWithReplace(s => s.StartsWith(sdkSentinel) ? sdkSentinel : s);
+                .ScrubLinesWithReplace(s => s.StartsWith(sdkSentinel) ? (sdkSentinel + " ... SCRUBBED VERSION INFO") : s);
         }
         finally { DeleteTempOutputFile(); }
     }
