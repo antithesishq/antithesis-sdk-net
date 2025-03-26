@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK.Test", "Anti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK.SourceGenerator", "Antithesis.SDK.SourceGenerator\Antithesis.SDK.SourceGenerator.csproj", "{AFEB5683e-7BD9-4C8B-9F48-201030226ECE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeCompany.SomeConsole", "SomeCompany.SomeConsole\SomeCompany.SomeConsole.csproj", "{525BD518-4161-44B6-AFFF-D699B9319F0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{AFEB5683-7BD9-4C8B-9F48-201030226ECE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFEB5683-7BD9-4C8B-9F48-201030226ECE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFEB5683-7BD9-4C8B-9F48-201030226ECE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{525BD518-4161-44B6-AFFF-D699B9319F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{525BD518-4161-44B6-AFFF-D699B9319F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{525BD518-4161-44B6-AFFF-D699B9319F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{525BD518-4161-44B6-AFFF-D699B9319F0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -34,9 +34,9 @@ internal static class Sink
     // as possible. This may be a premature optimization.
     internal static bool IsNoop { get; } = _singleton.GetType() == typeof(NoopSink);
 
-    private sealed class LocalSink : ISink
+    internal sealed class LocalSink : ISink
     {
-        private const string FilePathEnvironmentVariableName = "ANTITHESIS_SDK_LOCAL_OUTPUT";
+        internal const string FilePathEnvironmentVariableName = "ANTITHESIS_SDK_LOCAL_OUTPUT";
         
         // The File will be created during File.AppendText; however, the Directory must exist to do so.
         internal static bool FileOrDirectoryExists

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <!-- Retain calls to Assert, Catalog, and Lifecycle; all of which are decorated with ConditionalAttribute. -->
+        <DefineConstants>$(DefineConstants);ANTITHESIS</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Antithesis.SDK\Antithesis.SDK.csproj" />
+        <ProjectReference Include="..\Antithesis.SDK.SourceGenerator\Antithesis.SDK.SourceGenerator.csproj"
+            OutputItemType="Analyzer"
+            ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="System" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+    </ItemGroup>
+
+</Project>
