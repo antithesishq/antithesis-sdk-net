@@ -8,6 +8,9 @@ using System.Text.Json.Serialization;
 /// An init-only data transfer object for metadata related to the source code location of an assertion.
 /// If your project is referencing the Antithesis.SDK.SourceGenerator package, there is no need for you to construct this class directly.
 /// </summary>
+/// <remarks>
+/// Default values are copied from the Antithesis Java SDK.
+/// </remarks>
 public class LocationInfo
 {
     internal static LocationInfo Unknown { get; } = new();
@@ -19,10 +22,10 @@ public class LocationInfo
     public string ClassName { get; init; } = "class";
 
     /// <summary>
-    /// The name of the function containing the assertion.
+    /// The name of the method containing the assertion.
     /// </summary>
     [JsonPropertyName("function")]
-    public string FunctionName { get; init; } = "function";
+    public string MethodName { get; init; } = "function";
 
     /// <summary>
     /// The path of the file containing the assertion. Antithesis.SDK.SourceGenerator attempts to set this to the solution-relative

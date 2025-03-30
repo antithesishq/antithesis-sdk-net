@@ -11,11 +11,12 @@ internal record class Caller(string? AssemblyName, string? ClassName, string? Me
         var line = Location.GetLineSpan();
         var start = line.StartLinePosition;
 
+        // Defaults are copied from the Antithesis Java SDK.
         string className = EmptyToNull(ClassName) ?? "class";
-        string functionName = EmptyToNull(MethodName) ?? "function";
+        string methodName = EmptyToNull(MethodName) ?? "function";
         string filePath = EmptyToNull(TryGetSolutionRelativeFilePath()) ?? "file";
 
-        return $@"new global::Antithesis.SDK.LocationInfo() {{ ClassName = @""{className}"", FunctionName = @""{functionName}"", FilePath = @""{filePath}"", BeginLine = {start.Line + 1}, BeginColumn = {start.Character + 1}}}";
+        return $@"new global::Antithesis.SDK.LocationInfo() {{ ClassName = @""{className}"", MethodName = @""{methodName}"", FilePath = @""{filePath}"", BeginLine = {start.Line + 1}, BeginColumn = {start.Character + 1}}}";
 
         static string? EmptyToNull(string? s) => string.IsNullOrEmpty(s) ? null : s;
 
