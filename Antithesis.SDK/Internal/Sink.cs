@@ -11,6 +11,7 @@ internal static class Sink
     {
         Write(VersionInfoWrapper.Singleton);
 
+        // TODO : Try sending this property with the VersionInfo / antithesis_sdk event.
         Lifecycle.SendEvent("antithesis_sdk_sink", new JsonObject()
         {
             ["type"] = _singleton.GetType().FullName

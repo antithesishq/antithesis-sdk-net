@@ -5,15 +5,24 @@ using System.Diagnostics;
 // This interface exists to better support mocking and testing.
 internal interface IRandomUInt64Provider { ulong Next(); }
 
-// Regarding which methods have to be overriden with Sample: NextBytes(Byte[]), Next(), and Next(Int32, Int32):
-// https://learn.microsoft.com/en-us/dotnet/api/system.random.sample?view=net-9.0#notes-to-inheritors
-// We also chose to override NextBytes(Span<Byte>) because we used it for NextBytes(Byte[]).
-//
 // Methods adapted or inspired by:
 // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Random.ImplBase.cs
 // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Random.Xoshiro256StarStarImpl.cs
+
+/// <summary>
+/// Use's Antithesis's deterministic and reproducible random number generator within a System.Random subclass.
+/// Because it is a subclass of System.Random, it can be used as a drop-in replacement for it.
+/// </summary>
+/// <remarks>
+/// Regarding the methods which have to be overriden with Sample when subclassing System.Random:
+/// <a href="https://learn.microsoft.com/en-us/dotnet/api/system.random.sample?view=net-9.0#notes-to-inheritors">Microsoft Learn</a>.
+/// We also chose to override NextBytes(Span&lt;Byte&gt;) because we used it for NextBytes(Byte[]) which had to be overridden.
+/// </remarks>
 public class Random : System.Random
 {
+    /// <summary>
+    /// Returns a Singleton of this class when executing within Antithesis; else, throws a FileNotFoundException.
+    /// </summary>
     public static System.Random SharedThrowIfNativeLibraryNotExists
     {
         get
@@ -24,6 +33,9 @@ public class Random : System.Random
         }
     }
 
+    /// <summary>
+    /// Returns a Singleton of this class when executing within Antithesis; else, falls back to System.Random.Shared.
+    /// </summary>
     public static System.Random SharedFallbackToSystem { get; } =
         FFI.FileExists ? new Random(new FFIRandomUInt64Provider()) : System.Random.Shared;
 

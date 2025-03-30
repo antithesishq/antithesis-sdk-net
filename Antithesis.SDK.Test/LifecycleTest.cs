@@ -7,6 +7,9 @@ public class LifecycleTest
     {
         XAssert.Equal(
             "{\"antithesis_setup\":{\"status\":\"complete\",\"details\":null}}",
-            Serializer.Serialize(Lifecycle.SetupCompleteJson()));
+            Serializer.Serialize(
+                Lifecycle.SendEventJson(
+                    Lifecycle.SetupCompleteJsonPropertyName,
+                    Lifecycle.SetupCompleteJsonDetails())));
     }
 }

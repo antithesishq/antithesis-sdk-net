@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 
 internal static class GuidanceTracker
 {
+    // Because boolean guidance is a collection of key value pairs, we always write it to Antithesis so it can decide what to pursue.
     internal static bool ShouldBooleanWrite() => true;
 
     internal static bool ShouldNumericWrite(bool maximize, string idIsTheMessage, double left, double right) =>
@@ -22,6 +23,8 @@ internal static class GuidanceTracker
         private readonly bool _maximize;
         private double _mark;
 
+        // Numeric guidance is important to write as Antithesis "gets closer" to making an assertion potentially pass or fail.
+        // The "antithesis_guidance/maximize" JSON property indicates which "direction" is "closer" to the flipping point.
         internal bool ShouldWrite(double left, double right)
         {
             double diff = left - right;

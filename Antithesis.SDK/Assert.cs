@@ -4,10 +4,35 @@ using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 // LOAD BEARING : typeof(Assert).FullName and the "string idIsTheMessage" Parameters' names are load bearing for the CatalogGenerator.
+
+/// <summary>
+/// The Assert class enables defining <a href="https://antithesis.com/docs/using_antithesis/properties/" target="_blank">test properties</a>
+/// about your program or <a href="https://antithesis.com/docs/getting_started/first_test/" target="_blank">workload</a>.
+/// <br/><br/>
+/// Each static method in this class takes a parameter called <c>idIsTheMessage</c>, which is a string literal identifier used to aggregate assertions.
+/// Antithesis generates one test property per unique <c>idIsTheMessage</c>. This test property will be named <c>idIsTheMessage</c>
+/// in the <a href="https://antithesis.com/docs/reports/triage/" target="_blank">triage report</a>.
+/// <br/><br/>
+/// Each static method also takes a parameter called <c>details</c>, which is an optional <c>JsonObject</c> reference of additional information provided
+/// by the caller to add context to assertion passes and failures. The information that is logged will appear in the <c>logs</c> section of a
+/// <a href="https://antithesis.com/docs/reports/triage/" target="_blank">triage report</a>.
+/// </summary>
 public static class Assert
 {
-    // No Guidance
-
+    #region No Guidance
+   
+    /// <summary>
+    /// Assert that <c>condition</c> is true every time this method is called, <b><i>and</i></b> that it is called at least once
+    /// (i.e. the corresponding test property will fail if the assertion is never encountered).
+    /// <br/><br/>
+    /// The corresponding test property will be viewable in the <c>Antithesis SDK: Always assertions</c> group of your triage report.
+    /// </summary>
+    /// <param name="condition">The condition being asserted. Evaluated at runtime.</param>
+    /// <param name="idIsTheMessage">
+    ///     A unique string identifier of the assertion. Provides context for assertion passes and failures and is intended to be human-readable.
+    ///     <b><i>Must be provided as a string literal or as a reference to a publicly accessible const field.</i></b>
+    /// </param>
+    /// <param name="details">Optional additional details to provide greater context for assertion passes and failures. Evaluated at runtime.</param>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Always(bool condition, string idIsTheMessage, JsonObject? details = default)
     {
@@ -15,6 +40,12 @@ public static class Assert
             NoGuidanceHelper(AssertionMethodType.Always, condition, idIsTheMessage, details);
     }
 
+    /// <summary>
+    /// Assert that <c>condition</c> is true every time this method is called. The corresponding test property will pass if the assertion is never encountered.
+    /// <br/><br/>
+    /// The corresponding test property will be viewable in the <c>Antithesis SDK: Always assertions</c> group of your triage report.
+    /// </summary>
+    /// <inheritdoc cref="Always" path="/param"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysOrUnreachable(bool condition, string idIsTheMessage, JsonObject? details = default)
     {
@@ -22,6 +53,12 @@ public static class Assert
             NoGuidanceHelper(AssertionMethodType.AlwaysOrUnreachable, condition, idIsTheMessage, details);
     }
 
+    /// <summary>
+    /// Assert that <c>condition</c> is true at least one time that this method was called. The corresponding test property will fail if the assertion is never encountered.
+    /// <br/><br/>
+    /// This test property will be viewable in the <c>Antithesis SDK: Sometimes assertions</c> group of your triage report.
+    /// </summary>
+    /// <inheritdoc cref="Always" path="/param"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Sometimes(bool condition, string idIsTheMessage, JsonObject? details = default)
     {
@@ -29,6 +66,12 @@ public static class Assert
             NoGuidanceHelper(AssertionMethodType.Sometimes, condition, idIsTheMessage, details);
     }
 
+    /// <summary>
+    /// Assert that a line of code is never reached. The corresponding test property will pass if and only if the assertion is never encountered.
+    /// <br/><br/>
+    /// This test property will be viewable in the <c>Antithesis SDK: Reachability assertions</c> group of your triage report.
+    /// </summary>
+    /// <inheritdoc cref="Always" path="/param"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Unreachable(string idIsTheMessage, JsonObject? details = default)
     {
@@ -36,6 +79,12 @@ public static class Assert
             NoGuidanceHelper(AssertionMethodType.Unreachable, false, idIsTheMessage, details);
     }
 
+    /// <summary>
+    /// Assert that a line of code is reached at least once. The corresponding test property will fail if the assertion is never encountered.
+    /// <br/><br/>
+    /// This test property will be viewable in the <c>Antithesis SDK: Reachability assertions</c> group of your triage report.
+    /// </summary>
+    /// <inheritdoc cref="Always" path="/param"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Reachable(string idIsTheMessage, JsonObject? details = default)
     {
@@ -52,8 +101,20 @@ public static class Assert
             Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, details)));
     }
 
-    // Numeric Guidance
+    #endregion
 
+    #region Numeric Guidance
+
+#pragma warning disable 1573
+    /// <summary>
+    /// <c>AlwaysGreaterThan(left, right, ...)</c> is mostly equivalent to <c>Always(left &gt; right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <typeparam name="T">The numeric type that we are comparing.</typeparam>
+    /// <inheritdoc cref="Always" path="/param"/>
+    /// <param name="left">The left operand of the comparison.</param>
+    /// <param name="right">The right operand of the comparison.</param>
+    /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -64,7 +125,15 @@ public static class Assert
                 left, right, idIsTheMessage, details);
         }
     }
+#pragma warning restore 1573
 
+    /// <summary>
+    /// <c>AlwaysGreaterThanOrEqualTo(left, right, ...)</c> is mostly equivalent to <c>Always(left &gt;= right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -76,6 +145,13 @@ public static class Assert
         }
     }
 
+    /// <summary>
+    /// <c>AlwaysLessThan(left, right, ...)</c> is mostly equivalent to <c>Always(left &lt; right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -87,6 +163,13 @@ public static class Assert
         }
     }
 
+    /// <summary>
+    /// <c>AlwaysLessThanOrEqualTo(left, right, ...)</c> is mostly equivalent to <c>Always(left &lt;= right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -98,6 +181,13 @@ public static class Assert
         }
     }
 
+    /// <summary>
+    /// <c>SometimesGreaterThan(left, right, ...)</c> is mostly equivalent to <c>Sometimes(left &gt; right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -109,6 +199,13 @@ public static class Assert
         }
     }
 
+    /// <summary>
+    /// <c>SometimesGreaterThanOrEqualTo(left, right, ...)</c> is mostly equivalent to <c>Sometimes(left &gt;= right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -120,6 +217,13 @@ public static class Assert
         }
     }
 
+    /// <summary>
+    /// <c>SometimesLessThan(left, right, ...)</c> is mostly equivalent to <c>Sometimes(left &lt; right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -131,6 +235,13 @@ public static class Assert
         }
     }
 
+    /// <summary>
+    /// <c>SometimesLessThanOrEqualTo(left, right, ...)</c> is mostly equivalent to <c>Sometimes(left &lt;= right, ...)</c> but additionally
+    /// provides Antithesis visibility into the value of <c>left</c> and <c>right</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/typeparam"/>
+    /// <inheritdoc cref="AlwaysGreaterThan" path="/param"/>
+    /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
         where T : struct, IComparable, IConvertible
@@ -184,8 +295,18 @@ public static class Assert
         }
     }
 
-    // Boolean Guidance
+    #endregion
 
+    #region  Boolean Guidance
+
+#pragma warning disable 1573
+    /// <summary>
+    /// <c>AlwaysSome({ ["key1"] = bool1, ["key2"] = bool2 }, ...)</c> is similar to <c>Always(bool1 || bool2, ...)</c> but additionally provides
+    /// Antithesis visibility into the keys and values of <c>conditions</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="Always" path="/param"/>
+    /// <param name="conditions">The collection of conditions to-be disjuncted, represented as a Dictionary of booleans keyed by strings.</param>
+    /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysSome(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default)
     {
@@ -193,12 +314,20 @@ public static class Assert
             BooleanGuidanceHelper(AssertionMethodType.AlwaysSome, values => values.Any(v => v), conditions, idIsTheMessage, details);
     }
 
+    /// <summary>
+    /// <c>SometimesAll({ ["key1"] = bool1, ["key2"] = bool2 }, ...)</c> is similar to <c>Sometimes(bool1 &amp;&amp; bool2, ...)</c> but additionally provides
+    /// Antithesis visibility into the keys and values of <c>conditions</c> by merging them into the assertion's details.
+    /// </summary>
+    /// <inheritdoc cref="Always" path="/param"/>
+    /// <param name="conditions">The collection of conditions to-be conjuncted, represented as a Dictionary of booleans keyed by strings.</param>
+    /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesAll(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
             BooleanGuidanceHelper(AssertionMethodType.SometimesAll, values => !values.Any(v => !v), conditions, idIsTheMessage, details);
     }
+#pragma warning restore 1573
 
     private static void BooleanGuidanceHelper(AssertionMethodType methodType, Func<IEnumerable<bool>, bool> operation,
         IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details)
@@ -231,7 +360,7 @@ public static class Assert
         }
     }
 
-    // Common
+    #endregion
 
     private static JsonObject? SetStackTrace(bool condition, JsonObject? json)
     {

@@ -15,6 +15,7 @@ internal static class AssertionTracker
         private int _passCount;
         private int _failCount;
 
+        // Only the first pass or fail is valuable to Antithesis. Any others cost performance and log space for no added value.
         internal bool ShouldWrite(bool condition) =>
             (condition
                 ? Interlocked.Increment(ref _passCount)
