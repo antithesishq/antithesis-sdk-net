@@ -8,14 +8,13 @@ using System.Text.Json.Nodes;
 /// </summary>
 public static class Lifecycle
 {
-    private const string OutputDirectoryEnvironmentVariableName = "ANTITHESIS_OUTPUT_DIR";
-
     /// <summary>
     /// Determines if this code is executing within Antithesis according to the existence of an
     /// Antithesis environment variable as documented on our
     /// <a href="https://antithesis.com/docs/environment/the_antithesis_environment/#detecting-whether-you-are-running-within-antithesis">website</a>.
     /// </summary>
-    public static bool IsAntithesis { get; } = !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(OutputDirectoryEnvironmentVariableName));
+    public static bool IsAntithesis { get; } =
+        !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(EnvironmentVariableNames.OutputDirectory));
 
     /// <summary>
     /// Indicates to Antithesis that setup has completed. Call this method when your system and workload are fully initialized.

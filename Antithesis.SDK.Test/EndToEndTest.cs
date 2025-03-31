@@ -21,7 +21,7 @@ public class EndToEndTest
 
     [ModuleInitializer]
     internal static void Initialize() =>
-        Environment.SetEnvironmentVariable(Sink.LocalSink.FilePathEnvironmentVariableName, _tempOutputFilePath);
+        Environment.SetEnvironmentVariable(EnvironmentVariableNames.LocalSinkOutputFilePath, _tempOutputFilePath);
 
     [Fact]
     public Task SomeCompanySomeConsole()

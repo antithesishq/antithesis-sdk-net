@@ -37,14 +37,12 @@ internal static class Sink
 
     internal sealed class LocalSink : ISink
     {
-        internal const string FilePathEnvironmentVariableName = "ANTITHESIS_SDK_LOCAL_OUTPUT";
-        
         // The File will be created during File.AppendText; however, the Directory must exist to do so.
         internal static bool FileOrDirectoryExists
         {
             get
             {
-                string? filePath = Environment.GetEnvironmentVariable(FilePathEnvironmentVariableName);
+                string? filePath = Environment.GetEnvironmentVariable(EnvironmentVariableNames.LocalSinkOutputFilePath);
 
                 if (string.IsNullOrEmpty(filePath))
                     return false;
@@ -58,7 +56,7 @@ internal static class Sink
             }
         }
 
-        internal LocalSink() => _filePath = Environment.GetEnvironmentVariable(FilePathEnvironmentVariableName)!;
+        internal LocalSink() => _filePath = Environment.GetEnvironmentVariable(EnvironmentVariableNames.LocalSinkOutputFilePath)!;
 
         private readonly string _filePath;
         private readonly object _padlock = new();
