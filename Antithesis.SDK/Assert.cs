@@ -6,16 +6,16 @@ using System.Text.Json.Nodes;
 // LOAD BEARING : typeof(Assert).FullName and the "string idIsTheMessage" Parameters' names are load bearing for the CatalogGenerator.
 
 /// <summary>
-/// The Assert class enables defining <a href="https://antithesis.com/docs/using_antithesis/properties/" target="_blank">test properties</a>
-/// about your program or <a href="https://antithesis.com/docs/getting_started/first_test/" target="_blank">workload</a>.
+/// The Assert class enables defining <a href="https://antithesis.com/docs/using_antithesis/properties/">test properties</a>
+/// about your program or <a href="https://antithesis.com/docs/getting_started/first_test/">workload</a>.
 /// <br/><br/>
 /// Each static method in this class takes a parameter called <c>idIsTheMessage</c>, which is a string literal identifier used to aggregate assertions.
 /// Antithesis generates one test property per unique <c>idIsTheMessage</c>. This test property will be named <c>idIsTheMessage</c>
-/// in the <a href="https://antithesis.com/docs/reports/triage/" target="_blank">triage report</a>.
+/// in the <a href="https://antithesis.com/docs/reports/triage/">triage report</a>.
 /// <br/><br/>
 /// Each static method also takes a parameter called <c>details</c>, which is an optional <c>JsonObject</c> reference of additional information provided
 /// by the caller to add context to assertion passes and failures. The information that is logged will appear in the <c>logs</c> section of a
-/// <a href="https://antithesis.com/docs/reports/triage/" target="_blank">triage report</a>.
+/// <a href="https://antithesis.com/docs/reports/triage/">triage report</a>.
 /// </summary>
 public static class Assert
 {

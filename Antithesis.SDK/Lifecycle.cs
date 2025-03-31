@@ -20,7 +20,7 @@ public static class Lifecycle
     /// <summary>
     /// Indicates to Antithesis that setup has completed. Call this method when your system and workload are fully initialized.
     /// After this method is called, Antithesis will take a snapshot of your system and begin
-    /// <a href="https://antithesis.com/docs/applications/reliability/fault_injection/" target="_blank">injecting faults</a>.
+    /// <a href="https://antithesis.com/docs/applications/reliability/fault_injection/">injecting faults</a>.
     /// Calling this method multiple times or from multiple processes will have no effect. Antithesis will treat the first time
     /// any process called this method as the moment that the setup was completed.
     /// </summary>
