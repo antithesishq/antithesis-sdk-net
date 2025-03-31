@@ -1,32 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <!-- Antithesis runs Linux containers, so we are not targeting .NET Framework (or .NET Standard <= 2.0).
-            .NET 6 added System.Text.Json.JsonObject and System.Random.Shared which are both used by this library.
-            System.Random.Shared would be a trivial dependency to replace, while System.Text.Json.JsonObject would
-            required additional effort. -->
-        <TargetFramework>net6.0</TargetFramework>
+        <!-- Source Generators must target .NET Standard 2.0 because they are loaded by the Roslyn compiler. -->
+        <TargetFramework>netstandard2.0</TargetFramework>
 
         <ImplicitUsings>disable</ImplicitUsings>
         <LangVersion>latest</LangVersion>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-        <!-- XML code documentation -->
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!-- I cannot find this Property documented; however, I see it in some example projects. -->
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <!-- False positive when packaging a Roslyn Analyzer: https://github.com/NuGet/Home/issues/11354 -->
+        <NoWarn>NU5128</NoWarn>
+
+        <!-- RS1036 : A project containing analyzers or source generators should specify this property -->
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>       
 
         <!-- SourceLink: https://devblogs.microsoft.com/dotnet/producing-packages-with-source-link/ -->
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
 
-        <!-- NuGet Symbols Package: https://learn.microsoft.com/en-us/nuget/create-packages/symbol-packages-snupkg -->
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
         <!-- NuGet Best Practices: https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices -->
         <Authors>Antithesis Operations LLC</Authors>
         <Copyright>Copyright (c) 2025 Antithesis Operations LLC</Copyright>
-        <Description>This .NET library is an Antithesis Fallback SDK that allows you to access some of the functionalities of Antithesis. It is not official or supported by Antithesis in any way. It is meant as a stopgap measure before the release of the official .NET SDK.</Description>
+        <Description>This .NET library contains a Source Generator that adds a corresponding Catalog call for every Assert call.</Description>
         <PackageIcon>Icon.png</PackageIcon>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -38,6 +38,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- This is required for building a Roslyn analyzer. We've chosen to support .NET 6+, hence the "old" version. -->
+        <!-- See https://github.com/dotnet/roslyn/blob/main/docs/wiki/NuGet-packages.md for version compatibility. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
+
+        <!-- This is for analyzing our analyzer. -->
         <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -58,9 +63,12 @@
 
     <ItemGroup>
         <!-- 00-03 antithesis mark_ universal color@4x_opaque -->
-        <None Include="../Icon.png" Pack="true" PackagePath="" />
-        <None Include="../LICENSE" Pack="true" PackagePath="" />
-        <None Include="../README.md" Pack="true" PackagePath="" />
+        <None Include="../../Icon.png" Pack="true" PackagePath="" />
+        <None Include="../../LICENSE" Pack="true" PackagePath="" />
+        <None Include="../../README.md" Pack="true" PackagePath="" />
+
+        <!-- This is responsible for packaging the actual Analyzer / Source Generator. -->
+        <None Include="$(OutputPath)/$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     </ItemGroup>
 
 </Project>

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK", "Antithesis.SDK\Antithesis.SDK.csproj", "{0876CB80-7281-4FD7-A950-524D79B6D0C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK", "src/Antithesis.SDK/Antithesis.SDK.csproj", "{0876CB80-7281-4FD7-A950-524D79B6D0C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK.Tests", "Antithesis.SDK.Tests\Antithesis.SDK.Tests.csproj", "{51D479A8-1791-403D-8E8B-42E8DF785343}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK.Tests", "tests/Antithesis.SDK.Tests/Antithesis.SDK.Tests.csproj", "{51D479A8-1791-403D-8E8B-42E8DF785343}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK.SourceGenerator", "Antithesis.SDK.SourceGenerator\Antithesis.SDK.SourceGenerator.csproj", "{AFEB5683e-7BD9-4C8B-9F48-201030226ECE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antithesis.SDK.SourceGenerator", "src/Antithesis.SDK.SourceGenerator/Antithesis.SDK.SourceGenerator.csproj", "{AFEB5683e-7BD9-4C8B-9F48-201030226ECE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeCompany.SomeConsole", "SomeCompany.SomeConsole\SomeCompany.SomeConsole.csproj", "{525BD518-4161-44B6-AFFF-D699B9319F0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SomeCompany.SomeConsole", "tests/SomeCompany.SomeConsole/SomeCompany.SomeConsole.csproj", "{525BD518-4161-44B6-AFFF-D699B9319F0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

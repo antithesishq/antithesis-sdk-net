@@ -11,8 +11,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Antithesis.SDK\Antithesis.SDK.csproj" />
-        <ProjectReference Include="..\Antithesis.SDK.SourceGenerator\Antithesis.SDK.SourceGenerator.csproj"
+        <ProjectReference Include="../../src/Antithesis.SDK/Antithesis.SDK.csproj" />
+        <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerator/Antithesis.SDK.SourceGenerator.csproj"
             OutputItemType="Analyzer"
             ReferenceOutputAssembly="false" />
     </ItemGroup>
