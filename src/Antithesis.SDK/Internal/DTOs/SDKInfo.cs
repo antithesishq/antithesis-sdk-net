@@ -2,16 +2,18 @@ namespace Antithesis.SDK;
 
 using System.Text.Json.Serialization;
 
-internal class VersionInfoWrapper
+internal class SDKInfoWrapper
 {
-    internal static VersionInfoWrapper Singleton { get; } = new();
+    internal SDKInfoWrapper(Type sinkType) => Info = new(sinkType);
 
     [JsonPropertyName("antithesis_sdk")]
-    public VersionInfo Version { get; } = new();
+    public SDKInfo Info { get; }
 }
 
-internal class VersionInfo
+internal class SDKInfo
 {
+    internal SDKInfo(Type sinkType) => SinkTypeFullName = sinkType.FullName;
+
     [JsonPropertyName("language")]
     public LanguageInfo Language { get; } = new();
 
@@ -20,6 +22,9 @@ internal class VersionInfo
 
     [JsonPropertyName("protocol_version")]
     public string ProtocolVersion { get; } = "1.1.0";
+
+    [JsonPropertyName("sink_type")]
+    public string? SinkTypeFullName { get; }
 }
 
 internal class LanguageInfo
