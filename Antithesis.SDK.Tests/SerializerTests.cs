@@ -3,7 +3,7 @@ namespace Antithesis.SDK;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-public class SerializerTest
+public class SerializerTests
 {
     [Fact]
     public void String()

@@ -2,7 +2,7 @@ namespace Antithesis.SDK;
 
 using System.IO;
 
-public class BCLSanityTest
+public class BCLSanityTests
 {
     [Fact]
     public void PathGetDirectoryName()

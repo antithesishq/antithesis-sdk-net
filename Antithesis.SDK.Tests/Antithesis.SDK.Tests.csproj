@@ -43,11 +43,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="CatalogGeneratorTest/*" />
+        <Compile Remove="CatalogGeneratorTests/*" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="CatalogGeneratorTest/*" />
+        <None Include="CatalogGeneratorTests/*" />
     </ItemGroup>
 
 </Project>

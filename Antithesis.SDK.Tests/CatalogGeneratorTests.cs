@@ -9,7 +9,7 @@ using VerifyTests;
 using VerifyXunit;
 
 // Adapted from https://andrewlock.net/creating-a-source-generator-part-2-testing-an-incremental-generator-with-snapshot-testing/
-public sealed class CatalogGeneratorTest
+public sealed class CatalogGeneratorTests
 {
     [ModuleInitializer]
     internal static void Initialize() =>
@@ -38,14 +38,14 @@ public sealed class CatalogGeneratorTest
 
         // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
         return Verifier.Verify(driver)
-            .UseDirectory(Path.Combine(nameof(CatalogGeneratorTest), "Verify"))
+            .UseDirectory(Path.Combine(nameof(CatalogGeneratorTests), "Verify"))
             .UseParameters(fileNameNoExtension)
             .ScrubLinesWithReplace(s => s.StartsWith(generatedCodeSentinel) ? (generatedCodeSentinel + " ... SCRUBBED VERSION INFO") : s);
     }
 
     public static IEnumerable<object[]> GetFiles()
     {
-        string directory = Path.Combine(ThisDirectory(), nameof(CatalogGeneratorTest));
+        string directory = Path.Combine(ThisDirectory(), nameof(CatalogGeneratorTests));
 
         return Directory.GetFiles(directory)
             .Select(filePath => new object[] { Path.GetFileNameWithoutExtension(filePath), File.ReadAllText(filePath) });

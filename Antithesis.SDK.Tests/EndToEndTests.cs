@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using VerifyTests;
 using VerifyXunit;
 
-public class EndToEndTest
+public class EndToEndTests
 {
     // Follow the Verify naming convention so that our gitignore applies; however, Verify includes
     // the test's name in addition to the class's, so we should never collide.
     private static readonly string _tempOutputFilePath =
-        CurrentFile.Relative($"{nameof(EndToEndTest)}.received.txt");
+        CurrentFile.Relative($"{nameof(EndToEndTests)}.received.txt");
 
     private static void DeleteTempOutputFile()
     {
@@ -39,7 +39,7 @@ public class EndToEndTest
             const string sdkSentinel = "{\"antithesis_sdk\":{\"language\":{\"name\":\"C#\",\"version\":\".NET";
 
             return Verifier.VerifyFile(_tempOutputFilePath)
-                .UseDirectory(nameof(EndToEndTest))
+                .UseDirectory(nameof(EndToEndTests))
                 .ScrubLinesWithReplace(s => s.StartsWith(sdkSentinel) ? (sdkSentinel + " ... SCRUBBED VERSION INFO") : s);
         }
         finally { DeleteTempOutputFile(); }

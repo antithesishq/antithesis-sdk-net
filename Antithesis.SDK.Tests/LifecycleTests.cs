@@ -1,6 +1,6 @@
 namespace Antithesis.SDK;
 
-public class LifecycleTest
+public class LifecycleTests
 {
     [Fact]
     public void SetupComplete()
