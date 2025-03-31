@@ -4,7 +4,7 @@
     {
       "src": [
         {
-          "src": "../Antithesis.SDK",
+          "src": "../src/Antithesis.SDK",
           "files": [
             "**/*.csproj"
           ]
@@ -24,6 +24,17 @@
         ]
       }
     ],
+    "overwrite": [
+      {
+        "files": [
+          "namespaces/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "_site/**"
+        ]
+      }
+    ],
     "resource": [
       {
         "files": [
@@ -37,8 +48,10 @@
       "modern"
     ],
     "globalMetadata": {
-      "_appName": "antithesis-sdk-dotnet",
-      "_appTitle": "antithesis-sdk-dotnet",
+      "_appLogoPath": "images/icon_mark_32.png",
+      "_appTitle": "Antithesis .NET SDK",
+      "_disableBreadcrumb": true,
+      "_disableTocFilter": true,
       "_enableSearch": false,
       "pdf": false
     }
