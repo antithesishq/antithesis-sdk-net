@@ -9,7 +9,7 @@ internal enum DiagnosticId
     IdIsTheMessageSymbolNotFound = 2,
     IdIsTheMessageSymbolAmbiguous = 3,
     IdIsTheMessageMustBeAccessible = 4,
-    IdIsTheMessageMustBeLiteralOrConstField = 5
+    IdIsTheMessageMustBeNonNullLiteralOrConstField = 5
 }
 
 internal static class DiagnosticDescriptors
@@ -48,11 +48,11 @@ internal static class DiagnosticDescriptors
                     @"The expression passed as an argument to any Assert ""idIsTheMessage"" parameter must accessible to public or internal.",
                     "Catalog"),
 
-            [DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField] =
+            [DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField] =
                 Construct(
-                    DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField,
-                    @"""idIsTheMessage"" must be a literal or a const field.",
-                    @"The expression passed as an argument to any Assert ""idIsTheMessage"" parameter must be a literal or a reference to a const field.",
+                    DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField,
+                    @"""idIsTheMessage"" must be a non-null literal or a const field.",
+                    @"The expression passed as an argument to any Assert ""idIsTheMessage"" parameter must be a non-null literal or a reference to a const field.",
                     "Catalog")
         };
 

@@ -1,6 +1,7 @@
 ﻿namespace Antithesis.SDK;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
@@ -132,13 +133,18 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             var idIsTheMessageLiteral = idIsTheMessageArgument.ChildNodes().SingleOrDefault(n => n is LiteralExpressionSyntax);
 
             if (idIsTheMessageLiteral != null)
-                return (idIsTheMessageLiteral.ToString(), null);
+            {
+                // Other relevant SyntaxKinds include DefaultLiteralExpression and NullLiteralExpression.
+                return idIsTheMessageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
+                    ? (idIsTheMessageLiteral.ToString(), null)
+                    : (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+            }
 
             var idIsTheMessageReference = idIsTheMessageArgument.ChildNodes()
                 .SingleOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
 
             if (idIsTheMessageReference == null)
-                return (null, DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField);
+                return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
        
             var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageReference, cancellationToken);
             
@@ -156,7 +162,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
                 return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
 
             if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
-                return (null, DiagnosticId.IdIsTheMessageMustBeLiteralOrConstField);
+                return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
             
             return (GetSymbolFullName(idIsTheMessageField), null);
         }
