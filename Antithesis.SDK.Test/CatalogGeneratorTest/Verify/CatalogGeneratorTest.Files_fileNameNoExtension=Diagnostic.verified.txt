@@ -233,9 +233,47 @@
             Assert.Always(true, IdReadonly);
             Assert.Always(true, IdStaticReadonly);
             ^^^^^^^^^^^^^
-        }
+
 */
  : (32,12)-(32,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a non-null literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+
+            Assert.Always(true, null);
+            ^^^^^^^^^^^^^
+            Assert.Always(true, default);
+*/
+ : (34,12)-(34,25),
+      Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS005,
+        Title: "idIsTheMessage" must be a non-null literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: /*
+            Assert.Always(true, null);
+            Assert.Always(true, default);
+            ^^^^^^^^^^^^^
+        }
+*/
+ : (35,12)-(35,25),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {

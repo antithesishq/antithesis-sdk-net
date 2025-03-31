@@ -31,6 +31,9 @@ namespace SomeCompany.SomeProject
             Assert.Always(true, Id);
             Assert.Always(true, IdReadonly);
             Assert.Always(true, IdStaticReadonly);
+
+            Assert.Always(true, null);
+            Assert.Always(true, default);
         }
 
         private string _id = string.Empty;
