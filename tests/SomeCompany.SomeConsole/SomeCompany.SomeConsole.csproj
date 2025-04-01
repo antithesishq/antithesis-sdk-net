@@ -11,8 +11,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Because we are using ProjectReference instead of PackageReference, we need to reference both -->
+        <!-- Antithesis.SDK and Antithesis.SDK.SourceGenerators because the former is restricting the latter's -->
+        <!-- binaries from transitively flowing via ProjectReference. -->
         <ProjectReference Include="../../src/Antithesis.SDK/Antithesis.SDK.csproj" />
-        <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerator/Antithesis.SDK.SourceGenerator.csproj"
+        <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj"
             OutputItemType="Analyzer"
             ReferenceOutputAssembly="false" />
     </ItemGroup>

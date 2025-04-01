@@ -34,6 +34,9 @@
 
     <ItemGroup>
         <ProjectReference Include="../../src/Antithesis.SDK/Antithesis.SDK.csproj" />
+        <!-- Because we are directly instantiating classes from the SourceGenerators library, we need a "full" -->
+        <!-- ProjectReference to it (i.e. no OutputItemType="Analyzer" or ReferenceOutputAssembly="false" attributes). -->
+        <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj" />
         <ProjectReference Include="../SomeCompany.SomeConsole/SomeCompany.SomeConsole.csproj" />
     </ItemGroup>
 

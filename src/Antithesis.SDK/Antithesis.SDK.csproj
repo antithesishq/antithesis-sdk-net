@@ -42,9 +42,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- PrivateAssets="none" allows our SourceGenerator to become a transitive analyzer for consumers of this package. -->
+        <!-- PrivateAssets="none" allows our SourceGenerators to become transitive analyzers for consumers of this package. -->
         <!-- https://github.com/NuGet/Home/issues/3697#issuecomment-342983009 -->
-        <ProjectReference Include="../Antithesis.SDK.SourceGenerator/Antithesis.SDK.SourceGenerator.csproj" PrivateAssets="none" />
+        <ProjectReference Include="../Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj"
+            OutputItemType="Analyzer"
+            PrivateAssets="none"
+            ReferenceOutputAssembly="false" />
     </ItemGroup>
 
     <ItemGroup>
