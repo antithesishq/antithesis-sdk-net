@@ -48,9 +48,11 @@ internal record class AssertCallSite(Caller Caller, string AssertMethodName, str
     internal string ToGeneratedCode(string? projectDirectory)
     {
         const string nlIndent = "\n            ";
+
+        bool hasError = DiagnosticId != null && DiagnosticId.Value.GetSeverity() == DiagnosticSeverity.Error;
         
-        string prefix = DiagnosticId != null ? "/*" : string.Empty;
-        string suffix = DiagnosticId != null ? "*/" : string.Empty; 
+        string prefix = hasError ? "/*" : string.Empty;
+        string suffix = hasError ? "*/" : string.Empty;
 
         return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertIdIsTheMessage},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
     }
