@@ -42,12 +42,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- PrivateAssets="none" allows our SourceGenerators to become transitive analyzers for consumers of this package. -->
-        <!-- https://github.com/NuGet/Home/issues/3697#issuecomment-342983009 -->
+        <!-- 1. PrivateAssets="none" allows our SourceGenerators to become transitive analyzers for consumers of this package. -->
+        <!--    https://github.com/NuGet/Home/issues/3697#issuecomment-342983009 -->
+        <!-- 2. If OutputItemType="Analyzer" is added, our SourceGenerators will run with this project, which at best is both -->
+        <!--    unneccessary and confusing. -->
+        <!-- 3. If ReferenceOutputAssembly="false" is added, "dotnet pack" will not add the Package Dependency at all. -->
         <ProjectReference Include="../Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj"
-            OutputItemType="Analyzer"
-            PrivateAssets="none"
-            ReferenceOutputAssembly="false" />
+            PrivateAssets="none" />
     </ItemGroup>
 
     <ItemGroup>

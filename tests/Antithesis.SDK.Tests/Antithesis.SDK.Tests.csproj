@@ -34,8 +34,14 @@
 
     <ItemGroup>
         <ProjectReference Include="../../src/Antithesis.SDK/Antithesis.SDK.csproj" />
-        <!-- Because we are directly instantiating classes from the SourceGenerators library, we need a "full" -->
-        <!-- ProjectReference to it (i.e. no OutputItemType="Analyzer" or ReferenceOutputAssembly="false" attributes). -->
+        <!-- We are directly ProjectReferencing Antithesis.SDK.SourceGenerators to make the relationship explicit: -->
+        <!-- 1. We are NOT adding OutputItemType="Analyzer" to the ProjectReference because doing so would cause -->
+        <!--    the SourceGenerators to run with this project, which at best is both unnecessary and confusing. -->
+        <!--    We instead test the SourceGenerators by directly instantiating and executing them on example C# files. -->
+        <!-- 2. We are NOT adding ReferenceOutputAssembly="false" to the ProjectReference because doing so -->
+        <!--    *should* prevent us from using its Types; however, because Antithesis.SDK does not use that -->
+        <!--    attribute on its ProjectReference to SourceGenerators (it must not - see its comment), adding -->
+        <!--    the attribute here would have no effect. -->
         <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj" />
         <ProjectReference Include="../SomeCompany.SomeConsole/SomeCompany.SomeConsole.csproj" />
     </ItemGroup>

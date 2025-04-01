@@ -11,9 +11,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- Because we are using ProjectReference instead of PackageReference, we need to reference both -->
-        <!-- Antithesis.SDK and Antithesis.SDK.SourceGenerators because the former is restricting the latter's -->
-        <!-- binaries from transitively flowing via ProjectReference. -->
+        <!-- We need to reference both Antithesis.SDK and Antithesis.SDK.SourceGenerators even though the former -->
+        <!-- has a ProjectReference to the latter because analyzers aren't transitive through ProjectReferences. -->
+        <!-- We must declare OutputItemType="Analyzer" for the SourceGenerators to run with this project. -->
+        <!-- ReferenceOutputAssembly="false" is less important and only added to be explicit about the dependency. -->
         <ProjectReference Include="../../src/Antithesis.SDK/Antithesis.SDK.csproj" />
         <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj"
             OutputItemType="Analyzer"
