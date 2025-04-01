@@ -10,8 +10,8 @@ internal interface IRandomUInt64Provider { ulong Next(); }
 // https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Random.Xoshiro256StarStarImpl.cs
 
 /// <summary>
-/// Use's Antithesis's deterministic and reproducible random number generator within a System.Random subclass.
-/// Because it is a subclass of System.Random, it can be used as a drop-in replacement for it.
+/// The Random class is a subclass of <see cref="System.Random">System.Random</see> that encapsules Antithesis's deterministic and
+/// reproducible random number generator.
 /// </summary>
 /// <remarks>
 /// Regarding the methods which have to be overriden with Sample when subclassing System.Random:

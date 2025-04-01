@@ -7,8 +7,9 @@ using System.Diagnostics;
 /// <summary>
 /// The Catalog class is used by the Antithesis.SDK.SourceGenerator package to Catalog all method calls to Assert
 /// so that Antithesis is aware of all assertions regardless of whether or not they are encountered during runtime.
-/// If your project is referencing the Antithesis.SDK.SourceGenerator package, there is no need for you to call this
-/// class directly.
+/// <br/><br/>
+/// You should not call this class directly; it is exclusively used by the Rosyln Analyzers contained in the
+/// Antithesis.SDK.SourceGenerators package.
 /// </summary>
 public static class Catalog
 {

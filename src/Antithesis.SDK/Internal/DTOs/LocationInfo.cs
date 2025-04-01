@@ -6,7 +6,9 @@ using System.Text.Json.Serialization;
 
 /// <summary>
 /// An init-only data transfer object for metadata related to the source code location of an assertion.
-/// If your project is referencing the Antithesis.SDK.SourceGenerator package, there is no need for you to construct this class directly.
+/// <br/><br/>
+/// You should not call this class directly; it is exclusively used by the Rosyln Analyzers contained in the
+/// Antithesis.SDK.SourceGenerators package.
 /// </summary>
 /// <remarks>
 /// Default values are copied from the Antithesis Java SDK.
