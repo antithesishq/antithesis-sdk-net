@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VerifyTests;
 using VerifyXunit;
@@ -33,15 +34,17 @@ public sealed class CatalogGeneratorTests
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new CatalogGenerator());
         driver = driver.RunGenerators(compilation);
 
-        // We preserve as much of the GeneratedCodeAttibute line as possible for minimal effort.
-        const string generatedCodeSentinel = "[global::System.CodeDom.Compiler.GeneratedCode(\"Antithesis.SDK.CatalogGenerator\",";
-
         // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
         return Verifier.Verify(driver)
             .UseDirectory(Path.Combine(nameof(CatalogGeneratorTests), "Verify"))
             .UseParameters(fileNameNoExtension)
-            .ScrubLinesWithReplace(s => s.StartsWith(generatedCodeSentinel) ? (generatedCodeSentinel + " ... SCRUBBED VERSION INFO") : s);
+            .ScrubLinesWithReplace(s => s.StartsWith(_generatedCodeSentinel)
+                ? _generatedCodeVersionScrubber.Replace(s, "$1...SCRUBBED...$3") 
+                : s);
     }
+
+    private const string _generatedCodeSentinel = @"[global::System.CodeDom.Compiler.GeneratedCode(""Antithesis.SDK.CatalogGenerator"", """;
+    private static readonly Regex _generatedCodeVersionScrubber = new(@"(""Antithesis.SDK.CatalogGenerator"", "")([^""]+)("")");
 
     public static IEnumerable<object[]> GetFiles()
     {

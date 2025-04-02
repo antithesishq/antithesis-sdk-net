@@ -1,7 +1,7 @@
 ﻿//HintName: SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator.generated.cs
 namespace SomeCompany.SomeProject.Antithesis_SDK_CatalogGenerator;
 
-[global::System.CodeDom.Compiler.GeneratedCode("Antithesis.SDK.CatalogGenerator", ... SCRUBBED VERSION INFO
+[global::System.CodeDom.Compiler.GeneratedCode("Antithesis.SDK.CatalogGenerator", "...SCRUBBED...")]
 internal static class Catalog
 {
     [global::System.Runtime.CompilerServices.ModuleInitializer]

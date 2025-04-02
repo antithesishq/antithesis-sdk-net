@@ -2,6 +2,7 @@ namespace Antithesis.SDK;
 
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using VerifyTests;
 using VerifyXunit;
@@ -35,13 +36,15 @@ public class EndToEndTests
             // unload an Assembly, we can only perform one test with this Assembly.
             AppDomain.CurrentDomain.ExecuteAssembly("SomeCompany.SomeConsole.dll");
 
-            // We preserve as much of the antithesis_sdk JSONL as possible for minimal effort.
-            const string sdkSentinel = "{\"antithesis_sdk\":{\"language\":{\"name\":\"C#\",\"version\":\".NET";
-
             return Verifier.VerifyFile(_tempOutputFilePath)
                 .UseDirectory(nameof(EndToEndTests))
-                .ScrubLinesWithReplace(s => s.StartsWith(sdkSentinel) ? (sdkSentinel + " ... SCRUBBED VERSION INFO") : s);
+                .ScrubLinesWithReplace(s => s.StartsWith(_sdkSentinel)
+                    ? _sdkVersionScrubber.Replace(s, "$1...SCRUBBED...$3") 
+                    : s);
         }
         finally { DeleteTempOutputFile(); }
     }
+
+    private const string _sdkSentinel = @"{""antithesis_sdk"":{""language"":{""name"":""C#"",""version"":""";
+    private static readonly Regex _sdkVersionScrubber = new(@"(version"":"")([^""]+)("")");
 }
