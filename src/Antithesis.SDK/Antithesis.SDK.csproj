@@ -30,7 +30,7 @@
         <!-- NuGet Best Practices: https://learn.microsoft.com/en-us/nuget/create-packages/package-authoring-best-practices -->
         <Authors>Antithesis Operations LLC</Authors>
         <Copyright>Copyright (c) 2025 Antithesis Operations LLC</Copyright>
-        <Description>This .NET library is an Antithesis Fallback SDK that allows you to access some of the functionalities of Antithesis. It is not official or supported by Antithesis in any way. It is meant as a stopgap measure before the release of the official .NET SDK.</Description>
+        <Description>This package contains types for .NET applications to use to integrate with Antithesis.</Description>
         <PackageIcon>icon_mark_128.png</PackageIcon>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -71,7 +71,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- 00-03 antithesis mark_ universal color@4x_opaque -->
         <None Include="../../icon_mark_128.png" Pack="true" PackagePath="" />
         <None Include="../../LICENSE" Pack="true" PackagePath="" />
         <None Include="../../README.md" Pack="true" PackagePath="" />
