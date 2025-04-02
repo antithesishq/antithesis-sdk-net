@@ -15,6 +15,6 @@ COPY --from=build /app/out .
 
 # Symlink to the folder where Antithesis will automatically instrument the binaries.
 RUN mkdir -p /opt/antithesis/catalog
-RUN ln -s ../../../app /opt/antithesis/catalog/app
+RUN ln -s /app /opt/antithesis/catalog/app
 
 ENTRYPOINT ["dotnet", "WebService.dll"]
