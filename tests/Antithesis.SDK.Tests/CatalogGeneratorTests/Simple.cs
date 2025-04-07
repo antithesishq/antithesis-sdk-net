@@ -1,20 +1,3 @@
-namespace Antithesis.SDK
-{
-    using System.Collections.Generic;
-    using System.Text.Json.Nodes;
-
-    public static class Assert
-    {
-        // Test at least one of each "signature type" / position of the idIsTheMessage Parameter.
-
-        public static void Always(bool condition, string idIsTheMessage, JsonObject? details = default) { }
-        public static void AlwaysGreaterThan(int left, int right, string idIsTheMessage, JsonObject? details = default) { }
-        public static void AlwaysSome(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default) { }
-        public static void Reachable(string idIsTheMessage, JsonObject? details = default) { }
-        public static void Sometimes(bool condition, string idIsTheMessage, JsonObject? details = default) { }
-    }
-}
-
 namespace SomeCompany.SomeProject
 {
     using Antithesis.SDK;

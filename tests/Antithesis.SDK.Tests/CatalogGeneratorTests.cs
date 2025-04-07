@@ -24,12 +24,21 @@ public sealed class CatalogGeneratorTests
 
         var compilation = CSharpCompilation.Create(
             assemblyName: "SomeCompany.SomeProject",
-            references: new[]
-            {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Dictionary<,>).Assembly.Location)
-            },
+            references: CreateReferences(
+                // Several of these Assemblies overlap because we are being thorough regarding Types in Assert's methods' signatures.
+                typeof(object),
+                typeof(IComparable<>),
+                typeof(IConvertible),
+                typeof(IReadOnlyDictionary<,>),
+                typeof(Dictionary<,>),
+                typeof(System.Text.Json.Nodes.JsonObject),
+                typeof(Antithesis.SDK.Assert)),
             syntaxTrees: new[] { syntaxTree });
+        
+        static IEnumerable<MetadataReference> CreateReferences(params Type[] types) =>
+            types.Select(type => type.Assembly.Location)
+                .Distinct()
+                .Select(path => MetadataReference.CreateFromFile(path));
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new CatalogGenerator());
         driver = driver.RunGenerators(compilation);

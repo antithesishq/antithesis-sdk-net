@@ -1,11 +1,3 @@
-namespace Antithesis.SDK
-{
-    public static class Assert
-    {
-        public static void Always(bool condition, string idIsTheMessage, System.Text.Json.Nodes.JsonObject? details = default) { }
-    }
-}
-
 namespace SomeCompany.SomeProject
 {
     using Antithesis.SDK;
