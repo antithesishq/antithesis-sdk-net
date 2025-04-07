@@ -11,15 +11,15 @@ internal static class Catalog
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 9, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.Sometimes(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 10, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.Reachable(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 11, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.Unreachable(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 12, BeginColumn = 13});*/
 
@@ -27,19 +27,19 @@ internal static class Catalog
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 13, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.AlwaysGreaterThan(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 16, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.AlwaysLessThan(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 18, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.SometimesGreaterThan(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 19, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.SometimesLessThan(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 20, BeginColumn = 13});*/
 
@@ -47,15 +47,15 @@ internal static class Catalog
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 21, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.Sometimes(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 23, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.Reachable(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 24, BeginColumn = 13});*/
 
-        /*global::Antithesis.SDK.Catalog.Always(
+        /*global::Antithesis.SDK.Catalog.Unreachable(
             ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 25, BeginColumn = 13});*/
 

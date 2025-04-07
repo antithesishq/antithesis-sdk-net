@@ -7,22 +7,22 @@ namespace SomeCompany.SomeProject
         public void SomeMethod()
         {
             Assert.Always(true, Ids.Ambiguous);
-            Assert.Always(true, Ids.NotAccessible1);
-            Assert.Always(true, Ids.NotAccessible2);
-            Assert.Always(true, Ids.NotField);
+            Assert.Sometimes(true, Ids.NotAccessible1);
+            Assert.Reachable(Ids.NotAccessible2);
+            Assert.Unreachable(Ids.NotField);
             Antithesis.SDK.Assert.Always(true, Ids.NotConst);
 
             string id = string.Empty;
-            Assert.Always(true, id);
+            Assert.AlwaysGreaterThan(2, 1, id);
 
-            Assert.Always(true, _id);
-            Assert.Always(true, _idReadonly);
-            Assert.Always(true, _idStaticReadonly);
+            Assert.AlwaysLessThan(1, 2, _id);
+            Assert.SometimesGreaterThan(2, 1, _idReadonly);
+            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
             Assert.Always(true, _idConst);
 
-            Assert.Always(true, Id);
-            Assert.Always(true, IdReadonly);
-            Assert.Always(true, IdStaticReadonly);
+            Assert.Sometimes(true, Id);
+            Assert.Reachable(IdReadonly);
+            Assert.Unreachable(IdStaticReadonly);
 
             Assert.Always(true, null);
             Assert.Always(true, default);

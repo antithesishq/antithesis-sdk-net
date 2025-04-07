@@ -5,7 +5,7 @@
         {
             Assert.Always(true, Ids.Ambiguous);
             ^^^^^^^^^^^^^
-            Assert.Always(true, Ids.NotAccessible1);
+            Assert.Sometimes(true, Ids.NotAccessible1);
 */
  : (8,12)-(8,25),
       Message: The expression passed as an argument to this Assert "idIsTheMessage" parameter is ambiguous.,
@@ -22,11 +22,11 @@
     {
       Location: /*
             Assert.Always(true, Ids.Ambiguous);
-            Assert.Always(true, Ids.NotAccessible1);
-            ^^^^^^^^^^^^^
-            Assert.Always(true, Ids.NotAccessible2);
+            Assert.Sometimes(true, Ids.NotAccessible1);
+            ^^^^^^^^^^^^^^^^
+            Assert.Reachable(Ids.NotAccessible2);
 */
- : (9,12)-(9,25),
+ : (9,12)-(9,28),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -40,12 +40,12 @@
     },
     {
       Location: /*
-            Assert.Always(true, Ids.NotAccessible1);
-            Assert.Always(true, Ids.NotAccessible2);
-            ^^^^^^^^^^^^^
-            Assert.Always(true, Ids.NotField);
+            Assert.Sometimes(true, Ids.NotAccessible1);
+            Assert.Reachable(Ids.NotAccessible2);
+            ^^^^^^^^^^^^^^^^
+            Assert.Unreachable(Ids.NotField);
 */
- : (10,12)-(10,25),
+ : (10,12)-(10,28),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -59,12 +59,12 @@
     },
     {
       Location: /*
-            Assert.Always(true, Ids.NotAccessible2);
-            Assert.Always(true, Ids.NotField);
-            ^^^^^^^^^^^^^
+            Assert.Reachable(Ids.NotAccessible2);
+            Assert.Unreachable(Ids.NotField);
+            ^^^^^^^^^^^^^^^^^^
             Antithesis.SDK.Assert.Always(true, Ids.NotConst);
 */
- : (11,12)-(11,25),
+ : (11,12)-(11,30),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -78,7 +78,7 @@
     },
     {
       Location: /*
-            Assert.Always(true, Ids.NotField);
+            Assert.Unreachable(Ids.NotField);
             Antithesis.SDK.Assert.Always(true, Ids.NotConst);
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -98,11 +98,11 @@
     {
       Location: /*
             string id = string.Empty;
-            Assert.Always(true, id);
-            ^^^^^^^^^^^^^
+            Assert.AlwaysGreaterThan(2, 1, id);
+            ^^^^^^^^^^^^^^^^^^^^^^^^
 
 */
- : (15,12)-(15,25),
+ : (15,12)-(15,36),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -117,11 +117,11 @@
     {
       Location: /*
 
-            Assert.Always(true, _id);
-            ^^^^^^^^^^^^^
-            Assert.Always(true, _idReadonly);
+            Assert.AlwaysLessThan(1, 2, _id);
+            ^^^^^^^^^^^^^^^^^^^^^
+            Assert.SometimesGreaterThan(2, 1, _idReadonly);
 */
- : (17,12)-(17,25),
+ : (17,12)-(17,33),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -135,12 +135,12 @@
     },
     {
       Location: /*
-            Assert.Always(true, _id);
-            Assert.Always(true, _idReadonly);
-            ^^^^^^^^^^^^^
-            Assert.Always(true, _idStaticReadonly);
+            Assert.AlwaysLessThan(1, 2, _id);
+            Assert.SometimesGreaterThan(2, 1, _idReadonly);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
 */
- : (18,12)-(18,25),
+ : (18,12)-(18,39),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -154,12 +154,12 @@
     },
     {
       Location: /*
-            Assert.Always(true, _idReadonly);
-            Assert.Always(true, _idStaticReadonly);
-            ^^^^^^^^^^^^^
+            Assert.SometimesGreaterThan(2, 1, _idReadonly);
+            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
+            ^^^^^^^^^^^^^^^^^^^^^^^^
             Assert.Always(true, _idConst);
 */
- : (19,12)-(19,25),
+ : (19,12)-(19,36),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -173,7 +173,7 @@
     },
     {
       Location: /*
-            Assert.Always(true, _idStaticReadonly);
+            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
             Assert.Always(true, _idConst);
             ^^^^^^^^^^^^^
 
@@ -193,11 +193,11 @@
     {
       Location: /*
 
-            Assert.Always(true, Id);
-            ^^^^^^^^^^^^^
-            Assert.Always(true, IdReadonly);
+            Assert.Sometimes(true, Id);
+            ^^^^^^^^^^^^^^^^
+            Assert.Reachable(IdReadonly);
 */
- : (22,12)-(22,25),
+ : (22,12)-(22,28),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -211,12 +211,12 @@
     },
     {
       Location: /*
-            Assert.Always(true, Id);
-            Assert.Always(true, IdReadonly);
-            ^^^^^^^^^^^^^
-            Assert.Always(true, IdStaticReadonly);
+            Assert.Sometimes(true, Id);
+            Assert.Reachable(IdReadonly);
+            ^^^^^^^^^^^^^^^^
+            Assert.Unreachable(IdStaticReadonly);
 */
- : (23,12)-(23,25),
+ : (23,12)-(23,28),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -230,12 +230,12 @@
     },
     {
       Location: /*
-            Assert.Always(true, IdReadonly);
-            Assert.Always(true, IdStaticReadonly);
-            ^^^^^^^^^^^^^
+            Assert.Reachable(IdReadonly);
+            Assert.Unreachable(IdStaticReadonly);
+            ^^^^^^^^^^^^^^^^^^
 
 */
- : (24,12)-(24,25),
+ : (24,12)-(24,30),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
