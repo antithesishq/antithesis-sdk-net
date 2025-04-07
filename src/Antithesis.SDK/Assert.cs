@@ -117,7 +117,7 @@ public static class Assert
     /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -136,7 +136,7 @@ public static class Assert
     /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -154,7 +154,7 @@ public static class Assert
     /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -172,7 +172,7 @@ public static class Assert
     /// <seealso cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void AlwaysLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -190,7 +190,7 @@ public static class Assert
     /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -208,7 +208,7 @@ public static class Assert
     /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -226,7 +226,7 @@ public static class Assert
     /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -244,7 +244,7 @@ public static class Assert
     /// <seealso cref="Sometimes"/>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void SometimesLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
@@ -255,7 +255,7 @@ public static class Assert
 
     private static void NumericGuidanceHelper<T>(AssertionMethodType methodType, Func<int, bool> compareToOperation,
             T left, T right, string idIsTheMessage, JsonObject? details)
-        where T : struct, IComparable, IConvertible
+        where T : struct, IComparable<T>, IConvertible
     {
         if (string.IsNullOrEmpty(idIsTheMessage))
             throw new ArgumentNullException(nameof(idIsTheMessage));
