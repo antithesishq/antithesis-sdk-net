@@ -77,137 +77,142 @@ public sealed class CatalogGenerator : IIncrementalGenerator
     private static AssertInvocation? TransformAssertInvocation(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         var assertInvocation = (InvocationExpressionSyntax)context.Node;
-        var assertMethod = GetAssertMethodSymbol();
+        var assertMethod = GetAssertMethodSymbol(context, cancellationToken, assertInvocation);
 
         if (assertMethod == null)
             return null;
 
-        (string? callerClassName, string? callerMethodName) = GetCallerClassAndMethodNames();
-        (string? assertIdIsTheMessage, DiagnosticId? diagnosticId) = GetAssertIdIsTheMessageOrDiagnosticId();
+        (string? callerClassName, string? callerMethodName) = GetAssertCallerClassAndMethodNames(assertInvocation);
+
+        (string? assertIdIsTheMessage, DiagnosticId? diagnosticId) =
+            GetAssertIdIsTheMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
 
         return new AssertInvocation(
             new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName, assertInvocation.GetLocation()),
             GetPossibleAssertMethodName(assertInvocation)!, assertIdIsTheMessage, diagnosticId);
+    }
 
-        IMethodSymbol? GetAssertMethodSymbol()
+    private static IMethodSymbol? GetAssertMethodSymbol(GeneratorSyntaxContext context, CancellationToken cancellationToken,
+        InvocationExpressionSyntax assertInvocation)
+    {
+        var symbolInfo = context.SemanticModel.GetSymbolInfo(assertInvocation, cancellationToken);
+
+        if (symbolInfo.Symbol != null)
         {
-            var symbolInfo = context.SemanticModel.GetSymbolInfo(assertInvocation, cancellationToken);
+            var methodSymbol = symbolInfo.Symbol as IMethodSymbol;
 
-            if (symbolInfo.Symbol != null)
-            {
-                var methodSymbol = symbolInfo.Symbol as IMethodSymbol;
-
-                return IsAssertMethod(methodSymbol) ? methodSymbol : null;
-            }
-
-            // When writing some of our Tests, we found that our CSharpCompilation configuration (and our lack of knowledge of how to use
-            // it properly) would result in calls to generic Assert methods (i.e. the Guidance related methods) having
-            // SemanticModel.GetSymbolInfo.Symbol == null with CandidateSymbols having one OverloadResolutionFailure. We've chosen to fallback
-            // to CandidateSymbols to make those tests "work", and because doing so should not cause any negative impacts (and possibly have
-            // other positive impacts related to developer experience with Diagnostics).
-
-            // Avoid LINQ because source generation is performance sensitive. No benchmarking was performed, so this may be a premature
-            // optimization; however, the LINQ version offers little readability or code length benefits anyways.
-
-            foreach (var candidateSymbol in symbolInfo.CandidateSymbols)
-            {
-                var methodSymbol = candidateSymbol as IMethodSymbol;
-
-                if (IsAssertMethod(methodSymbol))
-                    return methodSymbol;
-            }
-
-            return null;
-
-            static bool IsAssertMethod(IMethodSymbol? symbol) =>
-                symbol != null
-                    && symbol.ContainingType.Name == "Assert"
-                    && symbol.ContainingNamespace.Name == "SDK"
-                    && symbol.ContainingNamespace.ContainingNamespace.Name == "Antithesis"
-                    && symbol.ContainingAssembly.Name == "Antithesis.SDK";
+            return IsAssertMethod(methodSymbol) ? methodSymbol : null;
         }
 
-        (string? CallerClassName, string? CallerMethodName) GetCallerClassAndMethodNames()
+        // When writing some of our Tests, we found that our CSharpCompilation configuration (and our lack of knowledge of how to use
+        // it properly) would result in calls to generic Assert methods (i.e. the Guidance related methods) having
+        // SemanticModel.GetSymbolInfo.Symbol == null with CandidateSymbols having one OverloadResolutionFailure. We've chosen to fallback
+        // to CandidateSymbols to make those tests "work", and because doing so should not cause any negative impacts (and possibly have
+        // other positive impacts related to developer experience with Diagnostics).
+
+        // Avoid LINQ because source generation is performance sensitive. No benchmarking was performed, so this may be a premature
+        // optimization; however, the LINQ version offers little readability or code length benefits anyways.
+
+        foreach (var candidateSymbol in symbolInfo.CandidateSymbols)
         {
-            const string dotnetConstructorName = ".ctor";
-            const string dotnetIndexerName = "indexer";
+            var methodSymbol = candidateSymbol as IMethodSymbol;
 
-            string? callerMethodName = null;
-
-            var callerCrawlParent = assertInvocation.Parent;
-
-            while (callerCrawlParent != null)
-            {
-                if (callerCrawlParent is ClassDeclarationSyntax @class)
-                    return (@class.Identifier.ValueText, callerMethodName);
-
-                if (string.IsNullOrEmpty(callerMethodName))
-                {
-                    if (callerCrawlParent is ConstructorDeclarationSyntax constructor)
-                        callerMethodName = dotnetConstructorName;
-                    else if (callerCrawlParent is IndexerDeclarationSyntax indexer)
-                        callerMethodName = dotnetIndexerName;
-                    else if (callerCrawlParent is MethodDeclarationSyntax method)
-                        callerMethodName = method.Identifier.ValueText;
-                    else if (callerCrawlParent is PropertyDeclarationSyntax property)
-                        callerMethodName = property.Identifier.ValueText;
-                }
-
-                callerCrawlParent = callerCrawlParent.Parent;
-            }
-
-            return (null, callerMethodName);
+            if (IsAssertMethod(methodSymbol))
+                return methodSymbol;
         }
 
-        (string? IdIsTheMessage, DiagnosticId? DiagnosticId) GetAssertIdIsTheMessageOrDiagnosticId()
-        {
-            int idIsTheMessageOrdinal = assertMethod.Parameters.Single(parameter => parameter.Name == "idIsTheMessage").Ordinal;
+        return null;
 
-            if (assertInvocation.ArgumentList.Arguments.Count <= idIsTheMessageOrdinal)
+        static bool IsAssertMethod(IMethodSymbol? symbol) =>
+            symbol != null
+                && symbol.ContainingType.Name == "Assert"
+                && symbol.ContainingNamespace.Name == "SDK"
+                && symbol.ContainingNamespace.ContainingNamespace.Name == "Antithesis"
+                && symbol.ContainingAssembly.Name == "Antithesis.SDK";
+    }
+
+    private static (string? CallerClassName, string? CallerMethodName) GetAssertCallerClassAndMethodNames(InvocationExpressionSyntax assertInvocation)
+    {
+        const string dotnetConstructorName = ".ctor";
+        const string dotnetIndexerName = "indexer";
+
+        string? callerMethodName = null;
+
+        var callerCrawlParent = assertInvocation.Parent;
+
+        while (callerCrawlParent != null)
+        {
+            if (callerCrawlParent is ClassDeclarationSyntax @class)
+                return (@class.Identifier.ValueText, callerMethodName);
+
+            if (string.IsNullOrEmpty(callerMethodName))
+            {
+                if (callerCrawlParent is ConstructorDeclarationSyntax constructor)
+                    callerMethodName = dotnetConstructorName;
+                else if (callerCrawlParent is IndexerDeclarationSyntax indexer)
+                    callerMethodName = dotnetIndexerName;
+                else if (callerCrawlParent is MethodDeclarationSyntax method)
+                    callerMethodName = method.Identifier.ValueText;
+                else if (callerCrawlParent is PropertyDeclarationSyntax property)
+                    callerMethodName = property.Identifier.ValueText;
+            }
+
+            callerCrawlParent = callerCrawlParent.Parent;
+        }
+
+        return (null, callerMethodName);
+    }
+
+    private static (string? IdIsTheMessage, DiagnosticId? DiagnosticId) GetAssertIdIsTheMessageOrDiagnosticId(
+        GeneratorSyntaxContext context, CancellationToken cancellationToken,
+        InvocationExpressionSyntax assertInvocation, IMethodSymbol assertMethod)
+    {
+        int idIsTheMessageOrdinal = assertMethod.Parameters.Single(parameter => parameter.Name == "idIsTheMessage").Ordinal;
+
+        if (assertInvocation.ArgumentList.Arguments.Count <= idIsTheMessageOrdinal)
+            return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
+
+        var idIsTheMessageArgument = assertInvocation.ArgumentList.Arguments[idIsTheMessageOrdinal];
+
+        // We support the following two ways of specifying the unique idIsTheMessage for an Assertion:
+        // 1. A literal string passed in-line as an argument to the Assert "string idIsTheMessage" Parameter.
+        // 2. A reference to a constant field with public or internal accessibility.
+
+        var idIsTheMessageLiteral = idIsTheMessageArgument.ChildNodes().SingleOrDefault(n => n is LiteralExpressionSyntax);
+
+        if (idIsTheMessageLiteral != null)
+        {
+            // Other relevant SyntaxKinds include DefaultLiteralExpression and NullLiteralExpression.
+            return idIsTheMessageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
+                ? (idIsTheMessageLiteral.ToString(), null)
+                : (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+        }
+
+        var idIsTheMessageReference = idIsTheMessageArgument.ChildNodes()
+            .SingleOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
+
+        if (idIsTheMessageReference == null)
+            return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+
+        var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageReference, cancellationToken);
+
+        if (idIsTheMessageMember.Symbol == null)
+        {
+            if (idIsTheMessageMember.CandidateSymbols.Length == 0)
+                return (null, DiagnosticId.IdIsTheMessageSymbolNotFound);
+            else if (idIsTheMessageMember.CandidateSymbols.Any(IsSymbolAccessible))
                 return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
-
-            var idIsTheMessageArgument = assertInvocation.ArgumentList.Arguments[idIsTheMessageOrdinal];
-
-            // We support the following two ways of specifying the unique idIsTheMessage for an Assertion:
-            // 1. A literal string passed in-line as an argument to the Assert "string idIsTheMessage" Parameter.
-            // 2. A reference to a constant field with public or internal accessibility.
-
-            var idIsTheMessageLiteral = idIsTheMessageArgument.ChildNodes().SingleOrDefault(n => n is LiteralExpressionSyntax);
-
-            if (idIsTheMessageLiteral != null)
-            {
-                // Other relevant SyntaxKinds include DefaultLiteralExpression and NullLiteralExpression.
-                return idIsTheMessageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
-                    ? (idIsTheMessageLiteral.ToString(), null)
-                    : (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
-            }
-
-            var idIsTheMessageReference = idIsTheMessageArgument.ChildNodes()
-                .SingleOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
-
-            if (idIsTheMessageReference == null)
-                return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
-
-            var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageReference, cancellationToken);
-
-            if (idIsTheMessageMember.Symbol == null)
-            {
-                if (idIsTheMessageMember.CandidateSymbols.Length == 0)
-                    return (null, DiagnosticId.IdIsTheMessageSymbolNotFound);
-                else if (idIsTheMessageMember.CandidateSymbols.Any(IsSymbolAccessible))
-                    return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
-                else
-                    return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
-            }
-
-            if (!IsSymbolAccessible(idIsTheMessageMember.Symbol))
+            else
                 return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
-
-            if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
-                return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
-
-            return (GetSymbolFullName(idIsTheMessageField), null);
         }
+
+        if (!IsSymbolAccessible(idIsTheMessageMember.Symbol))
+            return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
+
+        if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
+            return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+
+        return (GetSymbolFullName(idIsTheMessageField), null);
     }
 
     private static bool IsSymbolAccessible(ISymbol symbol)
