@@ -63,17 +63,10 @@ public sealed class CatalogGenerator : IIncrementalGenerator
     private static AssertCallSite? TransformAssertCallSite(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         var assertMethodCall = (MemberAccessExpressionSyntax)context.Node;
+        var assertMethod = GetAssertMethodSymbol();
 
-        if (context.SemanticModel.GetSymbolInfo(assertMethodCall, cancellationToken).Symbol is not IMethodSymbol assertMethod)
+        if (assertMethod == null)
             return null;
-
-        // We don't check the Assembly Name because that would make testing much more difficult for little added value.
-        if (assertMethod.ContainingType.Name != "Assert"
-            || assertMethod.ContainingNamespace.Name != "SDK"
-            || assertMethod.ContainingNamespace.ContainingNamespace.Name != "Antithesis")
-        {
-            return null;
-        }
 
         (string? callerClassName, string? callerMethodName) = GetCallerClassAndMethodNames();
         (string? assertIdIsTheMessage, DiagnosticId? diagnosticId) = GetAssertIdIsTheMessageOrDiagnosticId();
@@ -81,6 +74,44 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         return new AssertCallSite(
             new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName, assertMethodCall.GetLocation()),
             assertMethodCall.Name.Identifier.ValueText, assertIdIsTheMessage, diagnosticId);
+
+        IMethodSymbol? GetAssertMethodSymbol()
+        {
+            var symbolInfo = context.SemanticModel.GetSymbolInfo(assertMethodCall, cancellationToken);
+
+            if (symbolInfo.Symbol != null)
+            {
+                var methodSymbol = symbolInfo.Symbol as IMethodSymbol;
+
+                return IsAssertMethod(methodSymbol) ? methodSymbol : null;
+            }
+
+            // When writing some of our Tests, we found that our CSharpCompilation configuration (and our lack of knowledge of how to use
+            // it properly) would result in calls to generic Assert methods (i.e. the Guidance related methods) having
+            // SemanticModel.GetSymbolInfo.Symbol == null with CandidateSymbols having one OverloadResolutionFailure. We've chosen to fallback
+            // to CandidateSymbols to make those tests "work", and because doing so should not cause any negative impacts (and possibly have
+            // other positive impacts related to developer experience with Diagnostics).
+
+            // Avoid LINQ because source generation is performance sensitive. No benchmarking was performed, so this may be a premature
+            // optimization; however, the LINQ version offers little readability or code length benefits anyways.
+            
+            foreach (var candidateSymbol in symbolInfo.CandidateSymbols)
+            {
+                var methodSymbol = candidateSymbol as IMethodSymbol;
+
+                if (IsAssertMethod(methodSymbol))
+                    return methodSymbol;
+            }
+
+            return null;
+
+            static bool IsAssertMethod(IMethodSymbol? symbol) =>
+                symbol != null
+                    && symbol.ContainingType.Name == "Assert"
+                    && symbol.ContainingNamespace.Name == "SDK"
+                    && symbol.ContainingNamespace.ContainingNamespace.Name == "Antithesis"
+                    && symbol.ContainingAssembly.Name == "Antithesis.SDK";
+        }
 
         (string? CallerClassName, string? CallerMethodName) GetCallerClassAndMethodNames()
         {
