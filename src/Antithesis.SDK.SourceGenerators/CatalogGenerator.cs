@@ -15,16 +15,16 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         var projectDirectory = context.AnalyzerConfigOptionsProvider
             .Select(TryGetProjectDirectory);
 
-        var assertCallSites = context.SyntaxProvider
+        var assertInvocations = context.SyntaxProvider
             .CreateSyntaxProvider(
-                IsPossibleAssertCallSite,
-                TransformAssertCallSite)
-            .Where(assertCallSite => assertCallSite != null)
+                IsPossibleAssertInvocation,
+                TransformAssertInvocation)
+            .Where(assertInvocation => assertInvocation != null)
             .Collect();
 
-        var projectAssertCallSites = projectDirectory.Combine(assertCallSites);
-    
-        context.RegisterImplementationSourceOutput(projectAssertCallSites, SourceOutput);
+        var projectAssertInvocations = projectDirectory.Combine(assertInvocations);
+
+        context.RegisterImplementationSourceOutput(projectAssertInvocations, SourceOutput);
     }
 
     // For the magic keys: https://stackoverflow.com/questions/65070796/source-generator-information-about-referencing-project
@@ -38,8 +38,22 @@ public sealed class CatalogGenerator : IIncrementalGenerator
                 ? projectDirectory2
                 : null);
 
-    private static bool IsPossibleAssertCallSite(SyntaxNode node, CancellationToken _) =>
-        node is MemberAccessExpressionSyntax memberAccess && _assertMethodNames.Contains(memberAccess.Name.Identifier.ValueText);
+    private static bool IsPossibleAssertInvocation(SyntaxNode node, CancellationToken _) =>
+        node is InvocationExpressionSyntax invocation
+            && _assertMethodNames.Contains(GetPossibleAssertMethodName(invocation) ?? string.Empty);
+
+    // MemberAccessExpressionSyntax example (far more common):
+    // Assert.Always(true, "Id");
+    //
+    // IdentifierNameSyntax example:
+    // using static Assert;
+    // Always(true, "Id");
+    private static string? GetPossibleAssertMethodName(InvocationExpressionSyntax invocation) =>
+        invocation.Expression is MemberAccessExpressionSyntax memberAccess
+            ? memberAccess.Name.Identifier.ValueText
+            : (invocation.Expression is IdentifierNameSyntax identifier
+                ? identifier.ToString()
+                : null);
 
     private static readonly HashSet<string> _assertMethodNames = new(
     [
@@ -60,9 +74,9 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         "Reachable"
     ]);
 
-    private static AssertCallSite? TransformAssertCallSite(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+    private static AssertInvocation? TransformAssertInvocation(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
-        var assertMethodCall = (MemberAccessExpressionSyntax)context.Node;
+        var assertInvocation = (InvocationExpressionSyntax)context.Node;
         var assertMethod = GetAssertMethodSymbol();
 
         if (assertMethod == null)
@@ -71,13 +85,13 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         (string? callerClassName, string? callerMethodName) = GetCallerClassAndMethodNames();
         (string? assertIdIsTheMessage, DiagnosticId? diagnosticId) = GetAssertIdIsTheMessageOrDiagnosticId();
 
-        return new AssertCallSite(
-            new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName, assertMethodCall.GetLocation()),
-            assertMethodCall.Name.Identifier.ValueText, assertIdIsTheMessage, diagnosticId);
+        return new AssertInvocation(
+            new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName, assertInvocation.GetLocation()),
+            GetPossibleAssertMethodName(assertInvocation)!, assertIdIsTheMessage, diagnosticId);
 
         IMethodSymbol? GetAssertMethodSymbol()
         {
-            var symbolInfo = context.SemanticModel.GetSymbolInfo(assertMethodCall, cancellationToken);
+            var symbolInfo = context.SemanticModel.GetSymbolInfo(assertInvocation, cancellationToken);
 
             if (symbolInfo.Symbol != null)
             {
@@ -94,7 +108,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
             // Avoid LINQ because source generation is performance sensitive. No benchmarking was performed, so this may be a premature
             // optimization; however, the LINQ version offers little readability or code length benefits anyways.
-            
+
             foreach (var candidateSymbol in symbolInfo.CandidateSymbols)
             {
                 var methodSymbol = candidateSymbol as IMethodSymbol;
@@ -120,7 +134,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
             string? callerMethodName = null;
 
-            var callerCrawlParent = assertMethodCall.Parent;
+            var callerCrawlParent = assertInvocation.Parent;
 
             while (callerCrawlParent != null)
             {
@@ -147,15 +161,12 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
         (string? IdIsTheMessage, DiagnosticId? DiagnosticId) GetAssertIdIsTheMessageOrDiagnosticId()
         {
-            if (assertMethodCall.Parent is not InvocationExpressionSyntax assertMethodInvocation)
-                return (null, DiagnosticId.SyntaxNotSupported);
-
             int idIsTheMessageOrdinal = assertMethod.Parameters.Single(parameter => parameter.Name == "idIsTheMessage").Ordinal;
 
-            if (assertMethodInvocation.ArgumentList.Arguments.Count <= idIsTheMessageOrdinal)
+            if (assertInvocation.ArgumentList.Arguments.Count <= idIsTheMessageOrdinal)
                 return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
 
-            var idIsTheMessageArgument = assertMethodInvocation.ArgumentList.Arguments[idIsTheMessageOrdinal];
+            var idIsTheMessageArgument = assertInvocation.ArgumentList.Arguments[idIsTheMessageOrdinal];
 
             // We support the following two ways of specifying the unique idIsTheMessage for an Assertion:
             // 1. A literal string passed in-line as an argument to the Assert "string idIsTheMessage" Parameter.
@@ -176,9 +187,9 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
             if (idIsTheMessageReference == null)
                 return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
-       
+
             var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageReference, cancellationToken);
-            
+
             if (idIsTheMessageMember.Symbol == null)
             {
                 if (idIsTheMessageMember.CandidateSymbols.Length == 0)
@@ -194,7 +205,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
             if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
                 return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
-            
+
             return (GetSymbolFullName(idIsTheMessageField), null);
         }
     }
@@ -243,15 +254,15 @@ public sealed class CatalogGenerator : IIncrementalGenerator
     }
 
     private static void SourceOutput(SourceProductionContext context,
-        (string? ProjectDirectory, ImmutableArray<AssertCallSite?> AssertCallSites) provider)
+        (string? ProjectDirectory, ImmutableArray<AssertInvocation?> AssertInvocations) provider)
     {
-        foreach (var assertCallSite in provider.AssertCallSites.Where(acs => acs!.DiagnosticId != null))
+        foreach (var assertCallSite in provider.AssertInvocations.Where(ai => ai!.DiagnosticId != null))
             context.ReportDiagnostic(assertCallSite!.ToDiagnostic());
 
-        // We include AssertCallSites with DiagnosticIds because ToGeneratedCode will comment out those lines.
-        foreach (var assemblyAssertCallSites in provider.AssertCallSites.GroupBy(acs => acs!.Caller.AssemblyName))
+        // We include AssertInvocations with DiagnosticIds because ToGeneratedCode will comment out those lines.
+        foreach (var assemblyAssertInvocations in provider.AssertInvocations.GroupBy(ai => ai!.Caller.AssemblyName))
         {
-            string assemblyName = assemblyAssertCallSites.Key!;
+            string assemblyName = assemblyAssertInvocations.Key!;
             string antithesisSuffix = typeof(CatalogGenerator).FullName.Replace(".", "_");
 
             string fileName = $"{assemblyName}.{antithesisSuffix}.generated.cs";
@@ -265,11 +276,11 @@ internal static class Catalog
     [global::System.Runtime.CompilerServices.ModuleInitializer]
     internal static void Initialize()
     {{
-        {string.Join("\n\n        ", assemblyAssertCallSites.Select(acs => acs!.ToGeneratedCode(provider.ProjectDirectory)))} 
+        {string.Join("\n\n        ", assemblyAssertInvocations.Select(ai => ai!.ToGeneratedCode(provider.ProjectDirectory)))} 
     }}
 }}";
 
             context.AddSource(fileName, source);
-        }       
+        }
     }
 }

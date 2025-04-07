@@ -38,7 +38,7 @@ internal record class Caller(string? AssemblyName, string? ClassName, string? Me
     }
 }
 
-internal record class AssertCallSite(Caller Caller, string AssertMethodName, string? AssertIdIsTheMessage, DiagnosticId? DiagnosticId)
+internal record class AssertInvocation(Caller Caller, string AssertMethodName, string? AssertIdIsTheMessage, DiagnosticId? DiagnosticId)
 {
     internal Diagnostic ToDiagnostic() =>
         DiagnosticId != null
