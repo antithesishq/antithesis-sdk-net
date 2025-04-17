@@ -15,12 +15,11 @@ public static class Catalog
 {
     #region No Guidance
 
-#pragma warning disable 1573
     /// <summary>
     /// Used by the Antithesis.SDK.SourceGenerator package to Catalog a corresponding Assert method call so that
     /// Antithesis is aware of the assertion regardless of whether or not it is encountered during runtime.
     /// </summary>
-    /// <inheritdoc cref="Assert.Always" path="/param"/>
+    /// <param name="idIsTheMessage"><inheritdoc cref="Assert.NoGuidanceHelper" path="/param[@name='idIsTheMessage']"/></param>
     /// <param name="location">Provides metadata related to the source code location of the corresponding Assert.</param>
     [Conditional(ConditionalCompilation.SymbolName)]
     public static void Always(string idIsTheMessage, LocationInfo location)
@@ -28,7 +27,6 @@ public static class Catalog
         if (!Sink.IsNoop)
             Helper(AssertionMethodType.Always, idIsTheMessage, location);
     }
-#pragma warning restore 1573
 
     /// <inheritdoc cref="Always"/>
     [Conditional(ConditionalCompilation.SymbolName)]
