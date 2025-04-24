@@ -1,0 +1,48 @@
+name: Build, Test, Package, and Publish
+
+on: workflow_dispatch
+
+jobs:
+    build-test-package-publish:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+
+        steps:
+        - uses: actions/checkout@v3
+          with:
+              fetch-depth: 0 # Avoid shallow clone which breaks Nerdbank.GitVersioning.
+        
+        - uses: actions/setup-dotnet@v3
+          with:
+              dotnet-version: 8.0.x
+              
+        - run: dotnet restore
+  
+        - shell: pwsh
+          run: |
+              $version = & nbgv get-version --variable NuGetPackageVersion
+              Write-Output "VVERSION=v$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          
+        - run: dotnet build --no-restore --configuration Release
+          
+        - run: dotnet test --no-build --configuration Release --verbosity normal
+  
+        - run: dotnet pack --no-build --configuration Release src/Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj
+        - run: dotnet pack --no-build --configuration Release src/Antithesis.SDK/Antithesis.SDK.csproj
+  
+        - run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_APIKEY}} "src/Antithesis.SDK.SourceGenerators/bin/Release/*.nupkg"
+        - run: dotnet nuget push --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_APIKEY}} "src/Antithesis.SDK/bin/Release/*.nupkg"
+  
+        - uses: actions/github-script@v7
+          with:
+              script: |
+                  const { VVERSION } = process.env
+
+                  github.rest.git.createRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: `refs/tags/${VVERSION}`,
+                      sha: context.sha
+                  })
