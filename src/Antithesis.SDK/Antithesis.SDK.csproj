@@ -31,7 +31,7 @@
         <Authors>Antithesis Operations LLC</Authors>
         <Copyright>Copyright (c) 2025 Antithesis Operations LLC</Copyright>
         <Description>This package contains types for .NET applications to use to integrate with Antithesis.</Description>
-        <PackageIcon>icon_mark_128.png</PackageIcon>
+        <PackageIcon>icon.png</PackageIcon>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
@@ -71,7 +71,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="../../icon_mark_128.png" Pack="true" PackagePath="" />
+        <None Include="../../icon.png" Pack="true" PackagePath="" />
         <None Include="../../LICENSE" Pack="true" PackagePath="" />
         <None Include="../../README.md" Pack="true" PackagePath="" />
     </ItemGroup>
