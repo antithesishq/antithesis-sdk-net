@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+
+        <ImplicitUsings>disable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+        <IsPackable>false</IsPackable>
+
+        <!-- Required for the DisassemblyDiagnoser. -->
+        <DebugType>pdbonly</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+
+        <Copyright>Copyright (c) 2025 Antithesis Operations LLC</Copyright>
+    </PropertyGroup>
+
+    <!-- This allows us to benchmark with and without Assert call sites using an MSBuild argument. -->
+    <PropertyGroup Condition=" '$(ANTITHESIS)' == 'true' ">
+        <DefineConstants>$(DefineConstants);ANTITHESIS</DefineConstants>
+    </PropertyGroup>
+
+    <!-- Deterministic Builds -->
+    <PropertyGroup Condition=" '$(GITHUB_ACTIONS)' == 'true' ">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- We need to reference both Antithesis.SDK and Antithesis.SDK.SourceGenerators even though the former -->
+        <!-- has a ProjectReference to the latter because analyzers aren't transitive through ProjectReferences. -->
+        <!-- We must declare OutputItemType="Analyzer" for the SourceGenerators to run with this project. -->
+        <!-- ReferenceOutputAssembly="false" is less important and only added to be explicit about the dependency. -->
+        <ProjectReference Include="../../src/Antithesis.SDK/Antithesis.SDK.csproj" />
+        <ProjectReference Include="../../src/Antithesis.SDK.SourceGenerators/Antithesis.SDK.SourceGenerators.csproj"
+            OutputItemType="Analyzer"
+            ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="System" />
+        <Using Include="System.Collections.Generic" />
+        <Using Include="System.Linq" />
+    </ItemGroup>
+
+</Project>
