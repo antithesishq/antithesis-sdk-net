@@ -1,7 +1,7 @@
 # Antithesis .NET SDK
 
 ### Under Development
-This SDK is under development. Once ready, an offical version will be announced, and a new version will be published to NuGet.
+This SDK is under development. Once ready, an official version will be announced, and a new version will be published to NuGet.
 
 This package contains types for .NET applications to use to integrate with [Antithesis](https://antithesis.com).
 * The Assert class enables defining [test properties](https://antithesis.com/docs/using_antithesis/properties/)
