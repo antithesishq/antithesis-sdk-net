@@ -54,11 +54,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="CatalogGeneratorTests/*" />
+        <Compile Remove="CatalogGeneratorTests/Data/*" />
+        <Compile Remove="CatalogGeneratorTests/Verify/*" />
+        <Compile Remove="EndToEndTests/Verify/*" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="CatalogGeneratorTests/*" />
+        <None Include="CatalogGeneratorTests/Data/*" />
+        <None Include="CatalogGeneratorTests/Verify/*" />
+        <None Include="EndToEndTests/Verify/*" />
     </ItemGroup>
 
 </Project>

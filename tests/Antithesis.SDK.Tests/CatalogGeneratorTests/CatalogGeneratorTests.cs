@@ -45,7 +45,7 @@ public sealed class CatalogGeneratorTests
 
         // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
         return Verifier.Verify(driver)
-            .UseDirectory(Path.Combine(nameof(CatalogGeneratorTests), "Verify"))
+            .UseDirectory(RelativeThisDirectory("Verify"))
             .UseParameters(fileNameNoExtension)
             .ScrubLinesWithReplace(s => s.StartsWith(_generatedCodeSentinel)
                 ? _generatedCodeVersionScrubber.Replace(s, "$1...SCRUBBED...$3") 
@@ -55,14 +55,10 @@ public sealed class CatalogGeneratorTests
     private const string _generatedCodeSentinel = @"[global::System.CodeDom.Compiler.GeneratedCode(""Antithesis.SDK.CatalogGenerator"", """;
     private static readonly Regex _generatedCodeVersionScrubber = new(@"(""Antithesis.SDK.CatalogGenerator"", "")([^""]+)("")");
 
-    public static IEnumerable<object[]> GetFiles()
-    {
-        string directory = Path.Combine(ThisDirectory(), nameof(CatalogGeneratorTests));
-
-        return Directory.GetFiles(directory)
+    public static IEnumerable<object[]> GetFiles() =>
+        Directory.GetFiles(RelativeThisDirectory("Data"))
             .Select(filePath => new object[] { Path.GetFileNameWithoutExtension(filePath), File.ReadAllText(filePath) });
-    }
 
-    private static string ThisDirectory([CallerFilePath] string? callerFilePath = null) =>
-        Path.GetDirectoryName(callerFilePath)!;
+    private static string RelativeThisDirectory(string relativePath, [CallerFilePath] string? callerFilePath = null) =>
+        Path.Combine(Path.GetDirectoryName(callerFilePath)!, relativePath);
 }

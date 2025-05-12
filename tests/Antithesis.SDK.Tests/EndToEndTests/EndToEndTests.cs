@@ -37,7 +37,7 @@ public class EndToEndTests
             AppDomain.CurrentDomain.ExecuteAssembly("SomeCompany.SomeConsole.dll");
 
             return Verifier.VerifyFile(_tempOutputFilePath)
-                .UseDirectory(nameof(EndToEndTests))
+                .UseDirectory(RelativeThisDirectory("Verify"))
                 .ScrubLinesWithReplace(s => s.StartsWith(_sdkSentinel)
                     ? _sdkVersionScrubber.Replace(s, "$1...SCRUBBED...$3") 
                     : s);
@@ -47,4 +47,7 @@ public class EndToEndTests
 
     private const string _sdkSentinel = @"{""antithesis_sdk"":{""language"":{""name"":""C#"",""version"":""";
     private static readonly Regex _sdkVersionScrubber = new(@"(version"":"")([^""]+)("")");
+
+    private static string RelativeThisDirectory(string relativePath, [CallerFilePath] string? callerFilePath = null) =>
+        Path.Combine(Path.GetDirectoryName(callerFilePath)!, relativePath);
 }
