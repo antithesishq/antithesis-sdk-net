@@ -20,6 +20,10 @@ internal interface IRandomUInt64Provider { ulong Next(); }
 /// </remarks>
 public class Random : System.Random
 {
+    /// <inheritdoc />
+    [Obsolete("Please use the Antithesis.SDK.Random.Shared* static properties which explicitly define their behavior when outside Antithesis.", true)]
+    new public static System.Random Shared => throw new NotSupportedException();
+
     /// <summary>
     /// Returns a Singleton of this class when executing within Antithesis; else, throws a FileNotFoundException.
     /// </summary>
