@@ -82,6 +82,12 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         if (assertMethod == null)
             return null;
 
+        int assertArgumentsSpecified = assertInvocation.ArgumentList.Arguments.Count(arg => !string.IsNullOrWhiteSpace(arg.ToString()));
+        int assertParametersRequired = assertMethod.Parameters.Count(p => !p.HasExplicitDefaultValue);
+
+        if (assertArgumentsSpecified < assertParametersRequired)
+            return null;
+
         (string? callerClassName, string? callerMethodName) = GetAssertCallerClassAndMethodNames(assertInvocation);
 
         (string? assertIdIsTheMessage, DiagnosticId? diagnosticId) =
