@@ -23,21 +23,29 @@ internal static class GuidanceTracker
         private readonly bool _maximize;
         private double _mark;
 
+        private readonly object _padlock = new();
+
         // Numeric guidance is important to write as Antithesis "gets closer" to making an assertion potentially pass or fail.
         // The "antithesis_guidance/maximize" JSON property indicates which "direction" is "closer" to the flipping point.
         internal bool ShouldWrite(double left, double right)
         {
             double diff = left - right;
 
-            if (_maximize && _mark > diff)
-                return false;
+            lock (_padlock)
+            {
+                if (_maximize && _mark > diff)
+                    return false;
 
-            if (!_maximize && _mark < diff)
-                return false;
+                if (!_maximize && _mark < diff)
+                    return false;
 
-            // Write NaN values, but don't let them update the mark.
-            if (!double.IsNaN(diff))
-                _mark = diff;
+                // Write NaN values, but don't let them update the mark.
+                //
+                // PositiveInifinity and NegativeInfinity can safely update the mark because they still behave "correctly" with
+                // comparison operators. See Antithesis.SDK.Tests/BCLSanityTests.
+                if (!double.IsNaN(diff))
+                    _mark = diff;
+            }
 
             return true;
         }
