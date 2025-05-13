@@ -40,13 +40,29 @@ public class EndToEndTests
                 .UseDirectory(RelativeThisDirectory("Verify"))
                 .ScrubLinesWithReplace(s => s.StartsWith(_sdkSentinel)
                     ? _sdkVersionScrubber.Replace(s, "$1...SCRUBBED...$3") 
-                    : s);
+                    : s)
+                .AddScrubber(sb =>
+                {
+                    // There is no "good" way to run Regex Match (or Replace) on a StringBuilder
+                    // because internally StringBuilder uses a Linked List to optimize for Append but
+                    // Regex requires / assumes O(1) indexing for performance.
+                    string s = sb.ToString();
+
+                    s = _stackTraceScrubber.Replace(s, "$1...SCRUBBED...$3");
+                    
+                    sb.Clear();
+                    sb.Append(s);
+
+                    return;
+                });
         }
         finally { DeleteTempOutputFile(); }
     }
 
     private const string _sdkSentinel = @"{""antithesis_sdk"":{""language"":{""name"":""C#"",""version"":""";
     private static readonly Regex _sdkVersionScrubber = new(@"(version"":"")([^""]+)("")");
+
+    private static readonly Regex _stackTraceScrubber = new(@"(stack_trace"":"")([^""]+)("")");
 
     private static string RelativeThisDirectory(string relativePath, [CallerFilePath] string? callerFilePath = null) =>
         Path.Combine(Path.GetDirectoryName(callerFilePath)!, relativePath);

@@ -1,3 +1,8 @@
 ﻿using Antithesis.SDK;
+using SomeCompany.SomeConsole;
 
-Assert.Reachable("Console Started");
+Lifecycle.SetupComplete();
+
+Assert.Reachable("Program.Main.Reachable");
+
+AssertionTrackerTests.OnlyWriteFirstPassAndFirstFail();
