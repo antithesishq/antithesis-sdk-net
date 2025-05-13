@@ -13,6 +13,9 @@ public static class AssertionTrackerTests
 
             Assert.Reachable("AssertionTrackerTests.OnlyWriteFirstPassAndFirstFail.Reachable");
             Assert.Unreachable("AssertionTrackerTests.OnlyWriteFirstPassAndFirstFail.Unreachable");
+
+            Assert.AlwaysGreaterThan(condition ? 1 : 0, condition ? 0 : 1, "AssertionTrackerTests.OnlyWriteFirstPassAndFirstFail.AlwaysGreaterThan");
+            Assert.SometimesLessThan(condition ? 0 : 1, condition ? 1 : 0, "AssertionTrackerTests.OnlyWriteFirstPassAndFirstFail.SometimesLessThan");
         }
     }
 }
