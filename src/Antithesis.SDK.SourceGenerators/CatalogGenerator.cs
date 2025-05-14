@@ -40,6 +40,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
     private static bool IsPossibleAssertInvocation(SyntaxNode node, CancellationToken _) =>
         node is InvocationExpressionSyntax invocation
+            && invocation.ArgumentList.Arguments.Count > 0
             && _assertMethodNames.Contains(GetPossibleAssertMethodName(invocation) ?? string.Empty);
 
     // MemberAccessExpressionSyntax example (far more common):
