@@ -1,13 +1,7 @@
 ﻿{
   Diagnostics: [
     {
-      Location: /*
-        {
-            Assert.Always(true, Ids.Ambiguous);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Sometimes(true, Ids.NotAccessible1);
-*/
- : (8,12)-(8,46),
+      Location: : (8,12)-(8,46),
       Message: The expression passed as an argument to this Assert "idIsTheMessage" parameter is ambiguous.,
       Severity: Error,
       Descriptor: {
@@ -20,13 +14,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Always(true, Ids.Ambiguous);
-            Assert.Sometimes(true, Ids.NotAccessible1);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Reachable(Ids.NotAccessible2);
-*/
- : (9,12)-(9,54),
+      Location: : (9,12)-(9,54),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -39,13 +27,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Sometimes(true, Ids.NotAccessible1);
-            Assert.Reachable(Ids.NotAccessible2);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Unreachable(Ids.NotField);
-*/
- : (10,12)-(10,48),
+      Location: : (10,12)-(10,48),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -58,13 +40,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Reachable(Ids.NotAccessible2);
-            Assert.Unreachable(Ids.NotField);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Antithesis.SDK.Assert.Always(true, Ids.NotConst);
-*/
- : (11,12)-(11,44),
+      Location: : (11,12)-(11,44),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -77,13 +53,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Unreachable(Ids.NotField);
-            Antithesis.SDK.Assert.Always(true, Ids.NotConst);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*/
- : (12,12)-(12,60),
+      Location: : (12,12)-(12,60),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -96,13 +66,7 @@
       }
     },
     {
-      Location: /*
-            string id = string.Empty;
-            Assert.AlwaysGreaterThan(2, 1, id);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*/
- : (15,12)-(15,46),
+      Location: : (15,12)-(15,46),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -115,13 +79,7 @@
       }
     },
     {
-      Location: /*
-
-            Assert.AlwaysLessThan(1, 2, _id);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.SometimesGreaterThan(2, 1, _idReadonly);
-*/
- : (17,12)-(17,44),
+      Location: : (17,12)-(17,44),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -134,13 +92,7 @@
       }
     },
     {
-      Location: /*
-            Assert.AlwaysLessThan(1, 2, _id);
-            Assert.SometimesGreaterThan(2, 1, _idReadonly);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
-*/
- : (18,12)-(18,58),
+      Location: : (18,12)-(18,58),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -153,13 +105,7 @@
       }
     },
     {
-      Location: /*
-            Assert.SometimesGreaterThan(2, 1, _idReadonly);
-            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Always(true, _idConst);
-*/
- : (19,12)-(19,61),
+      Location: : (19,12)-(19,61),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -172,13 +118,7 @@
       }
     },
     {
-      Location: /*
-            Assert.SometimesLessThan(1, 2, _idStaticReadonly);
-            Assert.Always(true, _idConst);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*/
- : (20,12)-(20,41),
+      Location: : (20,12)-(20,41),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must accessible to public or internal.,
       Severity: Error,
       Descriptor: {
@@ -191,13 +131,7 @@
       }
     },
     {
-      Location: /*
-
-            Assert.Sometimes(true, Id);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Reachable(IdReadonly);
-*/
- : (22,12)-(22,38),
+      Location: : (22,12)-(22,38),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -210,13 +144,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Sometimes(true, Id);
-            Assert.Reachable(IdReadonly);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Unreachable(IdStaticReadonly);
-*/
- : (23,12)-(23,40),
+      Location: : (23,12)-(23,40),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -229,13 +157,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Reachable(IdReadonly);
-            Assert.Unreachable(IdStaticReadonly);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-*/
- : (24,12)-(24,48),
+      Location: : (24,12)-(24,48),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -248,13 +170,7 @@
       }
     },
     {
-      Location: /*
-
-            Assert.Always(true, null);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^
-            Assert.Always(true, default);
-*/
- : (26,12)-(26,37),
+      Location: : (26,12)-(26,37),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
@@ -267,13 +183,7 @@
       }
     },
     {
-      Location: /*
-            Assert.Always(true, null);
-            Assert.Always(true, default);
-            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        }
-*/
- : (27,12)-(27,40),
+      Location: : (27,12)-(27,40),
       Message: The expression passed as an argument to any Assert "idIsTheMessage" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {

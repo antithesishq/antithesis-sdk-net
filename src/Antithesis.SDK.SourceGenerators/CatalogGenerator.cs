@@ -95,7 +95,8 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             GetAssertIdIsTheMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
 
         return new AssertInvocation(
-            new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName, assertInvocation.GetLocation()),
+            new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName,
+                LocationSlim.FromLocation(assertInvocation.GetLocation())),
             GetPossibleAssertMethodName(assertInvocation)!, assertIdIsTheMessage, diagnosticId);
     }
 

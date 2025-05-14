@@ -1,29 +1,47 @@
 namespace Antithesis.SDK;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using System.IO;
 
-internal record class Caller(string? AssemblyName, string? ClassName, string? MethodName, Location Location)
+// Adapted from (also renamed in order to not collide with the existing Antithesis.SDK.LocationInfo):
+// https://andrewlock.net/creating-a-source-generator-part-9-avoiding-performance-pitfalls-in-incremental-generators/#6-take-care-with-diagnostics
+internal record LocationSlim(string? FilePath, TextSpan TextSpan, LinePositionSpan LineSpan)
+{
+    internal static LocationSlim FromLocation(Location location) =>
+        new(location.SourceTree?.FilePath, location.SourceSpan, location.GetLineSpan().Span);
+
+    internal Location ToLocation() =>
+        FilePath != null
+            ? Location.Create(FilePath, TextSpan, LineSpan)
+            : Location.None;
+}
+
+// AssemblyName is used to Group AssertInvocations when generating source code files.
+internal record class Caller(string? AssemblyName, string? ClassName, string? MethodName, LocationSlim Location)
 {
     internal string ToGeneratedCode(string? projectDirectory)
     {
-        // LinePosition.Line and Character both use 0-based indexing, so we add 1 to each in the generated code.
-        var line = Location.GetLineSpan();
-        var start = line.StartLinePosition;
-
         // Defaults are copied from the Antithesis Java SDK.
         string className = EmptyToNull(ClassName) ?? "class";
         string methodName = EmptyToNull(MethodName) ?? "function";
-        string filePath = EmptyToNull(TryGetSolutionRelativeFilePath()) ?? "file";
+        string relativeFilePath = EmptyToNull(TryGetSolutionRelativeFilePath()) ?? "file";
 
-        return $@"new global::Antithesis.SDK.LocationInfo() {{ ClassName = @""{className}"", MethodName = @""{methodName}"", FilePath = @""{filePath}"", BeginLine = {start.Line + 1}, BeginColumn = {start.Character + 1}}}";
+        // LinePosition.Line and Character both use 0-based indexing, so we add 1 to each in the generated code.
+        var start = Location.LineSpan.Start;
+        int beginLine = start.Line + 1;
+        int beginColumn = start.Character + 1;
+
+        return $@"new global::Antithesis.SDK.LocationInfo() {{ ClassName = @""{className}"", MethodName = @""{methodName}"", FilePath = @""{relativeFilePath}"", BeginLine = {beginLine}, BeginColumn = {beginColumn}}}";
 
         static string? EmptyToNull(string? s) => string.IsNullOrEmpty(s) ? null : s;
 
         string? TryGetSolutionRelativeFilePath()
         {
-            if (string.IsNullOrEmpty(line.Path) || string.IsNullOrEmpty(projectDirectory))
-                return line.Path;
+            string? filePath = Location.FilePath;
+
+            if (string.IsNullOrEmpty(filePath) || string.IsNullOrEmpty(projectDirectory))
+                return filePath;
 
             // If projectDirectory ends with a directory separator, Path.GetDirectoryName will return the projectDirectory
             // without the trailing separator, which is not what we want here.
@@ -31,9 +49,14 @@ internal record class Caller(string? AssemblyName, string? ClassName, string? Me
             string solutionDirectory = Path.GetDirectoryName(projectDirectory);
 
             // We trim any leading directory separators to not give the false impression of an absolute path.
-            return (!string.IsNullOrEmpty(solutionDirectory) && line.Path.Length > solutionDirectory.Length && line.Path.StartsWith(solutionDirectory))
-                ? line.Path.Substring(solutionDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                : line.Path;
+            bool isSolutionRelative = !string.IsNullOrEmpty(solutionDirectory)
+                && filePath!.Length > solutionDirectory.Length
+                && filePath.StartsWith(solutionDirectory);
+
+            return isSolutionRelative
+                ? filePath!.Substring(solutionDirectory.Length)
+                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                : filePath;
         }
     }
 }
@@ -42,7 +65,7 @@ internal record class AssertInvocation(Caller Caller, string AssertMethodName, s
 {
     internal Diagnostic ToDiagnostic() =>
         DiagnosticId != null
-            ? Diagnostic.Create(DiagnosticDescriptors.ById[DiagnosticId.Value], Caller.Location)
+            ? Diagnostic.Create(DiagnosticDescriptors.ById[DiagnosticId.Value], Caller.Location.ToLocation())
             : throw new NotSupportedException();
 
     internal string ToGeneratedCode(string? projectDirectory)
