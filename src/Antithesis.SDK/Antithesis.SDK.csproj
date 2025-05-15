@@ -1,10 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <!-- Antithesis runs Linux containers, so we are not targeting .NET Framework (or .NET Standard <= 2.0).
-            .NET 6 added System.Text.Json.JsonObject and System.Random.Shared which are both used by this library.
-            System.Random.Shared would be a trivial dependency to replace, while System.Text.Json.JsonObject would
-            required additional effort. -->
+        <!-- Antithesis runs Linux containers, so we are not targeting .NET Framework (or .NET Standard <= 2.0). -->
+        <!-- .NET 6 added System.Random.Shared and System.Text.Json.Nodes.JsonObject which are both used by this library. -->
+        <!-- To replace / substitute those APIs for .NET Standard 2.1+ should we later need to target it: -->
+        <!-- 1. System.Random.Shared would require implementing our own thread-safe Random: -->
+        <!--    https://devblogs.microsoft.com/dotnet/getting-random-numbers-in-a-thread-safe-way/ -->
+        <!--    https://andrewlock.net/building-a-thread-safe-random-implementation-for-dotnet-framework/ -->
+        <!-- 2. System.Text.Json.Nodes.JsonObject would required a PackageReference conditional on the target framework. -->
         <TargetFramework>net6.0</TargetFramework>
 
         <ImplicitUsings>disable</ImplicitUsings>
