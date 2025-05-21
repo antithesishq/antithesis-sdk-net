@@ -6,8 +6,8 @@ using System.Diagnostics;
 internal interface IRandomUInt64Provider { ulong Next(); }
 
 // Methods adapted or inspired by:
-// https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Random.ImplBase.cs
-// https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Random.Xoshiro256StarStarImpl.cs
+// https://github.com/dotnet/runtime/blob/v9.0.5/src/libraries/System.Private.CoreLib/src/System/Random.ImplBase.cs
+// https://github.com/dotnet/runtime/blob/v9.0.5/src/libraries/System.Private.CoreLib/src/System/Random.Xoshiro256StarStarImpl.cs
 
 /// <summary>
 /// The Random class is a subclass of <see cref="System.Random">System.Random</see> that encapsules Antithesis's deterministic and
