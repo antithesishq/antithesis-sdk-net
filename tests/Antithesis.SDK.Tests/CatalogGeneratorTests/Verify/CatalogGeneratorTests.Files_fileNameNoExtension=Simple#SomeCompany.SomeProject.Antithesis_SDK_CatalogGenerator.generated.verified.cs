@@ -33,6 +33,10 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Reachable(
             global::SomeCompany.SomeProject.SomeClass.Id,
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"indexer", FilePath = @"file", BeginLine = 32, BeginColumn = 43}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"indexer", FilePath = @"file", BeginLine = 32, BeginColumn = 43});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Destructor Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"Finalize", FilePath = @"file", BeginLine = 38, BeginColumn = 13}); 
     }
 }

@@ -32,6 +32,11 @@ namespace SomeCompany.SomeProject
         public string this[int i] { get { Assert.Reachable(Id); return i.ToString(); } }
 
         internal const string Id = "Class Member Const Field";
+
+        ~SomeClass()
+        {
+            Assert.Always(true, "Destructor Literal");
+        }
     }
 
     public static class Ids
