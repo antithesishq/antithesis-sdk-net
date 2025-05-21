@@ -19,18 +19,8 @@ public class AssertBenchmarks
             var localSinkEnvironmentVariable =
                 new EnvironmentVariable(EnvironmentVariableNames.LocalSinkOutputFilePath, Path.GetTempFileName());
 
-            var antithesisBuildArgument = new MsBuildArgument(@"-p:ANTITHESIS=true");
-
 			AddJob(Job.Default.AsBaseline());
-
             AddJob(Job.Default.WithEnvironmentVariable(localSinkEnvironmentVariable));
-
-			AddJob(Job.Default.WithArguments([antithesisBuildArgument]));
-            
-            AddJob(
-                Job.Default
-				    .WithArguments([antithesisBuildArgument])
-                    .WithEnvironmentVariable(localSinkEnvironmentVariable));
 		}
 	}
 

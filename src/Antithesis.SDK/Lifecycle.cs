@@ -1,6 +1,5 @@
 namespace Antithesis.SDK;
 
-using System.Diagnostics;
 using System.Text.Json.Nodes;
 
 /// <summary>
@@ -24,7 +23,6 @@ public static class Lifecycle
     /// any process called this method as the moment that the setup was completed.
     /// </summary>
     /// <inheritdoc cref="SendEvent" path="/param"/>
-    [Conditional(ConditionalCompilation.SymbolName)]
     public static void SetupComplete(JsonObject? details = null)
     {
         // Calling SendEvent here instead of Sink.Write'ing the full "antithesis_setup" JsonObject makes the code slightly more complicated;
@@ -48,7 +46,6 @@ public static class Lifecycle
     /// </summary>
     /// <param name="name">The name of the event being logged.</param>
     /// <param name="details">Optional additional details to provide greater context for this event. Evaluated at runtime.</param>
-    [Conditional(ConditionalCompilation.SymbolName)]
     public static void SendEvent(string? name, JsonObject? details = null)
     {
         if (!Sink.IsNoop)

@@ -15,10 +15,6 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-        <!-- Retain calls to Assert, Catalog, and Lifecycle; all of which are decorated with ConditionalAttribute. -->
-        <!-- This is important for our methods that call our own methods (e.g. Lifecycle.SetupComplete calls SendEvent). -->
-        <DefineConstants>$(DefineConstants);ANTITHESIS</DefineConstants>
-
         <!-- XML code documentation -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 

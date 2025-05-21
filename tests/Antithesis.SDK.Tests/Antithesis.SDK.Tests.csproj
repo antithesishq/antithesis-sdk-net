@@ -8,9 +8,6 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-        <!-- Retain calls to Assert, Catalog, and Lifecycle; all of which are decorated with ConditionalAttribute. -->
-        <DefineConstants>$(DefineConstants);ANTITHESIS</DefineConstants>
-
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
 

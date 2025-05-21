@@ -9,10 +9,6 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-        <!-- Retain calls to Assert, Catalog, and Lifecycle; all of which are decorated with ConditionalAttribute. -->
-        <!-- This project does not reference Antithesis.SDK directly, so this is technically unnecessary. -->
-        <DefineConstants>$(DefineConstants);ANTITHESIS</DefineConstants>
-
         <!-- I cannot find this Property documented; however, I see it in some example projects. -->
         <DevelopmentDependency>true</DevelopmentDependency>
         <IncludeBuildOutput>false</IncludeBuildOutput>
