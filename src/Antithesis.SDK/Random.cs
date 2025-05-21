@@ -21,7 +21,7 @@ internal interface IRandomUInt64Provider { ulong Next(); }
 public class Random : System.Random
 {
     /// <inheritdoc />
-    [Obsolete("Please use the Antithesis.SDK.Random.Shared* static properties which explicitly define their behavior when outside Antithesis.", true)]
+    [Obsolete("Please use Antithesis.SDK.Random.SharedFallbackToSystem which explicitly defines its behavior when outside Antithesis.", true)]
     new public static System.Random Shared => throw new NotSupportedException();
 
     /// <summary>
