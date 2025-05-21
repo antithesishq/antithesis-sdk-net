@@ -1,5 +1,7 @@
 namespace Antithesis.SDK;
 
+using System.Text.Json;
+
 public class LifecycleTests
 {
     [Fact]
@@ -7,7 +9,7 @@ public class LifecycleTests
     {
         XAssert.Equal(
             "{\"antithesis_setup\":{\"status\":\"complete\",\"details\":null}}",
-            Serializer.Serialize(
+            JsonSerializer.Serialize(
                 Lifecycle.SendEventJson(
                     Lifecycle.SetupCompleteJsonPropertyName,
                     Lifecycle.SetupCompleteJsonDetails())));

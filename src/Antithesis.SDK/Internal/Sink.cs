@@ -1,6 +1,7 @@
 namespace Antithesis.SDK;
 
 using System.IO;
+using System.Text.Json;
 
 internal interface ISink { void Write(string message); }
 
@@ -10,7 +11,7 @@ internal static class Sink
         Write(new SDKInfoWrapper(_singleton.GetType()));
 
     internal static void Write(object message) =>
-        _singleton.Write(Serializer.Serialize(message));
+        _singleton.Write(JsonSerializer.Serialize(message));
 
     private static readonly ISink _singleton =
         FFI.FileExists
