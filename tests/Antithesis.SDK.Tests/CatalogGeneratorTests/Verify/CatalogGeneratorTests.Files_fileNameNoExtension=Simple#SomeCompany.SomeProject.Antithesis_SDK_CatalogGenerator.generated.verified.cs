@@ -49,6 +49,14 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Always(
             "Operator Overload Literal",
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"==", FilePath = @"file", BeginLine = 57, BeginColumn = 13}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"==", FilePath = @"file", BeginLine = 57, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Event Add Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeEvent", FilePath = @"file", BeginLine = 64, BeginColumn = 19});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Event Remove Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeEvent", FilePath = @"file", BeginLine = 65, BeginColumn = 22}); 
     }
 }

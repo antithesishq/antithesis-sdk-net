@@ -58,6 +58,12 @@ namespace SomeCompany.SomeProject
 
             return left?.Equals(right) ?? false;
         }
+
+        public event System.Predicate<int> SomeEvent
+        {
+            add { Assert.Always(true, "Event Add Literal"); }
+            remove { Assert.Always(true, "Event Remove Literal"); }
+        }
     }
 
     public static class Ids
