@@ -37,6 +37,18 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Always(
             "Destructor Literal",
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"Finalize", FilePath = @"file", BeginLine = 38, BeginColumn = 13}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"Finalize", FilePath = @"file", BeginLine = 38, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Conversion Operator Literal 1",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"byte", FilePath = @"file", BeginLine = 43, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Conversion Operator Literal 2",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"System.String", FilePath = @"file", BeginLine = 50, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Operator Overload Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"==", FilePath = @"file", BeginLine = 57, BeginColumn = 13}); 
     }
 }

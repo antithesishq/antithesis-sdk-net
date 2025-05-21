@@ -37,6 +37,27 @@ namespace SomeCompany.SomeProject
         {
             Assert.Always(true, "Destructor Literal");
         }
+
+        public static explicit operator byte(SomeClass _)
+        {
+            Assert.Always(true, "Conversion Operator Literal 1");
+
+            return 0x00;
+        }
+
+        public static explicit operator System.String(SomeClass someClass)
+        {
+            Assert.Always(true, "Conversion Operator Literal 2");
+
+            return someClass.ToString();
+        }
+
+        public static bool operator ==(SomeClass left, SomeClass right)
+        {
+            Assert.Always(true, "Operator Overload Literal");
+
+            return left?.Equals(right) ?? false;
+        }
     }
 
     public static class Ids
