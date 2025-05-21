@@ -319,7 +319,7 @@ public static class Assert
     public static void SometimesAll(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            BooleanGuidanceHelper(AssertionMethodType.SometimesAll, values => !values.Any(v => !v), conditions, idIsTheMessage, details);
+            BooleanGuidanceHelper(AssertionMethodType.SometimesAll, values => values.All(v => v), conditions, idIsTheMessage, details);
     }
 
     /// <param name="methodType">The AssertionMethodType of the caller.</param>
