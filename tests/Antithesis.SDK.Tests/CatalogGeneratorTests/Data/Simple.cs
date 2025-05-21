@@ -66,6 +66,19 @@ namespace SomeCompany.SomeProject
         }
     }
 
+    public struct SomeStruct
+    {
+        public void SomeMethod() => Assert.Always(true, "SomeStruct SomeMethod Literal");
+    }
+
+    public record SomeRecord(int Value)
+    {
+        public void SomeMethod()
+        {
+            Assert.Always(true, "SomeRecord SomeMethod Literal");
+        }
+    }
+
     public static class Ids
     {
         public const string Field1 = "Ids Field1 Const";

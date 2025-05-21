@@ -57,6 +57,14 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Always(
             "Event Remove Literal",
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeEvent", FilePath = @"file", BeginLine = 65, BeginColumn = 22}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeEvent", FilePath = @"file", BeginLine = 65, BeginColumn = 22});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "SomeStruct SomeMethod Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeStruct", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 71, BeginColumn = 37});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "SomeRecord SomeMethod Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 78, BeginColumn = 13}); 
     }
 }
