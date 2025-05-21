@@ -142,6 +142,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
     private static (string? CallerClassName, string? CallerMethodName) GetAssertCallerClassAndMethodNames(InvocationExpressionSyntax assertInvocation)
     {
         const string dotnetConstructorName = ".ctor";
+        const string dotnetDestructorName = "Finalize";
         const string dotnetIndexerName = "indexer";
 
         string? callerMethodName = null;
@@ -150,17 +151,34 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
         while (callerCrawlParent != null)
         {
-            if (callerCrawlParent is ClassDeclarationSyntax @class)
-                return (@class.Identifier.ValueText, callerMethodName);
+            // TypeDeclarationSyntax
+            // => ClassDeclarationSyntax, InterfaceDeclarationSyntax, RecordDeclarationSyntax, StructDeclarationSyntax
+            // https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.typedeclarationsyntax
+            if (callerCrawlParent is TypeDeclarationSyntax @type)
+                return (@type.Identifier.ValueText, callerMethodName);
 
             if (string.IsNullOrEmpty(callerMethodName))
             {
-                if (callerCrawlParent is ConstructorDeclarationSyntax constructor)
+                // BaseMethodDeclarationSyntax
+                // https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.basemethoddeclarationsyntax
+                if (callerCrawlParent is ConstructorDeclarationSyntax _)
                     callerMethodName = dotnetConstructorName;
-                else if (callerCrawlParent is IndexerDeclarationSyntax indexer)
-                    callerMethodName = dotnetIndexerName;
+                else if (callerCrawlParent is ConversionOperatorDeclarationSyntax conversion)
+                    callerMethodName = conversion.Type.ToString();
+                else if (callerCrawlParent is DestructorDeclarationSyntax _)
+                    callerMethodName = dotnetDestructorName;
                 else if (callerCrawlParent is MethodDeclarationSyntax method)
                     callerMethodName = method.Identifier.ValueText;
+                else if (callerCrawlParent is OperatorDeclarationSyntax @operator)
+                    callerMethodName = @operator.OperatorToken.ValueText;
+                // BasePropertyDeclarationSyntax
+                // https://learn.microsoft.com/en-us/dotnet/api/microsoft.codeanalysis.csharp.syntax.basepropertydeclarationsyntax
+                // We are not capturing the accessor because the complexity isn't worth the value:
+                // add/remove for events; get/set for properties
+                else if (callerCrawlParent is EventDeclarationSyntax @event)
+                    callerMethodName = @event.Identifier.ValueText;
+                else if (callerCrawlParent is IndexerDeclarationSyntax _)
+                    callerMethodName = dotnetIndexerName;
                 else if (callerCrawlParent is PropertyDeclarationSyntax property)
                     callerMethodName = property.Identifier.ValueText;
             }
