@@ -19,16 +19,14 @@ internal class FFISink : FFI, ISink
 
 internal class FFI
 {
-    protected FFI() => ThrowIfNotFileExists();
-    
-    private const string FilePath = "/usr/lib/libvoidstar.so";
-    internal static bool FileExists { get; } = File.Exists(FilePath);
-
-    internal static void ThrowIfNotFileExists()
+    protected FFI()
     {
         if (!FileExists)
             throw new FileNotFoundException(FilePath);
     }
+    
+    private const string FilePath = "/usr/lib/libvoidstar.so";
+    internal static bool FileExists { get; } = File.Exists(FilePath);
 
     [DllImport(FilePath)]
     protected static extern ulong fuzz_get_random();

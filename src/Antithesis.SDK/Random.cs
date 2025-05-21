@@ -25,19 +25,6 @@ public class Random : System.Random
     new public static System.Random Shared => throw new NotSupportedException();
 
     /// <summary>
-    /// Returns a Singleton of this class when executing within Antithesis; else, throws a FileNotFoundException.
-    /// </summary>
-    public static System.Random SharedThrowIfNativeLibraryNotExists
-    {
-        get
-        {
-            FFI.ThrowIfNotFileExists();
-
-            return SharedFallbackToSystem;
-        }
-    }
-
-    /// <summary>
     /// Returns a Singleton of this class when executing within Antithesis; else, falls back to System.Random.Shared.
     /// </summary>
     public static System.Random SharedFallbackToSystem { get; } =

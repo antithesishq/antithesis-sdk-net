@@ -23,11 +23,7 @@ public class RandomTests
     private static Antithesis.SDK.Random NewFixedSeedRandom() => new(new SystemRandomFixedSeedUInt64Provider());
 
     [Fact]
-    public void Shared()
-    {
-        XAssert.Throws<FileNotFoundException>(() => { var _ = Random.SharedThrowIfNativeLibraryNotExists; });
-        XAssert.Equal(System.Random.Shared, Random.SharedFallbackToSystem);
-    }
+    public void Shared() => XAssert.Equal(System.Random.Shared, Random.SharedFallbackToSystem);
 
     // NextDouble should directly exercise our Sample override.
     [Fact]
