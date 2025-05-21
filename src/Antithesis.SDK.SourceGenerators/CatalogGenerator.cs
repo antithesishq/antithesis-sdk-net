@@ -133,10 +133,10 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
         static bool IsAssertMethod(IMethodSymbol? symbol) =>
             symbol != null
-                && symbol.ContainingType.Name == "Assert"
-                && symbol.ContainingNamespace.Name == "SDK"
-                && symbol.ContainingNamespace.ContainingNamespace.Name == "Antithesis"
-                && symbol.ContainingAssembly.Name == "Antithesis.SDK";
+                && symbol.ContainingType?.Name == "Assert"
+                && symbol.ContainingNamespace?.Name == "SDK"
+                && symbol.ContainingNamespace?.ContainingNamespace?.Name == "Antithesis"
+                && symbol.ContainingAssembly?.Name == "Antithesis.SDK";
     }
 
     private static (string? CallerClassName, string? CallerMethodName) GetAssertCallerClassAndMethodNames(InvocationExpressionSyntax assertInvocation)
