@@ -26,12 +26,14 @@ namespace SomeCompany.SomeProject
 
             Assert.Always(true, null);
             Assert.Always(true, default);
+
+            Assert.Always(true, " ");
         }
 
         private string _id = string.Empty;
         private readonly string _idReadonly = string.Empty;
         private static readonly string _idStaticReadonly = string.Empty;
-        private const string _idConst = string.Empty;
+        private const string _idConst = "";
 
         public string Id = string.Empty;
         public readonly string IdReadonly = string.Empty;

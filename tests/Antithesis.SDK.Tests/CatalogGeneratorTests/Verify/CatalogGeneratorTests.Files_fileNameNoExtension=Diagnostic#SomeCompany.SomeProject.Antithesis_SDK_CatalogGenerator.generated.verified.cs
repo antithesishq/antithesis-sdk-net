@@ -65,6 +65,10 @@ internal static class Catalog
 
         /*global::Antithesis.SDK.Catalog.Always(
             ,
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 28, BeginColumn = 13});*/ 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 28, BeginColumn = 13});*/
+
+        /*global::Antithesis.SDK.Catalog.Always(
+            ,
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 30, BeginColumn = 13});*/ 
     }
 }

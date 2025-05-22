@@ -119,12 +119,12 @@
     },
     {
       Location: : (20,12)-(20,41),
-      Message: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS005,
-        Title: "message" must be a non-null literal or a const field.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
+        Id: ANTITHESIS006,
+        Title: "message" must contain at least one non white space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
@@ -190,6 +190,19 @@
         Id: ANTITHESIS005,
         Title: "message" must be a non-null literal or a const field.,
         MessageFormat: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: : (29,12)-(29,36),
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS006,
+        Title: "message" must contain at least one non white space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
