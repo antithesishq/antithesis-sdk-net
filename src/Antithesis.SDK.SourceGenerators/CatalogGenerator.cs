@@ -242,13 +242,13 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         if (!IsSymbolAccessible(messageMember.Symbol))
             return (null, DiagnosticId.MessageMustBeAccessible);
 
-        if (messageMember.Symbol is not IFieldSymbol messageField || !messageField.IsConst)
+        if (messageMember.Symbol is not IFieldSymbol messageField || !messageField.IsConst || messageField.ConstantValue == null)
             return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
-        return (GetSymbolFullName(messageField), null);
+        return ($"\"{messageField.ConstantValue}\"", null);
     }
 
-    private static bool IsSymbolAccessible(ISymbol symbol)
+        private static bool IsSymbolAccessible(ISymbol symbol)
     {
         if (symbol.DeclaredAccessibility is not (Accessibility.NotApplicable or Accessibility.Public or Accessibility.Internal or Accessibility.ProtectedOrInternal))
             return false;
@@ -257,38 +257,6 @@ public sealed class CatalogGenerator : IIncrementalGenerator
             return IsSymbolAccessible(symbol.ContainingSymbol);
 
         return true;
-    }
-
-    private static string GetSymbolFullName(ISymbol symbol)
-    {
-        // TODO : Make sure to create valid C# identifiers (e.g. if escaping is required for keywords in the name).
-
-        var namePartsReverse = new List<string> { symbol.Name };
-
-        var containingType = symbol.ContainingType;
-
-        while (true)
-        {
-            namePartsReverse.Add(containingType.Name);
-
-            if (containingType.ContainingType != null)
-                containingType = containingType.ContainingType;
-            else
-                break;
-        }
-
-        var containingNamespace = containingType.ContainingNamespace;
-
-        while (containingNamespace != null && !containingNamespace.IsGlobalNamespace)
-        {
-            namePartsReverse.Add(containingNamespace.Name);
-
-            containingNamespace = containingNamespace.ContainingNamespace;
-        }
-
-        namePartsReverse.Reverse();
-
-        return "global::" + string.Join(".", namePartsReverse);
     }
 
     private static void SourceOutput(SourceProductionContext context,

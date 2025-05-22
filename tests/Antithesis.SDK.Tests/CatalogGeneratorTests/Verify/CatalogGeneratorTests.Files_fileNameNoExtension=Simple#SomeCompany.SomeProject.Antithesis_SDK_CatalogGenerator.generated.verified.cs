@@ -12,7 +12,7 @@ internal static class Catalog
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @".ctor", FilePath = @"file", BeginLine = 10, BeginColumn = 13});
 
         global::Antithesis.SDK.Catalog.AlwaysGreaterThan(
-            global::SomeCompany.SomeProject.Ids.Field1,
+            "Ids Field1 Const",
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethodBlock", FilePath = @"file", BeginLine = 15, BeginColumn = 13});
 
         global::Antithesis.SDK.Catalog.Reachable(
@@ -28,11 +28,11 @@ internal static class Catalog
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeProperty", FilePath = @"file", BeginLine = 26, BeginColumn = 17});
 
         global::Antithesis.SDK.Catalog.Sometimes(
-            global::SomeCompany.SomeProject.Ids.Field2,
+            "Ids Field2 Const",
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeProperty", FilePath = @"file", BeginLine = 29, BeginColumn = 20});
 
         global::Antithesis.SDK.Catalog.Reachable(
-            global::SomeCompany.SomeProject.SomeClass.Id,
+            "Class Member Const Field",
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"indexer", FilePath = @"file", BeginLine = 32, BeginColumn = 43});
 
         global::Antithesis.SDK.Catalog.Always(
