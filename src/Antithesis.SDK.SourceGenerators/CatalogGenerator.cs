@@ -211,7 +211,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         // 1. A literal string passed in-line as an argument to the Assert "string message" Parameter.
         // 2. A reference to a constant field with public or internal accessibility.
 
-        var messageLiteral = messageArgument.ChildNodes().SingleOrDefault(n => n is LiteralExpressionSyntax);
+        var messageLiteral = messageArgument.ChildNodes().FirstOrDefault(n => n is LiteralExpressionSyntax);
 
         if (messageLiteral != null)
         {
@@ -222,7 +222,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         }
 
         var messageReference = messageArgument.ChildNodes()
-            .SingleOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
+            .FirstOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
 
         if (messageReference == null)
             return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
