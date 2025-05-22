@@ -77,6 +77,12 @@ namespace SomeCompany.SomeProject
         {
             Assert.Always(true, "SomeRecord SomeMethod Literal");
         }
+
+        public void SomeMethodUsingNamedArguments()
+        {
+            Assert.Always(condition: true, message: "SomeRecord SomeMethodUsingNamedArguments Normal Order Literal");
+            Assert.Always(message: "SomeRecord SomeMethodUsingNamedArguments Reversed Order Literal", condition: true);
+        }
     }
 
     public static class Ids

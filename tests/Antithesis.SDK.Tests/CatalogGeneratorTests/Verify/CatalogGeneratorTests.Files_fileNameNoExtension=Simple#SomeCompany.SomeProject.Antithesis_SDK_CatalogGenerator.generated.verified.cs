@@ -65,6 +65,14 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Always(
             "SomeRecord SomeMethod Literal",
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 78, BeginColumn = 13}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 78, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "SomeRecord SomeMethodUsingNamedArguments Normal Order Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethodUsingNamedArguments", FilePath = @"file", BeginLine = 83, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "SomeRecord SomeMethodUsingNamedArguments Reversed Order Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethodUsingNamedArguments", FilePath = @"file", BeginLine = 84, BeginColumn = 13}); 
     }
 }

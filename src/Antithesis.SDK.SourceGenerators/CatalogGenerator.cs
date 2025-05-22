@@ -195,10 +195,17 @@ public sealed class CatalogGenerator : IIncrementalGenerator
     {
         int messageOrdinal = assertMethod.Parameters.Single(parameter => parameter.Name == "message").Ordinal;
 
+        // Because of named arguments, this check is actually "incorrect"; however, in TransformAssertInvocation we've
+        // already checked that the number of invocation arguments == method parameters, so this check is also redundant.
+        // We've left it in as a safeguard against TransformAssertInvocation changing in a way that would cause our
+        // assertInvocation.ArgumentList.Arguments indexing to go out of bounds.
         if (assertInvocation.ArgumentList.Arguments.Count <= messageOrdinal)
             return (null, DiagnosticId.MessageSymbolAmbiguous);
 
-        var messageArgument = assertInvocation.ArgumentList.Arguments[messageOrdinal];
+        var messageArgument = assertInvocation.ArgumentList
+                .Arguments
+                .FirstOrDefault(arg => arg.NameColon?.Name.ToString() == "message")
+            ?? assertInvocation.ArgumentList.Arguments[messageOrdinal];
 
         // We support the following two ways of specifying the unique message for an Assertion:
         // 1. A literal string passed in-line as an argument to the Assert "string message" Parameter.
