@@ -24,7 +24,7 @@ public class AssertBenchmarks
 		}
 	}
 
-    public const string IdIsTheMessage = nameof(AlwaysInTightLoop);
+    public const string Message = nameof(AlwaysInTightLoop);
 
     [Benchmark]
     public long AlwaysInTightLoop()
@@ -34,7 +34,7 @@ public class AssertBenchmarks
         for (int i = 0; i < 1_000; i++)
         {
             sum += i;
-            Assert.Always(true, IdIsTheMessage);
+            Assert.Always(true, Message);
         }
 
         return sum;

@@ -8,10 +8,10 @@ internal enum DiagnosticId
     // Error 0##
     Unspecified = 0,
     SyntaxNotSupported = 1,
-    IdIsTheMessageSymbolNotFound = 2,
-    IdIsTheMessageSymbolAmbiguous = 3,
-    IdIsTheMessageMustBeAccessible = 4,
-    IdIsTheMessageMustBeNonNullLiteralOrConstField = 5,
+    MessageSymbolNotFound = 2,
+    MessageSymbolAmbiguous = 3,
+    MessageMustBeAccessible = 4,
+    MessageMustBeNonNullLiteralOrConstField = 5,
 
     // Warning 1##
 
@@ -54,32 +54,32 @@ internal static class DiagnosticDescriptors
                     "This syntax is not supported. Please contact Antithesis.",
                     "InternalError"),
 
-            [DiagnosticId.IdIsTheMessageSymbolNotFound] =
+            [DiagnosticId.MessageSymbolNotFound] =
                 Construct(
-                    DiagnosticId.IdIsTheMessageSymbolNotFound,
+                    DiagnosticId.MessageSymbolNotFound,
                     "A symbol could not be found.",
                     "A symbol could not be found. Please contact Antithesis.",
                     "InternalError"),
 
-            [DiagnosticId.IdIsTheMessageSymbolAmbiguous] =
+            [DiagnosticId.MessageSymbolAmbiguous] =
                 Construct(
-                    DiagnosticId.IdIsTheMessageSymbolAmbiguous,
-                    @"""idIsTheMessage"" is ambiguous.",
-                    @"The expression passed as an argument to this Assert ""idIsTheMessage"" parameter is ambiguous.",
+                    DiagnosticId.MessageSymbolAmbiguous,
+                    @"""message"" is ambiguous.",
+                    @"The expression passed as an argument to this Assert ""message"" parameter is ambiguous.",
                     "Catalog"),
 
-            [DiagnosticId.IdIsTheMessageMustBeAccessible] =
+            [DiagnosticId.MessageMustBeAccessible] =
                 Construct(
-                    DiagnosticId.IdIsTheMessageMustBeAccessible,
-                    @"""idIsTheMessage"" must be accessible.",
-                    @"The expression passed as an argument to any Assert ""idIsTheMessage"" parameter must accessible to public or internal.",
+                    DiagnosticId.MessageMustBeAccessible,
+                    @"""message"" must be accessible.",
+                    @"The expression passed as an argument to any Assert ""message"" parameter must accessible to public or internal.",
                     "Catalog"),
 
-            [DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField] =
+            [DiagnosticId.MessageMustBeNonNullLiteralOrConstField] =
                 Construct(
-                    DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField,
-                    @"""idIsTheMessage"" must be a non-null literal or a const field.",
-                    @"The expression passed as an argument to any Assert ""idIsTheMessage"" parameter must be a non-null literal or a reference to a const field.",
+                    DiagnosticId.MessageMustBeNonNullLiteralOrConstField,
+                    @"""message"" must be a non-null literal or a const field.",
+                    @"The expression passed as an argument to any Assert ""message"" parameter must be a non-null literal or a reference to a const field.",
                     "Catalog"),
             
             [DiagnosticId.CompilerConstantNotDefined] =

@@ -17,40 +17,40 @@ public static class Catalog
     /// Used by the Antithesis.SDK.SourceGenerator package to Catalog a corresponding Assert method call so that
     /// Antithesis is aware of the assertion regardless of whether or not it is encountered during runtime.
     /// </summary>
-    /// <param name="idIsTheMessage"><inheritdoc cref="Assert.NoGuidanceHelper" path="/param[@name='idIsTheMessage']"/></param>
+    /// <param name="message"><inheritdoc cref="Assert.NoGuidanceHelper" path="/param[@name='message']"/></param>
     /// <param name="location">Provides metadata related to the source code location of the corresponding Assert.</param>
-    public static void Always(string idIsTheMessage, LocationInfo location)
+    public static void Always(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.Always, idIsTheMessage, location);
+            Helper(AssertionMethodType.Always, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void AlwaysOrUnreachable(string idIsTheMessage, LocationInfo location)
+    public static void AlwaysOrUnreachable(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.AlwaysOrUnreachable, idIsTheMessage, location);
+            Helper(AssertionMethodType.AlwaysOrUnreachable, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void Sometimes(string idIsTheMessage, LocationInfo location)
+    public static void Sometimes(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.Sometimes, idIsTheMessage, location);
+            Helper(AssertionMethodType.Sometimes, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void Unreachable(string idIsTheMessage, LocationInfo location)
+    public static void Unreachable(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.Unreachable, idIsTheMessage, location);
+            Helper(AssertionMethodType.Unreachable, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void Reachable(string idIsTheMessage, LocationInfo location)
+    public static void Reachable(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.Reachable, idIsTheMessage, location);
+            Helper(AssertionMethodType.Reachable, message, location);
     }
 
     #endregion
@@ -58,59 +58,59 @@ public static class Catalog
     #region Numeric Guidance
 
     /// <inheritdoc cref="Always"/>
-    public static void AlwaysGreaterThan(string idIsTheMessage, LocationInfo location)
+    public static void AlwaysGreaterThan(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.AlwaysGreaterThan, idIsTheMessage, location);
+            Helper(AssertionMethodType.AlwaysGreaterThan, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void AlwaysGreaterThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    public static void AlwaysGreaterThanOrEqualTo(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.AlwaysGreaterThanOrEqualTo, idIsTheMessage, location);
+            Helper(AssertionMethodType.AlwaysGreaterThanOrEqualTo, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void AlwaysLessThan(string idIsTheMessage, LocationInfo location)
+    public static void AlwaysLessThan(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.AlwaysLessThan, idIsTheMessage, location);
+            Helper(AssertionMethodType.AlwaysLessThan, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void AlwaysLessThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    public static void AlwaysLessThanOrEqualTo(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.AlwaysLessThanOrEqualTo, idIsTheMessage, location);
+            Helper(AssertionMethodType.AlwaysLessThanOrEqualTo, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void SometimesGreaterThan(string idIsTheMessage, LocationInfo location)
+    public static void SometimesGreaterThan(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.SometimesGreaterThan, idIsTheMessage, location);
+            Helper(AssertionMethodType.SometimesGreaterThan, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void SometimesGreaterThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    public static void SometimesGreaterThanOrEqualTo(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.SometimesGreaterThanOrEqualTo, idIsTheMessage, location);
+            Helper(AssertionMethodType.SometimesGreaterThanOrEqualTo, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void SometimesLessThan(string idIsTheMessage, LocationInfo location)
+    public static void SometimesLessThan(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.SometimesLessThan, idIsTheMessage, location);
+            Helper(AssertionMethodType.SometimesLessThan, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void SometimesLessThanOrEqualTo(string idIsTheMessage, LocationInfo location)
+    public static void SometimesLessThanOrEqualTo(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.SometimesLessThanOrEqualTo, idIsTheMessage, location);
+            Helper(AssertionMethodType.SometimesLessThanOrEqualTo, message, location);
     }
 
     #endregion
@@ -118,29 +118,29 @@ public static class Catalog
     #region Boolean Guidance
 
     /// <inheritdoc cref="Always"/>
-    public static void AlwaysSome(string idIsTheMessage, LocationInfo location)
+    public static void AlwaysSome(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.AlwaysSome, idIsTheMessage, location);
+            Helper(AssertionMethodType.AlwaysSome, message, location);
     }
 
     /// <inheritdoc cref="Always"/>
-    public static void SometimesAll(string idIsTheMessage, LocationInfo location)
+    public static void SometimesAll(string message, LocationInfo location)
     {
         if (!Sink.IsNoop)
-            Helper(AssertionMethodType.SometimesAll, idIsTheMessage, location);
+            Helper(AssertionMethodType.SometimesAll, message, location);
     }
 
     #endregion
 
-    private static void Helper(AssertionMethodType methodType, string idIsTheMessage, LocationInfo location)
+    private static void Helper(AssertionMethodType methodType, string message, LocationInfo location)
     {
-        if (string.IsNullOrEmpty(idIsTheMessage))
-            throw new ArgumentNullException(nameof(idIsTheMessage));
+        if (string.IsNullOrEmpty(message))
+            throw new ArgumentNullException(nameof(message));
 
         if (location == null)
             throw new ArgumentNullException(nameof(location));
 
-        Sink.Write(AssertionInfo.ConstructForCatalogWrite(methodType, idIsTheMessage, location));
+        Sink.Write(AssertionInfo.ConstructForCatalogWrite(methodType, message, location));
     }
 }

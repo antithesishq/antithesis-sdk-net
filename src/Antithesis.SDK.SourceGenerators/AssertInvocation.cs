@@ -61,7 +61,7 @@ internal record class Caller(string? AssemblyName, string? ClassName, string? Me
     }
 }
 
-internal record class AssertInvocation(Caller Caller, string AssertMethodName, string? AssertIdIsTheMessage, DiagnosticId? DiagnosticId)
+internal record class AssertInvocation(Caller Caller, string AssertMethodName, string? AssertMessage, DiagnosticId? DiagnosticId)
 {
     internal Diagnostic ToDiagnostic() =>
         DiagnosticId != null
@@ -77,6 +77,6 @@ internal record class AssertInvocation(Caller Caller, string AssertMethodName, s
         string prefix = hasError ? "/*" : string.Empty;
         string suffix = hasError ? "*/" : string.Empty;
 
-        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertIdIsTheMessage},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
+        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertMessage},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
     }
 }

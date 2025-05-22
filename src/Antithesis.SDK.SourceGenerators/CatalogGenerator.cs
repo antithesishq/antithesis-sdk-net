@@ -91,13 +91,13 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
         (string? callerClassName, string? callerMethodName) = GetAssertCallerClassAndMethodNames(assertInvocation);
 
-        (string? assertIdIsTheMessage, DiagnosticId? diagnosticId) =
-            GetAssertIdIsTheMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
+        (string? assertMessage, DiagnosticId? diagnosticId) =
+            GetAssertMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
 
         return new AssertInvocation(
             new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName,
                 LocationSlim.FromLocation(assertInvocation.GetLocation())),
-            GetPossibleAssertMethodName(assertInvocation)!, assertIdIsTheMessage, diagnosticId);
+            GetPossibleAssertMethodName(assertInvocation)!, assertMessage, diagnosticId);
     }
 
     private static IMethodSymbol? GetAssertMethodSymbol(GeneratorSyntaxContext context, CancellationToken cancellationToken,
@@ -189,56 +189,56 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         return (null, callerMethodName);
     }
 
-    private static (string? IdIsTheMessage, DiagnosticId? DiagnosticId) GetAssertIdIsTheMessageOrDiagnosticId(
+    private static (string? Message, DiagnosticId? DiagnosticId) GetAssertMessageOrDiagnosticId(
         GeneratorSyntaxContext context, CancellationToken cancellationToken,
         InvocationExpressionSyntax assertInvocation, IMethodSymbol assertMethod)
     {
-        int idIsTheMessageOrdinal = assertMethod.Parameters.Single(parameter => parameter.Name == "idIsTheMessage").Ordinal;
+        int messageOrdinal = assertMethod.Parameters.Single(parameter => parameter.Name == "message").Ordinal;
 
-        if (assertInvocation.ArgumentList.Arguments.Count <= idIsTheMessageOrdinal)
-            return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
+        if (assertInvocation.ArgumentList.Arguments.Count <= messageOrdinal)
+            return (null, DiagnosticId.MessageSymbolAmbiguous);
 
-        var idIsTheMessageArgument = assertInvocation.ArgumentList.Arguments[idIsTheMessageOrdinal];
+        var messageArgument = assertInvocation.ArgumentList.Arguments[messageOrdinal];
 
-        // We support the following two ways of specifying the unique idIsTheMessage for an Assertion:
-        // 1. A literal string passed in-line as an argument to the Assert "string idIsTheMessage" Parameter.
+        // We support the following two ways of specifying the unique message for an Assertion:
+        // 1. A literal string passed in-line as an argument to the Assert "string message" Parameter.
         // 2. A reference to a constant field with public or internal accessibility.
 
-        var idIsTheMessageLiteral = idIsTheMessageArgument.ChildNodes().SingleOrDefault(n => n is LiteralExpressionSyntax);
+        var messageLiteral = messageArgument.ChildNodes().SingleOrDefault(n => n is LiteralExpressionSyntax);
 
-        if (idIsTheMessageLiteral != null)
+        if (messageLiteral != null)
         {
             // Other relevant SyntaxKinds include DefaultLiteralExpression and NullLiteralExpression.
-            return idIsTheMessageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
-                ? (idIsTheMessageLiteral.ToString(), null)
-                : (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+            return messageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
+                ? (messageLiteral.ToString(), null)
+                : (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
         }
 
-        var idIsTheMessageReference = idIsTheMessageArgument.ChildNodes()
+        var messageReference = messageArgument.ChildNodes()
             .SingleOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
 
-        if (idIsTheMessageReference == null)
-            return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+        if (messageReference == null)
+            return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
-        var idIsTheMessageMember = context.SemanticModel.GetSymbolInfo(idIsTheMessageReference, cancellationToken);
+        var messageMember = context.SemanticModel.GetSymbolInfo(messageReference, cancellationToken);
 
-        if (idIsTheMessageMember.Symbol == null)
+        if (messageMember.Symbol == null)
         {
-            if (idIsTheMessageMember.CandidateSymbols.Length == 0)
-                return (null, DiagnosticId.IdIsTheMessageSymbolNotFound);
-            else if (idIsTheMessageMember.CandidateSymbols.Any(IsSymbolAccessible))
-                return (null, DiagnosticId.IdIsTheMessageSymbolAmbiguous);
+            if (messageMember.CandidateSymbols.Length == 0)
+                return (null, DiagnosticId.MessageSymbolNotFound);
+            else if (messageMember.CandidateSymbols.Any(IsSymbolAccessible))
+                return (null, DiagnosticId.MessageSymbolAmbiguous);
             else
-                return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
+                return (null, DiagnosticId.MessageMustBeAccessible);
         }
 
-        if (!IsSymbolAccessible(idIsTheMessageMember.Symbol))
-            return (null, DiagnosticId.IdIsTheMessageMustBeAccessible);
+        if (!IsSymbolAccessible(messageMember.Symbol))
+            return (null, DiagnosticId.MessageMustBeAccessible);
 
-        if (idIsTheMessageMember.Symbol is not IFieldSymbol idIsTheMessageField || !idIsTheMessageField.IsConst)
-            return (null, DiagnosticId.IdIsTheMessageMustBeNonNullLiteralOrConstField);
+        if (messageMember.Symbol is not IFieldSymbol messageField || !messageField.IsConst)
+            return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
-        return (GetSymbolFullName(idIsTheMessageField), null);
+        return (GetSymbolFullName(messageField), null);
     }
 
     private static bool IsSymbolAccessible(ISymbol symbol)

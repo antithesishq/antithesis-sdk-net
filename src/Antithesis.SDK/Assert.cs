@@ -2,14 +2,14 @@ namespace Antithesis.SDK;
 
 using System.Text.Json.Nodes;
 
-// LOAD BEARING : typeof(Assert).FullName and the "string idIsTheMessage" Parameters' names are load bearing for the CatalogGenerator.
+// LOAD BEARING : typeof(Assert).FullName and the "string message" Parameters' names are load bearing for the CatalogGenerator.
 
 /// <summary>
 /// The Assert class enables defining <a href="https://antithesis.com/docs/using_antithesis/properties/">test properties</a>
 /// about your program or <a href="https://antithesis.com/docs/getting_started/first_test/">workload</a>.
 /// <br/><br/>
-/// Each static method in this class takes a parameter called <c>idIsTheMessage</c>, which is a string literal identifier used to aggregate assertions.
-/// Antithesis generates one test property per unique <c>idIsTheMessage</c>. This test property will be named <c>idIsTheMessage</c>
+/// Each static method in this class takes a parameter called <c>message</c>, which is a string literal identifier used to aggregate assertions.
+/// Antithesis generates one test property per unique <c>message</c>. This test property will be named <c>message</c>
 /// in the <a href="https://antithesis.com/docs/reports/triage/">triage report</a>.
 /// <br/><br/>
 /// Each static method also takes a parameter called <c>details</c>, which is an optional <c>JsonObject</c> reference of additional information provided
@@ -27,10 +27,10 @@ public static class Assert
     /// The corresponding test property will be viewable in the <c>Antithesis SDK: Always assertions</c> group of your triage report.
     /// </summary>
     /// <inheritdoc cref="NoGuidanceHelper"/>
-    public static void Always(bool condition, string idIsTheMessage, JsonObject? details = default)
+    public static void Always(bool condition, string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            NoGuidanceHelper(AssertionMethodType.Always, condition, idIsTheMessage, details);
+            NoGuidanceHelper(AssertionMethodType.Always, condition, message, details);
     }
 
     /// <summary>
@@ -39,10 +39,10 @@ public static class Assert
     /// The corresponding test property will be viewable in the <c>Antithesis SDK: Always assertions</c> group of your triage report.
     /// </summary>
     /// <inheritdoc cref="NoGuidanceHelper"/>
-    public static void AlwaysOrUnreachable(bool condition, string idIsTheMessage, JsonObject? details = default)
+    public static void AlwaysOrUnreachable(bool condition, string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            NoGuidanceHelper(AssertionMethodType.AlwaysOrUnreachable, condition, idIsTheMessage, details);
+            NoGuidanceHelper(AssertionMethodType.AlwaysOrUnreachable, condition, message, details);
     }
 
     /// <summary>
@@ -51,10 +51,10 @@ public static class Assert
     /// This test property will be viewable in the <c>Antithesis SDK: Sometimes assertions</c> group of your triage report.
     /// </summary>
     /// <inheritdoc cref="NoGuidanceHelper"/>
-    public static void Sometimes(bool condition, string idIsTheMessage, JsonObject? details = default)
+    public static void Sometimes(bool condition, string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            NoGuidanceHelper(AssertionMethodType.Sometimes, condition, idIsTheMessage, details);
+            NoGuidanceHelper(AssertionMethodType.Sometimes, condition, message, details);
     }
 
     /// <summary>
@@ -63,10 +63,10 @@ public static class Assert
     /// This test property will be viewable in the <c>Antithesis SDK: Reachability assertions</c> group of your triage report.
     /// </summary>
     /// <inheritdoc cref="NoGuidanceHelper"/>
-    public static void Unreachable(string idIsTheMessage, JsonObject? details = default)
+    public static void Unreachable(string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            NoGuidanceHelper(AssertionMethodType.Unreachable, false, idIsTheMessage, details);
+            NoGuidanceHelper(AssertionMethodType.Unreachable, false, message, details);
     }
 
     /// <summary>
@@ -75,26 +75,26 @@ public static class Assert
     /// This test property will be viewable in the <c>Antithesis SDK: Reachability assertions</c> group of your triage report.
     /// </summary>
     /// <inheritdoc cref="NoGuidanceHelper"/>
-    public static void Reachable(string idIsTheMessage, JsonObject? details = default)
+    public static void Reachable(string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            NoGuidanceHelper(AssertionMethodType.Reachable, true, idIsTheMessage, details);
+            NoGuidanceHelper(AssertionMethodType.Reachable, true, message, details);
     }
 
     /// <param name="methodType">The AssertionMethodType of the caller.</param>
     /// <param name="condition">The condition being asserted.</param>
-    /// <param name="idIsTheMessage">
+    /// <param name="message">
     ///     A unique string identifier of the assertion. Provides context for assertion passes and failures and is intended to be human-readable.
     ///     <b><i>Must be provided as a string literal or as a reference to a publicly accessible const field.</i></b>
     /// </param>
     /// <param name="details">Optional additional details to provide greater context for assertion passes and failures.</param>
-    private static void NoGuidanceHelper(AssertionMethodType methodType, bool condition, string idIsTheMessage, JsonObject? details)
+    private static void NoGuidanceHelper(AssertionMethodType methodType, bool condition, string message, JsonObject? details)
     {
-        if (string.IsNullOrEmpty(idIsTheMessage))
-            throw new ArgumentNullException(nameof(idIsTheMessage));
+        if (string.IsNullOrEmpty(message))
+            throw new ArgumentNullException(nameof(message));
 
-        if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, details)));
+        if (AssertionTracker.ShouldWrite(message, condition))
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetStackTrace(condition, details)));
     }
 
     #endregion
@@ -107,13 +107,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Always"/>
-    public static void AlwaysGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void AlwaysGreaterThan<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.AlwaysGreaterThan, compareTo => compareTo > 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -123,13 +123,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Always"/>
-    public static void AlwaysGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void AlwaysGreaterThanOrEqualTo<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.AlwaysGreaterThanOrEqualTo, compareTo => compareTo >= 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -139,13 +139,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Always"/>
-    public static void AlwaysLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void AlwaysLessThan<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.AlwaysLessThan, compareTo => compareTo < 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -155,13 +155,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Always"/>
-    public static void AlwaysLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void AlwaysLessThanOrEqualTo<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.AlwaysLessThanOrEqualTo, compareTo => compareTo <= 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -171,13 +171,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Sometimes"/>
-    public static void SometimesGreaterThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void SometimesGreaterThan<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.SometimesGreaterThan, compareTo => compareTo > 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -187,13 +187,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Sometimes"/>
-    public static void SometimesGreaterThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void SometimesGreaterThanOrEqualTo<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.SometimesGreaterThanOrEqualTo, compareTo => compareTo >= 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -203,13 +203,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Sometimes"/>
-    public static void SometimesLessThan<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void SometimesLessThan<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.SometimesLessThan, compareTo => compareTo < 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -219,13 +219,13 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="NumericGuidanceHelper"/>
     /// <seealso cref="Sometimes"/>
-    public static void SometimesLessThanOrEqualTo<T>(T left, T right, string idIsTheMessage, JsonObject? details = default)
+    public static void SometimesLessThanOrEqualTo<T>(T left, T right, string message, JsonObject? details = default)
         where T : struct, IComparable<T>, IConvertible
     {
         if (!Sink.IsNoop)
         {
             NumericGuidanceHelper(AssertionMethodType.SometimesLessThanOrEqualTo, compareTo => compareTo <= 0,
-                left, right, idIsTheMessage, details);
+                left, right, message, details);
         }
     }
 
@@ -234,14 +234,14 @@ public static class Assert
     /// <param name="compareToOperation">The operation to apply to the result of left.CompareTo(right).</param>
     /// <param name="left">The left operand of the comparison.</param>
     /// <param name="right">The right operand of the comparison.</param>
-    /// <param name="idIsTheMessage"><inheritdoc cref="NoGuidanceHelper" path="/param[@name='idIsTheMessage']"/></param>
+    /// <param name="message"><inheritdoc cref="NoGuidanceHelper" path="/param[@name='message']"/></param>
     /// <param name="details"><inheritdoc cref="NoGuidanceHelper" path="/param[@name='details']"/></param>
     private static void NumericGuidanceHelper<T>(AssertionMethodType methodType, Func<int, bool> compareToOperation,
-            T left, T right, string idIsTheMessage, JsonObject? details)
+            T left, T right, string message, JsonObject? details)
         where T : struct, IComparable<T>, IConvertible
     {
-        if (string.IsNullOrEmpty(idIsTheMessage))
-            throw new ArgumentNullException(nameof(idIsTheMessage));
+        if (string.IsNullOrEmpty(message))
+            throw new ArgumentNullException(nameof(message));
 
         bool condition = compareToOperation(left.CompareTo(right));
 
@@ -258,11 +258,11 @@ public static class Assert
 
         bool converted = leftDouble.Success && rightDouble.Success;
 
-        if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, SetGuidanceData(details))));
+        if (AssertionTracker.ShouldWrite(message, condition))
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetStackTrace(condition, SetGuidanceData(details))));
 
-        if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), idIsTheMessage, leftDouble.Value, rightDouble.Value))
-            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
+        if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), message, leftDouble.Value, rightDouble.Value))
+            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, SetGuidanceData(null)));
 
         JsonObject? SetGuidanceData(JsonObject? json)
         {
@@ -288,10 +288,10 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="BooleanGuidanceHelper"/>
     /// <seealso cref="Always"/>
-    public static void AlwaysSome(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default)
+    public static void AlwaysSome(IReadOnlyDictionary<string, bool> conditions, string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            BooleanGuidanceHelper(AssertionMethodType.AlwaysSome, values => values.Any(v => v), conditions, idIsTheMessage, details);
+            BooleanGuidanceHelper(AssertionMethodType.AlwaysSome, values => values.Any(v => v), conditions, message, details);
     }
 
     /// <summary>
@@ -300,33 +300,33 @@ public static class Assert
     /// </summary>
     /// <inheritdoc cref="BooleanGuidanceHelper"/>
     /// <seealso cref="Sometimes"/>
-    public static void SometimesAll(IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details = default)
+    public static void SometimesAll(IReadOnlyDictionary<string, bool> conditions, string message, JsonObject? details = default)
     {
         if (!Sink.IsNoop)
-            BooleanGuidanceHelper(AssertionMethodType.SometimesAll, values => values.All(v => v), conditions, idIsTheMessage, details);
+            BooleanGuidanceHelper(AssertionMethodType.SometimesAll, values => values.All(v => v), conditions, message, details);
     }
 
     /// <param name="methodType">The AssertionMethodType of the caller.</param>
     /// <param name="operation">The operation to apply to conditions.Values.</param>
     /// <param name="conditions">The collection of conditions to-be evaluated, represented as a Dictionary of bools keyed by strings.</param>
-    /// <param name="idIsTheMessage"><inheritdoc cref="NoGuidanceHelper" path="/param[@name='idIsTheMessage']"/></param>
+    /// <param name="message"><inheritdoc cref="NoGuidanceHelper" path="/param[@name='message']"/></param>
     /// <param name="details"><inheritdoc cref="NoGuidanceHelper" path="/param[@name='details']"/></param>
     private static void BooleanGuidanceHelper(AssertionMethodType methodType, Func<IEnumerable<bool>, bool> operation,
-        IReadOnlyDictionary<string, bool> conditions, string idIsTheMessage, JsonObject? details)
+        IReadOnlyDictionary<string, bool> conditions, string message, JsonObject? details)
     {
         if (conditions == null)
             throw new ArgumentNullException(nameof(conditions));
 
-        if (string.IsNullOrEmpty(idIsTheMessage))
-            throw new ArgumentNullException(nameof(idIsTheMessage));
+        if (string.IsNullOrEmpty(message))
+            throw new ArgumentNullException(nameof(message));
 
         bool condition = operation(conditions.Values);
 
-        if (AssertionTracker.ShouldWrite(idIsTheMessage, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, idIsTheMessage, condition, SetStackTrace(condition, SetGuidanceData(details))));
+        if (AssertionTracker.ShouldWrite(message, condition))
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetStackTrace(condition, SetGuidanceData(details))));
 
         if (GuidanceTracker.ShouldBooleanWrite())
-            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, idIsTheMessage, SetGuidanceData(null)));
+            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, SetGuidanceData(null)));
 
         JsonObject? SetGuidanceData(JsonObject? json)
         {
