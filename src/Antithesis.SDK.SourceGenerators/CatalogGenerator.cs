@@ -94,6 +94,12 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         (string? assertMessage, DiagnosticId? diagnosticId) =
             GetAssertMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
 
+        if (assertMessage != null && string.IsNullOrWhiteSpace(assertMessage.Trim('"')))
+        {
+            assertMessage = null;
+            diagnosticId ??= DiagnosticId.MessageMustContainNonWhiteSpace;        
+        }
+
         return new AssertInvocation(
             new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName,
                 LocationSlim.FromLocation(assertInvocation.GetLocation())),

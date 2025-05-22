@@ -13,6 +13,7 @@ internal enum DiagnosticId
     // Obsoleted prior to v1 General Availability.
     // MessageMustBeAccessible = 4,
     MessageMustBeNonNullLiteralOrConstField = 5,
+    MessageMustContainNonWhiteSpace = 6,
 
     // Warning 1##
 
@@ -74,6 +75,13 @@ internal static class DiagnosticDescriptors
                     DiagnosticId.MessageMustBeNonNullLiteralOrConstField,
                     @"""message"" must be a non-null literal or a const field.",
                     @"The expression passed as an argument to any Assert ""message"" parameter must be a non-null literal or a reference to a const field.",
+                    "Catalog"),
+
+            [DiagnosticId.MessageMustContainNonWhiteSpace] =
+                Construct(
+                    DiagnosticId.MessageMustContainNonWhiteSpace,
+                    @"""message"" must contain at least one non white space character.",
+                    @"The expression passed as an argument to any Assert ""message"" parameter must evaluate to a string containing at least one non white space character.",
                     "Catalog"),
             
             [DiagnosticId.CompilerConstantNotDefined] =
