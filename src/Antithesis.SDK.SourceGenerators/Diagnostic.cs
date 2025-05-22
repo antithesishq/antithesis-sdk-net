@@ -10,7 +10,8 @@ internal enum DiagnosticId
     SyntaxNotSupported = 1,
     MessageSymbolNotFound = 2,
     MessageSymbolAmbiguous = 3,
-    MessageMustBeAccessible = 4,
+    // Obsoleted prior to v1 General Availability.
+    // MessageMustBeAccessible = 4,
     MessageMustBeNonNullLiteralOrConstField = 5,
 
     // Warning 1##
@@ -66,13 +67,6 @@ internal static class DiagnosticDescriptors
                     DiagnosticId.MessageSymbolAmbiguous,
                     @"""message"" is ambiguous.",
                     @"The expression passed as an argument to this Assert ""message"" parameter is ambiguous.",
-                    "Catalog"),
-
-            [DiagnosticId.MessageMustBeAccessible] =
-                Construct(
-                    DiagnosticId.MessageMustBeAccessible,
-                    @"""message"" must be accessible.",
-                    @"The expression passed as an argument to any Assert ""message"" parameter must accessible to public or internal.",
                     "Catalog"),
 
             [DiagnosticId.MessageMustBeNonNullLiteralOrConstField] =

@@ -6,9 +6,9 @@ namespace SomeCompany.SomeProject
     {
         public void SomeMethod()
         {
-            Assert.Always(true, Ids.Ambiguous);
-            Assert.Sometimes(true, Ids.NotAccessible1);
-            Assert.Reachable(Ids.NotAccessible2);
+            Assert.Always(true, Ids.Ambiguous1);
+            Assert.Sometimes(true, Ids.Ambiguous2);
+            Assert.Reachable(Ids.Ambiguous3);
             Assert.Unreachable(Ids.NotField);
             Antithesis.SDK.Assert.Always(true, Ids.NotConst);
 
@@ -41,10 +41,11 @@ namespace SomeCompany.SomeProject
     public static class Ids
     {
         // Ambiguous because the class is declared static but this Field is not.
-        public string Ambiguous = string.Empty;
+        public string Ambiguous1 = string.Empty;
 
-        const string NotAccessible1 = string.Empty;
-        private const string NotAccessible2 = string.Empty;
+        // Ambiguous because these are inaccessible to SomeClass.
+        const string Ambiguous2 = string.Empty;
+        private const string Ambiguous3 = string.Empty;
 
         public static string NotField => string.Empty;
 

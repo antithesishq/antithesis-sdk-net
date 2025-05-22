@@ -233,30 +233,14 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         {
             if (messageMember.CandidateSymbols.Length == 0)
                 return (null, DiagnosticId.MessageSymbolNotFound);
-            else if (messageMember.CandidateSymbols.Any(IsSymbolAccessible))
-                return (null, DiagnosticId.MessageSymbolAmbiguous);
             else
-                return (null, DiagnosticId.MessageMustBeAccessible);
+                return (null, DiagnosticId.MessageSymbolAmbiguous);
         }
-
-        if (!IsSymbolAccessible(messageMember.Symbol))
-            return (null, DiagnosticId.MessageMustBeAccessible);
 
         if (messageMember.Symbol is not IFieldSymbol messageField || !messageField.IsConst || messageField.ConstantValue == null)
             return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
         return ($"\"{messageField.ConstantValue}\"", null);
-    }
-
-        private static bool IsSymbolAccessible(ISymbol symbol)
-    {
-        if (symbol.DeclaredAccessibility is not (Accessibility.NotApplicable or Accessibility.Public or Accessibility.Internal or Accessibility.ProtectedOrInternal))
-            return false;
-
-        if (symbol.ContainingSymbol != null)
-            return IsSymbolAccessible(symbol.ContainingSymbol);
-
-        return true;
     }
 
     private static void SourceOutput(SourceProductionContext context,

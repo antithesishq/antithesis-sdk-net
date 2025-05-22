@@ -1,7 +1,7 @@
 ﻿{
   Diagnostics: [
     {
-      Location: : (8,12)-(8,46),
+      Location: : (8,12)-(8,47),
       Message: The expression passed as an argument to this Assert "message" parameter is ambiguous.,
       Severity: Error,
       Descriptor: {
@@ -14,26 +14,26 @@
       }
     },
     {
-      Location: : (9,12)-(9,54),
-      Message: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+      Location: : (9,12)-(9,50),
+      Message: The expression passed as an argument to this Assert "message" parameter is ambiguous.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS004,
-        Title: "message" must be accessible.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+        Id: ANTITHESIS003,
+        Title: "message" is ambiguous.,
+        MessageFormat: The expression passed as an argument to this Assert "message" parameter is ambiguous.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
       }
     },
     {
-      Location: : (10,12)-(10,48),
-      Message: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+      Location: : (10,12)-(10,44),
+      Message: The expression passed as an argument to this Assert "message" parameter is ambiguous.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS004,
-        Title: "message" must be accessible.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+        Id: ANTITHESIS003,
+        Title: "message" is ambiguous.,
+        MessageFormat: The expression passed as an argument to this Assert "message" parameter is ambiguous.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
@@ -80,12 +80,12 @@
     },
     {
       Location: : (17,12)-(17,44),
-      Message: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+      Message: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS004,
-        Title: "message" must be accessible.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+        Id: ANTITHESIS005,
+        Title: "message" must be a non-null literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
@@ -93,12 +93,12 @@
     },
     {
       Location: : (18,12)-(18,58),
-      Message: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+      Message: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS004,
-        Title: "message" must be accessible.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+        Id: ANTITHESIS005,
+        Title: "message" must be a non-null literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
@@ -106,12 +106,12 @@
     },
     {
       Location: : (19,12)-(19,61),
-      Message: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+      Message: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS004,
-        Title: "message" must be accessible.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+        Id: ANTITHESIS005,
+        Title: "message" must be a non-null literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
@@ -119,12 +119,12 @@
     },
     {
       Location: : (20,12)-(20,41),
-      Message: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+      Message: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
       Severity: Error,
       Descriptor: {
-        Id: ANTITHESIS004,
-        Title: "message" must be accessible.,
-        MessageFormat: The expression passed as an argument to any Assert "message" parameter must accessible to public or internal.,
+        Id: ANTITHESIS005,
+        Title: "message" must be a non-null literal or a const field.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must be a non-null literal or a reference to a const field.,
         Category: Antithesis.Catalog,
         DefaultSeverity: Error,
         IsEnabledByDefault: true
