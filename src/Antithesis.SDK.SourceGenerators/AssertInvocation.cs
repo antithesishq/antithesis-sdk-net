@@ -1,7 +1,6 @@
 namespace Antithesis.SDK;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using System.IO;
 
@@ -62,26 +61,22 @@ internal record class Caller(string? AssemblyName, string? ClassName, string? Me
     }
 }
 
-internal record class AssertInvocation(Caller Caller, string AssertMethodName, string? AssertMessage, DiagnosticId? DiagnosticId)
+internal record class AssertInvocation(Caller Caller, string AssertMethodName, AssertMessageOrDiagnosticId AssertMessageOrDiagnosticId)
 {
     internal Diagnostic ToDiagnostic() =>
-        DiagnosticId != null
-            ? Diagnostic.Create(DiagnosticDescriptors.ById[DiagnosticId.Value], Caller.Location.ToLocation())
+        AssertMessageOrDiagnosticId.DiagnosticId != null
+            ? Diagnostic.Create(DiagnosticDescriptors.ById[AssertMessageOrDiagnosticId.DiagnosticId.Value], Caller.Location.ToLocation())
             : throw new NotSupportedException();
 
     internal string ToGeneratedCode(string? projectDirectory)
     {
         const string nlIndent = "\n            ";
 
-        bool hasError = DiagnosticId != null && DiagnosticId.Value.GetSeverity() == DiagnosticSeverity.Error;
+        bool hasError = AssertMessageOrDiagnosticId.DiagnosticId?.GetSeverity() == DiagnosticSeverity.Error;
         
         string prefix = hasError ? "/*" : string.Empty;
         string suffix = hasError ? "*/" : string.Empty;
 
-        string? assertMessageLiteral = !string.IsNullOrEmpty(AssertMessage)
-            ? SymbolDisplay.FormatLiteral(AssertMessage!, true)
-            : null;
-
-        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{assertMessageLiteral},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
+        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertMessageOrDiagnosticId.MessageLiteral},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
     }
 }

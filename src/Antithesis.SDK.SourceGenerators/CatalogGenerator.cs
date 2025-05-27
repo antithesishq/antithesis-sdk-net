@@ -91,24 +91,12 @@ public sealed class CatalogGenerator : IIncrementalGenerator
 
         (string? callerClassName, string? callerMethodName) = GetAssertCallerClassAndMethodNames(assertInvocation);
 
-        (string? assertMessage, DiagnosticId? diagnosticId) =
-            GetAssertMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
-
-        if (string.IsNullOrWhiteSpace(assertMessage))
-        {
-            assertMessage = null;
-            diagnosticId ??= DiagnosticId.MessageMustContainNonWhiteSpace;
-        }
-        else if (assertMessage.Any(c => char.IsWhiteSpace(c) && c != ' '))
-        {
-            assertMessage = null;
-            diagnosticId ??= DiagnosticId.MessageWhiteSpaceMustBeSpaceChar;
-        }
-
-        return new AssertInvocation(
+        return
+            new AssertInvocation(
                 new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName,
                     LocationSlim.FromLocation(assertInvocation.GetLocation())),
-                GetPossibleAssertMethodName(assertInvocation)!, assertMessage, diagnosticId);
+                GetPossibleAssertMethodName(assertInvocation)!,
+                GetAssertMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod));
     }
 
     private static IMethodSymbol? GetAssertMethodSymbol(GeneratorSyntaxContext context, CancellationToken cancellationToken,
@@ -200,7 +188,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         return (null, callerMethodName);
     }
 
-    private static (string? Message, DiagnosticId? DiagnosticId) GetAssertMessageOrDiagnosticId(
+    private static AssertMessageOrDiagnosticId GetAssertMessageOrDiagnosticId(
         GeneratorSyntaxContext context, CancellationToken cancellationToken,
         InvocationExpressionSyntax assertInvocation, IMethodSymbol assertMethod)
     {
@@ -211,7 +199,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         // We've left it in as a safeguard against TransformAssertInvocation changing in a way that would cause our
         // assertInvocation.ArgumentList.Arguments indexing to go out of bounds.
         if (assertInvocation.ArgumentList.Arguments.Count <= messageOrdinal)
-            return (null, DiagnosticId.MessageSymbolAmbiguous);
+            return new(DiagnosticId.MessageSymbolAmbiguous);
 
         var messageArgument = assertInvocation.ArgumentList
                 .Arguments
@@ -228,37 +216,36 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         {
             // Other relevant SyntaxKinds include DefaultLiteralExpression and NullLiteralExpression.
             return messageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
-                ? (messageLiteral.Token.ValueText, null)
-                : (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
+                ? new(messageLiteral.Token.ValueText)
+                : new(DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
         }
 
         var messageReference = messageArgument.ChildNodes()
             .FirstOrDefault(n => n is IdentifierNameSyntax or MemberAccessExpressionSyntax);
 
         if (messageReference == null)
-            return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
+            return new(DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
         var messageMember = context.SemanticModel.GetSymbolInfo(messageReference, cancellationToken);
 
         if (messageMember.Symbol == null)
         {
-            if (messageMember.CandidateSymbols.Length == 0)
-                return (null, DiagnosticId.MessageSymbolNotFound);
-            else
-                return (null, DiagnosticId.MessageSymbolAmbiguous);
+            return new(messageMember.CandidateSymbols.Length == 0
+                ? DiagnosticId.MessageSymbolNotFound
+                : DiagnosticId.MessageSymbolAmbiguous);
         }
 
         if (messageMember.Symbol is not IFieldSymbol messageField || !messageField.IsConst || messageField.ConstantValue == null)
-            return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
+            return new(DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
-        return (messageField.ConstantValue.ToString(), null);
+        return new(messageField.ConstantValue.ToString());
     }
 
     private static void SourceOutput(SourceProductionContext context,
         (string? ProjectDirectory, ImmutableArray<AssertInvocation?> AssertInvocations) provider)
     {
-        foreach (var assertCallSite in provider.AssertInvocations.Where(ai => ai!.DiagnosticId != null))
-            context.ReportDiagnostic(assertCallSite!.ToDiagnostic());
+        foreach (var assertInvocation in provider.AssertInvocations.Where(ai => ai!.AssertMessageOrDiagnosticId.DiagnosticId != null))
+            context.ReportDiagnostic(assertInvocation!.ToDiagnostic());
 
         // We include AssertInvocations with DiagnosticIds because ToGeneratedCode will comment out those lines.
         foreach (var assemblyAssertInvocations in provider.AssertInvocations.GroupBy(ai => ai!.Caller.AssemblyName))
