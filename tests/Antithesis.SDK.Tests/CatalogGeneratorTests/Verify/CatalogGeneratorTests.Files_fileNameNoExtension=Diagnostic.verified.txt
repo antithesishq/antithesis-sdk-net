@@ -207,6 +207,71 @@
         DefaultSeverity: Error,
         IsEnabledByDefault: true
       }
+    },
+    {
+      Location: : (30,12)-(30,37),
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS006,
+        Title: "message" must contain at least one non white space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: : (31,12)-(31,48),
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string that does not contain white space characters other than the space character.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS007,
+        Title: "message" white space must only be the space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string that does not contain white space characters other than the space character.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: : (32,12)-(32,37),
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS006,
+        Title: "message" must contain at least one non white space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: : (33,12)-(34,2),
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS006,
+        Title: "message" must contain at least one non white space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string containing at least one non white space character.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
+    },
+    {
+      Location: : (35,12)-(36,9),
+      Message: The expression passed as an argument to any Assert "message" parameter must evaluate to a string that does not contain white space characters other than the space character.,
+      Severity: Error,
+      Descriptor: {
+        Id: ANTITHESIS007,
+        Title: "message" white space must only be the space character.,
+        MessageFormat: The expression passed as an argument to any Assert "message" parameter must evaluate to a string that does not contain white space characters other than the space character.,
+        Category: Antithesis.Catalog,
+        DefaultSeverity: Error,
+        IsEnabledByDefault: true
+      }
     }
   ]
 }

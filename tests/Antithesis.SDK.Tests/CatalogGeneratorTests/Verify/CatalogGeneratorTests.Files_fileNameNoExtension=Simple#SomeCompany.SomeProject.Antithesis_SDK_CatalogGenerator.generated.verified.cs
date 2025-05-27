@@ -73,6 +73,22 @@ internal static class Catalog
 
         global::Antithesis.SDK.Catalog.Always(
             "SomeRecord SomeMethodUsingNamedArguments Reversed Order Literal",
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethodUsingNamedArguments", FilePath = @"file", BeginLine = 84, BeginColumn = 13}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeRecord", MethodName = @"SomeMethodUsingNamedArguments", FilePath = @"file", BeginLine = 84, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "SomeMethod \"Quote\" In Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 92, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "SomeMethod \"Quote\" In Verbatim Literal",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 93, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Ids Field \"Quote\" In Const",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 94, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
+            "Ids Field \"Quote\" In Verbatim Const",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 95, BeginColumn = 13}); 
     }
 }

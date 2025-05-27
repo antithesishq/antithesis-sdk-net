@@ -85,9 +85,22 @@ namespace SomeCompany.SomeProject
         }
     }
 
+    public class SomeClassQuoteInLiterals
+    {
+        public void SomeMethod()
+        {
+            Assert.Always(true, "SomeMethod \"Quote\" In Literal");
+            Assert.Always(true, @"SomeMethod ""Quote"" In Verbatim Literal");
+            Assert.Always(true, Ids.FieldQuoteInConst);
+            Assert.Always(true, Ids.FieldQuoteInVerbatimConst);
+        }
+    }
+
     public static class Ids
     {
         public const string Field1 = "Ids Field1 Const";
         public const string Field2 = "Ids Field2 Const";
+        public const string FieldQuoteInConst = "Ids Field \"Quote\" In Const";
+        public const string FieldQuoteInVerbatimConst = @"Ids Field ""Quote"" In Verbatim Const";
     }
 }

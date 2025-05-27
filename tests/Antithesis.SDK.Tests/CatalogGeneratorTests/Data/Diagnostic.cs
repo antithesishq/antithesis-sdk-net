@@ -28,6 +28,13 @@ namespace SomeCompany.SomeProject
             Assert.Always(true, default);
 
             Assert.Always(true, " ");
+            Assert.Always(true, "\n");
+            Assert.Always(true, "Some\nMessage");
+            Assert.Always(true, @" ");
+            Assert.Always(true, @"
+");
+            Assert.Always(true, @"Some
+Message");
         }
 
         private string _id = string.Empty;
