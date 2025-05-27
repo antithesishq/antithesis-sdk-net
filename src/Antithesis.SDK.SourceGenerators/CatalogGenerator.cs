@@ -97,13 +97,18 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         if (string.IsNullOrWhiteSpace(assertMessage))
         {
             assertMessage = null;
-            diagnosticId ??= DiagnosticId.MessageMustContainNonWhiteSpace;        
+            diagnosticId ??= DiagnosticId.MessageMustContainNonWhiteSpace;
+        }
+        else if (assertMessage.Any(c => char.IsWhiteSpace(c) && c != ' '))
+        {
+            assertMessage = null;
+            diagnosticId ??= DiagnosticId.MessageWhiteSpaceMustBeSpaceChar;
         }
 
         return new AssertInvocation(
-            new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName,
-                LocationSlim.FromLocation(assertInvocation.GetLocation())),
-            GetPossibleAssertMethodName(assertInvocation)!, assertMessage, diagnosticId);
+                new Caller(context.SemanticModel.Compilation.AssemblyName, callerClassName, callerMethodName,
+                    LocationSlim.FromLocation(assertInvocation.GetLocation())),
+                GetPossibleAssertMethodName(assertInvocation)!, assertMessage, diagnosticId);
     }
 
     private static IMethodSymbol? GetAssertMethodSymbol(GeneratorSyntaxContext context, CancellationToken cancellationToken,
