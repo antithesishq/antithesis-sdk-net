@@ -94,7 +94,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         (string? assertMessage, DiagnosticId? diagnosticId) =
             GetAssertMessageOrDiagnosticId(context, cancellationToken, assertInvocation, assertMethod);
 
-        if (assertMessage != null && string.IsNullOrWhiteSpace(assertMessage.Trim('"')))
+        if (string.IsNullOrWhiteSpace(assertMessage))
         {
             assertMessage = null;
             diagnosticId ??= DiagnosticId.MessageMustContainNonWhiteSpace;        
@@ -217,13 +217,13 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         // 1. A literal string passed in-line as an argument to the Assert "string message" Parameter.
         // 2. A reference to a constant field with public or internal accessibility.
 
-        var messageLiteral = messageArgument.ChildNodes().FirstOrDefault(n => n is LiteralExpressionSyntax);
+        var messageLiteral = (LiteralExpressionSyntax)messageArgument.ChildNodes().FirstOrDefault(n => n is LiteralExpressionSyntax);
 
         if (messageLiteral != null)
         {
             // Other relevant SyntaxKinds include DefaultLiteralExpression and NullLiteralExpression.
             return messageLiteral.IsKind(SyntaxKind.StringLiteralExpression)
-                ? (messageLiteral.ToString(), null)
+                ? (messageLiteral.Token.ValueText, null)
                 : (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
         }
 
@@ -246,7 +246,7 @@ public sealed class CatalogGenerator : IIncrementalGenerator
         if (messageMember.Symbol is not IFieldSymbol messageField || !messageField.IsConst || messageField.ConstantValue == null)
             return (null, DiagnosticId.MessageMustBeNonNullLiteralOrConstField);
 
-        return ($"\"{messageField.ConstantValue}\"", null);
+        return (messageField.ConstantValue.ToString(), null);
     }
 
     private static void SourceOutput(SourceProductionContext context,

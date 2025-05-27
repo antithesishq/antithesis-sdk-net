@@ -1,6 +1,7 @@
 namespace Antithesis.SDK;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using System.IO;
 
@@ -77,6 +78,10 @@ internal record class AssertInvocation(Caller Caller, string AssertMethodName, s
         string prefix = hasError ? "/*" : string.Empty;
         string suffix = hasError ? "*/" : string.Empty;
 
-        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{AssertMessage},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
+        string? assertMessageLiteral = !string.IsNullOrEmpty(AssertMessage)
+            ? SymbolDisplay.FormatLiteral(AssertMessage!, true)
+            : null;
+
+        return $"{prefix}global::Antithesis.SDK.Catalog.{AssertMethodName}({nlIndent}{assertMessageLiteral},{nlIndent}{Caller.ToGeneratedCode(projectDirectory)});{suffix}";
     }
 }
