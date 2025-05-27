@@ -81,14 +81,30 @@ internal static class Catalog
 
         /*global::Antithesis.SDK.Catalog.Always(
             ,
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 33, BeginColumn = 13});*/
-
-        /*global::Antithesis.SDK.Catalog.Always(
-            ,
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 34, BeginColumn = 13});*/
 
         /*global::Antithesis.SDK.Catalog.Always(
             ,
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 36, BeginColumn = 13});*/ 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 35, BeginColumn = 13});*/
+
+        /*global::Antithesis.SDK.Catalog.Always(
+            ,
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 37, BeginColumn = 13});*/
+
+        /*global::Antithesis.SDK.Catalog.Reachable(
+            ,
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 40, BeginColumn = 13});*/
+
+        /*global::Antithesis.SDK.Catalog.Reachable(
+            ,
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 41, BeginColumn = 13});*/
+
+        /*global::Antithesis.SDK.Catalog.Reachable(
+            ,
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 44, BeginColumn = 13});*/
+
+        /*global::Antithesis.SDK.Catalog.Sometimes(
+            ,
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClass", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 49, BeginColumn = 13});*/ 
     }
 }

@@ -83,12 +83,20 @@ internal static class Catalog
             "SomeMethod \"Quote\" In Verbatim Literal",
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 93, BeginColumn = 13});
 
-        global::Antithesis.SDK.Catalog.Always(
-            "Ids Field \"Quote\" In Const",
+        global::Antithesis.SDK.Catalog.Reachable(
+            "SomeMethod \"Quote\" In Raw Literal",
             new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 94, BeginColumn = 13});
 
         global::Antithesis.SDK.Catalog.Always(
+            "Ids Field \"Quote\" In Const",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 96, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Always(
             "Ids Field \"Quote\" In Verbatim Const",
-            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 95, BeginColumn = 13}); 
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 97, BeginColumn = 13});
+
+        global::Antithesis.SDK.Catalog.Reachable(
+            "Ids Field \"Quote\" In Raw Const",
+            new global::Antithesis.SDK.LocationInfo() { ClassName = @"SomeClassQuoteInLiterals", MethodName = @"SomeMethod", FilePath = @"file", BeginLine = 98, BeginColumn = 13}); 
     }
 }

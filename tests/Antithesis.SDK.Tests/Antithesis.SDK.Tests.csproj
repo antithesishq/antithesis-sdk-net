@@ -20,7 +20,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" />
+        <!-- Antithesis.SDK.SourceGenerators references Version 4.0.1 in order to support .NET 6+ SDK. -->
+        <!-- We reference 4.8.0 here so that our tests can use C# 12 syntax (released alongside .NET 8). -->
+        <!-- By adjusting this PackageReference's Version, we can test against different C# language versions, -->
+        <!-- including those "higher" than the C# language version that released with our TargetFramework. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
         <PackageReference Include="Verify" Version="28.16.0" />
         <PackageReference Include="Verify.SourceGenerators" Version="2.5.0" />

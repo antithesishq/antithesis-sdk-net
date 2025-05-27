@@ -30,11 +30,23 @@ namespace SomeCompany.SomeProject
             Assert.Always(true, " ");
             Assert.Always(true, "\n");
             Assert.Always(true, "Some\nMessage");
+
             Assert.Always(true, @" ");
             Assert.Always(true, @"
 ");
             Assert.Always(true, @"Some
 Message");
+
+            Assert.Reachable(""" """);
+            Assert.Reachable("""
+
+""");
+            Assert.Reachable("""
+                             Some
+                             Message
+                             """);
+
+            Assert.Sometimes(true, $"Interpolated");
         }
 
         private string _id = string.Empty;

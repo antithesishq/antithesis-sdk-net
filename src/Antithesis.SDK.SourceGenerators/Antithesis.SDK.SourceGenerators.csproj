@@ -40,6 +40,10 @@
     <ItemGroup>
         <!-- This is required for building a Roslyn analyzer. We've chosen to support .NET 6+, hence the "old" version. -->
         <!-- See https://github.com/dotnet/roslyn/blob/main/docs/wiki/NuGet-packages.md for version compatibility. -->
+        <!-- -->
+        <!-- In the future, should we need to target multiple versions of the .NET SDK with this Source Generator: -->
+        <!-- https://andrewlock.net/supporting-multiple-sdk-versions-in-analyzers-and-source-generators/ -->
+        <!-- https://andrewlock.net/creating-a-source-generator-part-14-supporting-multiple-sdk-versions-in-a-source-generator/ -->
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />
 
         <!-- This is for analyzing our analyzer. -->

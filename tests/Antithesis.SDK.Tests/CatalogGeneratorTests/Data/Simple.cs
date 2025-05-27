@@ -91,8 +91,11 @@ namespace SomeCompany.SomeProject
         {
             Assert.Always(true, "SomeMethod \"Quote\" In Literal");
             Assert.Always(true, @"SomeMethod ""Quote"" In Verbatim Literal");
+            Assert.Reachable("""SomeMethod "Quote" In Raw Literal""");
+
             Assert.Always(true, Ids.FieldQuoteInConst);
             Assert.Always(true, Ids.FieldQuoteInVerbatimConst);
+            Assert.Reachable(Ids.FieldQuoteInRawConst);
         }
     }
 
@@ -100,7 +103,9 @@ namespace SomeCompany.SomeProject
     {
         public const string Field1 = "Ids Field1 Const";
         public const string Field2 = "Ids Field2 Const";
+
         public const string FieldQuoteInConst = "Ids Field \"Quote\" In Const";
         public const string FieldQuoteInVerbatimConst = @"Ids Field ""Quote"" In Verbatim Const";
+        public const string FieldQuoteInRawConst = """Ids Field "Quote" In Raw Const""";
     }
 }
