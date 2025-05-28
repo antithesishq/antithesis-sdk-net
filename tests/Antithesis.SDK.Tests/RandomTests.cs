@@ -1,6 +1,5 @@
 namespace Antithesis.SDK;
 
-using System.IO;
 using Xunit;
 
 internal class SystemRandomFixedSeedUInt64Provider : IRandomUInt64Provider

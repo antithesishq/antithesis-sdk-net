@@ -3,7 +3,7 @@ namespace Antithesis.SDK;
 // LOAD BEARING : All public method signatures in this class are load bearing for the CatalogGenerator.
 
 /// <summary>
-/// The Catalog class is used by the Antithesis.SDK.SourceGenerator package to Catalog all method calls to Assert
+/// The Catalog class is used by the Antithesis.SDK.SourceGenerators package to Catalog all method calls to Assert
 /// so that Antithesis is aware of all assertions regardless of whether or not they are encountered during runtime.
 /// <br/><br/>
 /// You should not call this class directly; it is exclusively used by the Rosyln Analyzers contained in the
@@ -14,7 +14,7 @@ public static class Catalog
     #region No Guidance
 
     /// <summary>
-    /// Used by the Antithesis.SDK.SourceGenerator package to Catalog a corresponding Assert method call so that
+    /// Used by the Antithesis.SDK.SourceGenerators package to Catalog a corresponding Assert method call so that
     /// Antithesis is aware of the assertion regardless of whether or not it is encountered during runtime.
     /// </summary>
     /// <param name="message"><inheritdoc cref="Assert.NoGuidanceHelper" path="/param[@name='message']"/></param>
