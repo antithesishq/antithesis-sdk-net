@@ -94,7 +94,7 @@ public static class Assert
             throw new ArgumentNullException(nameof(message));
 
         if (AssertionTracker.ShouldWrite(message, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetStackTrace(condition, details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, details));
     }
 
     #endregion
@@ -259,7 +259,7 @@ public static class Assert
         bool converted = leftDouble.Success && rightDouble.Success;
 
         if (AssertionTracker.ShouldWrite(message, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetStackTrace(condition, SetGuidanceData(details))));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetGuidanceData(details)));
 
         if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), message, leftDouble.Value, rightDouble.Value))
             Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, SetGuidanceData(null)));
@@ -323,7 +323,7 @@ public static class Assert
         bool condition = operation(conditions.Values);
 
         if (AssertionTracker.ShouldWrite(message, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetStackTrace(condition, SetGuidanceData(details))));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetGuidanceData(details)));
 
         if (GuidanceTracker.ShouldBooleanWrite())
             Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, SetGuidanceData(null)));
@@ -343,21 +343,4 @@ public static class Assert
     }
 
     #endregion
-
-    private static JsonObject? SetStackTrace(bool condition, JsonObject? json)
-    {
-        // TODO : Revisit this for AssertType.Sometimes and Reachability.
-        //
-        // Do not call the potentially expensive Environment.StackTrace for passing Assertions; however,
-        // since AssertionTracker.ShouldWrite only returns true for the first pass and the first fail, this
-        // is probably a premature optimization.
-        if (condition)
-            return json;
-
-        json ??= new();
-
-        json["stack_trace"] = Environment.StackTrace;
-
-        return json;
-    }
 }
