@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Antithesis.SDK" Version="0.1.81-alpha" />
+        <PackageReference Include="Antithesis.SDK" Version="1.0.31" />
     </ItemGroup>
 
 </Project>
