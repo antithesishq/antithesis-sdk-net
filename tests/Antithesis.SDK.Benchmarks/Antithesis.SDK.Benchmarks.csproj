@@ -11,6 +11,9 @@
 
         <IsPackable>false</IsPackable>
 
+        <!-- Repeatable Package restores -->
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
         <!-- Required for the DisassemblyDiagnoser. -->
         <DebugType>pdbonly</DebugType>
         <DebugSymbols>true</DebugSymbols>

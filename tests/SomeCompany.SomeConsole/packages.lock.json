@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net8.0": {
+      "antithesis.sdk": {
+        "type": "Project",
+        "dependencies": {
+          "Antithesis.SDK.SourceGenerators": "[1.0.0, )"
+        }
+      },
+      "antithesis.sdk.sourcegenerators": {
+        "type": "Project"
+      }
+    }
+  }
+}

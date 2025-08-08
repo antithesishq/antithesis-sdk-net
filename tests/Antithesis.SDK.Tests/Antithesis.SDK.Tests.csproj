@@ -11,6 +11,9 @@
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
 
+        <!-- Repeatable Package restores -->
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
         <Copyright>Copyright (c) 2025 Antithesis Operations LLC</Copyright>
     </PropertyGroup>
 

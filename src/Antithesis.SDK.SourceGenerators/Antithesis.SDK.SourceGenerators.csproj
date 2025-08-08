@@ -9,6 +9,9 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
+        <!-- Repeatable Package restores -->
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
         <!-- I cannot find this Property documented; however, I see it in some example projects. -->
         <DevelopmentDependency>true</DevelopmentDependency>
         <IncludeBuildOutput>false</IncludeBuildOutput>

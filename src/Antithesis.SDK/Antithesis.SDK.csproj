@@ -15,6 +15,9 @@
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
+        <!-- Repeatable Package restores -->
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
         <!-- XML code documentation -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
