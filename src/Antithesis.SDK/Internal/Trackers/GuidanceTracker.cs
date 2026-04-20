@@ -33,15 +33,15 @@ internal static class GuidanceTracker
 
             lock (_padlock)
             {
-                if (_maximize && _mark > diff)
+                if (_maximize && _mark >= diff)
                     return false;
 
-                if (!_maximize && _mark < diff)
+                if (!_maximize && _mark <= diff)
                     return false;
 
                 // Write NaN values, but don't let them update the mark.
                 //
-                // PositiveInifinity and NegativeInfinity can safely update the mark because they still behave "correctly" with
+                // PositiveInfinity and NegativeInfinity can safely update the mark because they still behave "correctly" with
                 // comparison operators. See Antithesis.SDK.Tests/BCLSanityTests.
                 if (!double.IsNaN(diff))
                     _mark = diff;
