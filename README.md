@@ -7,7 +7,7 @@ about your program or [workload](https://antithesis.com/docs/test_templates/firs
 * The `Random` class is a subclass of `System.Random` that encapsulates Antithesis's deterministic and reproducible
 random number generator.
 
-For general usage guidance see the [Antithesis .NET SDK Documentation](https://antithesis.com/docs/using_antithesis/sdk/dotnet_sdk/).
+For general usage guidance see the [Antithesis .NET SDK Documentation](https://antithesis.com/docs/using_antithesis/sdk/dotnet/).
 
 ### Notes
 
@@ -15,4 +15,4 @@ This .NET 6.0+ Antithesis.SDK package's only dependency is the Antithesis.SDK.So
 Antithesis.SDK.SourceGenerators package contains a .NET Incremental Source Generator that adds a C# file
 to each Assembly that references it. The file contains a ModuleInitializer that calls Antithesis.SDK.Catalog
 for each Antithesis.SDK.Assert method call found during compilation. This informs Antithesis of every assertion
-regardless of whether or not the assertion is encountered during runtime.
+regardless of whether the assertion is encountered during runtime.
