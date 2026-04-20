@@ -20,7 +20,7 @@ public sealed class CatalogGeneratorTests
     [MemberData(nameof(GetFiles))]
     public Task Files(string fileNameNoExtension, string sourceCode)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+        var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode, cancellationToken: TestContext.Current.CancellationToken);
 
         var compilation = CSharpCompilation.Create(
             assemblyName: "SomeCompany.SomeProject",
@@ -34,21 +34,21 @@ public sealed class CatalogGeneratorTests
                 typeof(System.Text.Json.Nodes.JsonObject),
                 typeof(Antithesis.SDK.Assert)),
             syntaxTrees: new[] { syntaxTree });
-        
+
         static IEnumerable<MetadataReference> CreateReferences(params Type[] types) =>
             types.Select(type => type.Assembly.Location)
                 .Distinct()
                 .Select(path => MetadataReference.CreateFromFile(path));
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(new CatalogGenerator());
-        driver = driver.RunGenerators(compilation);
+        driver = driver.RunGenerators(compilation, TestContext.Current.CancellationToken);
 
         // Scrub the GeneratedCodeAttribute because it contains version information that will always change.
         return Verifier.Verify(driver)
             .UseDirectory(RelativeThisDirectory("Verify"))
             .UseParameters(fileNameNoExtension)
             .ScrubLinesWithReplace(s => s.StartsWith(_generatedCodeSentinel)
-                ? _generatedCodeVersionScrubber.Replace(s, "$1...SCRUBBED...$3") 
+                ? _generatedCodeVersionScrubber.Replace(s, "$1...SCRUBBED...$3")
                 : s);
     }
 
