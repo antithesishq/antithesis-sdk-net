@@ -50,7 +50,7 @@ internal static class AssertionDisplayTypeExtensions
         AssertionDisplayType.Sometimes or
         AssertionDisplayType.Reachable =>
             true,
-        
+
         AssertionDisplayType.AlwaysOrUnreachable or
         AssertionDisplayType.Unreachable =>
             false,
@@ -61,6 +61,9 @@ internal static class AssertionDisplayTypeExtensions
 
 internal static class AssertionMethodTypeExtensions
 {
+    internal static string GetAssertTypeRaw(this AssertionMethodType methodType) =>
+        methodType.GetAssertType().ToString().ToLowerInvariant();
+
     internal static AssertionAssertType GetAssertType(this AssertionMethodType methodType) => methodType switch
     {
         AssertionMethodType.Always or
@@ -86,6 +89,9 @@ internal static class AssertionMethodTypeExtensions
 
         _ => throw new NotImplementedException(methodType.ToString())
     };
+
+    internal static string GetDisplayTypeRaw(this AssertionMethodType methodType) =>
+        methodType.GetDisplayType().ToString();
 
     internal static AssertionDisplayType GetDisplayType(this AssertionMethodType methodType) => methodType switch
     {
@@ -128,7 +134,7 @@ internal static class AssertionMethodTypeExtensions
         AssertionMethodType.SometimesLessThan or
         AssertionMethodType.SometimesLessThanOrEqualTo =>
             GuidanceType.Numeric,
-        
+
         AssertionMethodType.AlwaysSome or
         AssertionMethodType.SometimesAll =>
             GuidanceType.Boolean,

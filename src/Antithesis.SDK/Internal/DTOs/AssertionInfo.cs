@@ -3,7 +3,7 @@ namespace Antithesis.SDK;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-internal class AssertionInfoWrapper(AssertionInfo assertion) 
+internal class AssertionInfoWrapper(AssertionInfo assertion)
 {
     [JsonPropertyName("antithesis_assert")]
     public AssertionInfo Assertion => assertion;
@@ -28,48 +28,58 @@ internal class AssertionInfo
                 Details = details
             });
 
+    internal static AssertionInfoWrapper ConstructForRawWrite(string assertType, string displayType,
+            string id, string message, LocationInfo locationInfo, bool mustHit, bool hit, bool condition, JsonObject? details) =>
+        new(
+            new()
+            {
+                AssertTypeRaw = assertType,
+                DisplayTypeRaw = displayType,
+                Id = id,
+                Message = message,
+                Location = locationInfo,
+                MustHit = mustHit,
+                Hit = hit,
+                Condition = condition,
+                Details = details
+            });
+
     private AssertionInfo(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo)
     {
-        AssertType = methodType.GetAssertType();
-        DisplayType = methodType.GetDisplayType();
+        AssertTypeRaw = methodType.GetAssertTypeRaw();
+        DisplayTypeRaw = methodType.GetDisplayTypeRaw();
         Id = idIsTheMessage;
         Message = idIsTheMessage;
         Location = locationInfo;
-        MustHit = DisplayType.GetMustHit();
+        MustHit = methodType.GetDisplayType().GetMustHit();
     }
 
-    // JsonStringEnumConverter<T> is only available in .NET 8+ (or by adding a dependency), and JsonStringEnumConverter (non-generic)
-    // won't allow us to specify a different naming policy for different enums. Keep it simple: we're adding properties
-    // that perform our desired enum to string conversions in the few places that we need them.
+    private AssertionInfo() { }
 
     [JsonPropertyName("assert_type")]
-    public string AssertTypeConverted => AssertType.ToString().ToLowerInvariant();
-    [JsonIgnore]
-    public AssertionAssertType AssertType { get; }
+    public string AssertTypeRaw { get; private init; } = null!;
 
     [JsonPropertyName("display_type")]
-    public string DisplayTypeConverted => DisplayType.ToString();
-    [JsonIgnore]
-    public AssertionDisplayType DisplayType { get; }
-    
+    public string DisplayTypeRaw { get; private init; } = null!;
+
     [JsonPropertyName("id")]
-    public string Id { get; }
+    public string Id { get; private init; } = null!;
 
     [JsonPropertyName("message")]
-    public string Message { get; }
-    
+    public string Message { get; private init; } = null!;
+
     [JsonPropertyName("location")]
-    public LocationInfo Location { get; }
+    public LocationInfo Location { get; private init;} = null!;
 
     [JsonPropertyName("must_hit")]
-    public bool MustHit { get; }
+    public bool MustHit { get; private init;}
 
     [JsonPropertyName("hit")]
-    public bool Hit { get; init; }    
+    public bool Hit { get; private init; }
 
     [JsonPropertyName("condition")]
-    public bool Condition { get; init; }
+    public bool Condition { get; private init; }
 
     [JsonPropertyName("details")]
-    public JsonObject? Details { get; init; }
+    public JsonObject? Details { get; private init; }
 }

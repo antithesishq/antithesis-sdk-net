@@ -18,11 +18,10 @@ internal class SystemRandomFixedSeedUInt64Provider : IRandomUInt64Provider
 
 public class RandomTests
 {
-    // Explicitly using Type.FullName for return Type clarity here.
-    private static Antithesis.SDK.Random NewFixedSeedRandom() => new(new SystemRandomFixedSeedUInt64Provider());
+    private static AntithesisRandom NewFixedSeedRandom() => new(new SystemRandomFixedSeedUInt64Provider());
 
     [Fact]
-    public void Shared() => XAssert.Equal(System.Random.Shared, Random.SharedFallbackToSystem);
+    public void Shared() => XAssert.Equal(System.Random.Shared, AntithesisRandom.SharedFallbackToSystem);
 
     // NextDouble should directly exercise our Sample override.
     [Fact]

@@ -53,5 +53,5 @@ public static class Lifecycle
     }
 
     internal static JsonObject SendEventJson(string? name, JsonObject? details = null) =>
-        new() { [string.IsNullOrWhiteSpace(name) ? "anonymous" : name.Trim()] = details };
+        new() { [name ?? string.Empty] = details };
 }

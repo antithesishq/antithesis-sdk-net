@@ -12,7 +12,10 @@ internal class FFISink : FFI, ISink
 {
     void ISink.Write(string message)
     {
-        fuzz_json_data(message, (ulong)message.Length);
+        // The length must be the UTF-8 byte count, not string.Length (UTF-16
+        // code units).
+        byte[] utf8 = System.Text.Encoding.UTF8.GetBytes(message);
+        fuzz_json_data(utf8, (ulong)utf8.Length);
         fuzz_flush();
     }
 }
@@ -24,7 +27,7 @@ internal class FFI
         if (!FileExists)
             throw new FileNotFoundException(FilePath);
     }
-    
+
     private const string FilePath = "/usr/lib/libvoidstar.so";
     internal static bool FileExists { get; } = File.Exists(FilePath);
 
@@ -32,7 +35,7 @@ internal class FFI
     protected static extern ulong fuzz_get_random();
 
     [DllImport(FilePath)]
-    protected static extern void fuzz_json_data([MarshalAs(UnmanagedType.LPUTF8Str)] string message, ulong length);
+    protected static extern void fuzz_json_data(byte[] message, ulong length);
 
     [DllImport(FilePath)]
     protected static extern void fuzz_flush();

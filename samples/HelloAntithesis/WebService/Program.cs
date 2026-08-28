@@ -8,7 +8,7 @@ builder.Logging.SetMinimumLevel(LogLevel.Warning);
 
 var app = builder.Build();
 
-var random = Antithesis.SDK.Random.SharedFallbackToSystem;
+var random = Antithesis.SDK.AntithesisRandom.SharedFallbackToSystem;
 
 app.MapGet("/", async () =>
 {

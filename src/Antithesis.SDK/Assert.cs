@@ -99,6 +99,68 @@ public static class Assert
 
     #endregion
 
+    #region Raw
+
+    /// <summary>
+    /// A low-level method designed for use by third-party frameworks that produce Antithesis-style
+    /// assertions with caller-supplied catalog metadata; regular users should call the assertion
+    /// methods above instead.
+    /// <br/><br/>
+    /// Catalog entries (<c>hit</c> = false) are always written. Hit entries are written only for
+    /// the first passing and the first failing call per <c>id</c>.
+    /// </summary>
+    /// <param name="assertType">One of <c>"always"</c>, <c>"sometimes"</c>, or <c>"reachability"</c>.</param>
+    /// <param name="displayType">One of <c>"Always"</c>, <c>"AlwaysOrUnreachable"</c>, <c>"Sometimes"</c>, <c>"Reachable"</c>, or <c>"Unreachable"</c>.</param>
+    /// <param name="className">The name of the class containing the assertion.</param>
+    /// <param name="functionName">The name of the method containing the assertion.</param>
+    /// <param name="filePath">The path of the file containing the assertion.</param>
+    /// <param name="beginLine">The 1-indexed line number where the assertion begins.</param>
+    /// <param name="beginColumn">The 1-indexed column number where the assertion begins.</param>
+    /// <param name="id">The unique identifier of the assertion, used to aggregate assertions and gate emission.</param>
+    /// <param name="condition">The condition being asserted.</param>
+    /// <param name="message">The human-readable name of the corresponding test property.</param>
+    /// <param name="details">Optional additional details to provide greater context for assertion passes and failures.</param>
+    /// <param name="hit">Whether the assertion was evaluated (<c>true</c>) or is being cataloged (<c>false</c>).</param>
+    /// <param name="mustHit">Whether the corresponding test property fails if the assertion is never encountered.</param>
+    public static void Raw(
+        string assertType,
+        string displayType,
+        string className,
+        string functionName,
+        string filePath,
+        int beginLine,
+        int beginColumn,
+        string id,
+        bool condition,
+        string message,
+        JsonObject? details,
+        bool hit,
+        bool mustHit)
+    {
+        if (string.IsNullOrEmpty(id))
+            throw new ArgumentNullException(nameof(id));
+
+        if (Sink.IsNoop)
+            return;
+
+        if (hit && !AssertionTracker.ShouldWrite(id, condition))
+            return;
+
+        var location = new LocationInfo
+        {
+            ClassName = className,
+            MethodName = functionName,
+            FilePath = filePath,
+            BeginLine = beginLine,
+            BeginColumn = beginColumn
+        };
+
+        Sink.Write(AssertionInfo.ConstructForRawWrite(
+            assertType, displayType, id, message, location, mustHit, hit, condition, details));
+    }
+
+    #endregion
+
     #region Numeric Guidance
 
     /// <summary>
