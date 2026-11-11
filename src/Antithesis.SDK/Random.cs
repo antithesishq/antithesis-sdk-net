@@ -44,6 +44,9 @@ public static class Random
     /// intend to use a random value in a structured way enables it to provide more interesting
     /// choices over time.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="items"/> is empty.
+    /// </exception>
     public static T RandomChoice<T>(IReadOnlyList<T> items)
     {
         if (items == null)

@@ -15,7 +15,9 @@ using System.Text.Json.Nodes;
 /// Each static method also takes a parameter called <c>details</c>, which is an optional <c>JsonObject</c> reference of additional information provided
 /// by the caller to add context to assertion passes and failures. The information that is logged will appear in the <c>logs</c> section of a
 /// <a href="https://antithesis.com/docs/reports/">triage report</a>.
+/// Null omits details; an explicit empty object is preserved. Argument expressions are evaluated on every call, even when the assertion does not emit.
 /// </summary>
+/// <remarks>If you include opaque CLR objects in your assertion details, the SDK may be unable to detect unsupported output from their serializers and emit the corresponding diagnostics.</remarks>
 public static class Assert
 {
     #region No Guidance
@@ -87,7 +89,8 @@ public static class Assert
     ///     A unique string identifier of the assertion. Provides context for assertion passes and failures and is intended to be human-readable.
     ///     <b><i>Must be provided as a string literal or as a reference to a publicly accessible const field.</i></b>
     /// </param>
-    /// <param name="details">Optional additional details to provide greater context for assertion passes and failures.</param>
+    /// <param name="details">Optional additional details. Null omits details; an empty object is preserved.
+    /// Serialization failures produce an antithesis_error record and the assertion still emits without details.</param>
     private static void NoGuidanceHelper(AssertionMethodType methodType, bool condition, string message, JsonObject? details)
     {
         if (string.IsNullOrEmpty(message))
@@ -106,7 +109,7 @@ public static class Assert
     /// assertions with caller-supplied catalog metadata; regular users should call the assertion
     /// methods above instead.
     /// <br/><br/>
-    /// Catalog entries (<c>hit</c> = false) are always written. Hit entries are written only for
+    /// Catalog entries (<c>hit</c> = false) are always written without details. Hit entries are written only for
     /// the first passing and the first failing call per <c>id</c>.
     /// </summary>
     /// <param name="assertType">One of <c>"always"</c>, <c>"sometimes"</c>, or <c>"reachability"</c>.</param>
@@ -119,9 +122,13 @@ public static class Assert
     /// <param name="id">The unique identifier of the assertion, used to aggregate assertions and gate emission.</param>
     /// <param name="condition">The condition being asserted.</param>
     /// <param name="message">The human-readable name of the corresponding test property.</param>
-    /// <param name="details">Optional additional details to provide greater context for assertion passes and failures.</param>
+    /// <param name="details">Optional additional details. Null omits details; an empty object is preserved.
+    /// Serialization failures produce an antithesis_error record and the assertion still emits without details.</param>
     /// <param name="hit">Whether the assertion was evaluated (<c>true</c>) or is being cataloged (<c>false</c>).</param>
     /// <param name="mustHit">Whether the corresponding test property fails if the assertion is never encountered.</param>
+    /// <param name="guidanceDetails">The <c>{left, right}</c> or named-bool pair a rich assertion derives
+    /// from its operands, overlaid on <c>details</c> exactly as the rich assertions overlay it — generated
+    /// fields override user-supplied fields of the same name. Null for a plain assertion.</param>
     public static void Raw(
         string assertType,
         string displayType,
@@ -135,7 +142,8 @@ public static class Assert
         string message,
         JsonObject? details,
         bool hit,
-        bool mustHit)
+        bool mustHit,
+        JsonObject? guidanceDetails = null)
     {
         if (string.IsNullOrEmpty(id))
             throw new ArgumentNullException(nameof(id));
@@ -146,7 +154,132 @@ public static class Assert
         if (hit && !AssertionTracker.ShouldWrite(id, condition))
             return;
 
-        var location = new LocationInfo
+        object? emitted = guidanceDetails is null
+            ? details
+            : details is null ? guidanceDetails : new DetailsOverlay(details, guidanceDetails);
+
+        Sink.Write(AssertionInfo.ConstructForRawWrite(
+            assertType, displayType, id, message,
+            RawLocation(className, functionName, filePath, beginLine, beginColumn),
+            mustHit, hit, condition, emitted));
+    }
+
+    /// <summary>
+    /// A low-level method designed for use by third-party frameworks that produce Antithesis-style
+    /// numeric guidance with caller-supplied catalog metadata; regular users should call the numeric
+    /// guidance methods below instead.
+    /// </summary>
+    /// <param name="maximize">Whether a larger <c>left - right</c> is the improvement being sought.
+    /// Fixed by the first call per <c>id</c>.</param>
+    /// <param name="left">The left operand of the comparison.</param>
+    /// <param name="right">The right operand of the comparison.</param>
+    /// <param name="className"><inheritdoc cref="Raw" path="/param[@name='className']"/></param>
+    /// <param name="functionName"><inheritdoc cref="Raw" path="/param[@name='functionName']"/></param>
+    /// <param name="filePath"><inheritdoc cref="Raw" path="/param[@name='filePath']"/></param>
+    /// <param name="beginLine"><inheritdoc cref="Raw" path="/param[@name='beginLine']"/></param>
+    /// <param name="beginColumn"><inheritdoc cref="Raw" path="/param[@name='beginColumn']"/></param>
+    /// <param name="id">The unique identifier of the guidance, used to key the tracked extremum.</param>
+    /// <param name="message"><inheritdoc cref="Raw" path="/param[@name='message']"/></param>
+    /// <param name="hit">Whether the guidance was evaluated (<c>true</c>) or is being cataloged (<c>false</c>).</param>
+    public static void RawNumericGuidance<T>(
+        bool maximize,
+        T left,
+        T right,
+        string className,
+        string functionName,
+        string filePath,
+        int beginLine,
+        int beginColumn,
+        string id,
+        string message,
+        bool hit)
+        where T : struct, IConvertible
+    {
+        if (string.IsNullOrEmpty(id))
+            throw new ArgumentNullException(nameof(id));
+
+        if (Sink.IsNoop)
+            return;
+
+        JsonObject? data = null;
+
+        if (hit)
+        {
+            var leftDouble = TryConvertToDouble(left);
+            var rightDouble = TryConvertToDouble(right);
+
+            // An operand the runtime cannot express as a double yields no
+            // guidance, as it does on the NumericGuidanceHelper path.
+            if (!leftDouble.Success || !rightDouble.Success)
+                return;
+
+            if (!Sink.ShouldWriteNumericGuidance(maximize, id, leftDouble.Value, rightDouble.Value))
+                return;
+
+            data = new JsonObject
+            {
+                ["left"] = leftDouble.Value,
+                ["right"] = rightDouble.Value
+            };
+        }
+
+        Sink.Write(GuidanceInfo.ConstructForRawWrite(GuidanceType.Numeric, maximize, id, message,
+            RawLocation(className, functionName, filePath, beginLine, beginColumn), hit, data));
+    }
+
+    /// <summary>
+    /// A low-level method designed for use by third-party frameworks that produce Antithesis-style
+    /// boolean guidance with caller-supplied catalog metadata; regular users should call
+    /// <see cref="AlwaysSome"/> or <see cref="SometimesAll"/> instead.
+    /// </summary>
+    /// <param name="maximize">Whether every condition being true is the outcome being sought.</param>
+    /// <param name="conditions">The conditions the guidance describes, as a dictionary of bools keyed by strings.</param>
+    /// <param name="className"><inheritdoc cref="Raw" path="/param[@name='className']"/></param>
+    /// <param name="functionName"><inheritdoc cref="Raw" path="/param[@name='functionName']"/></param>
+    /// <param name="filePath"><inheritdoc cref="Raw" path="/param[@name='filePath']"/></param>
+    /// <param name="beginLine"><inheritdoc cref="Raw" path="/param[@name='beginLine']"/></param>
+    /// <param name="beginColumn"><inheritdoc cref="Raw" path="/param[@name='beginColumn']"/></param>
+    /// <param name="id">The unique identifier of the guidance.</param>
+    /// <param name="message"><inheritdoc cref="Raw" path="/param[@name='message']"/></param>
+    /// <param name="hit">Whether the guidance was evaluated (<c>true</c>) or is being cataloged (<c>false</c>).</param>
+    public static void RawBooleanGuidance(
+        bool maximize,
+        IReadOnlyDictionary<string, bool> conditions,
+        string className,
+        string functionName,
+        string filePath,
+        int beginLine,
+        int beginColumn,
+        string id,
+        string message,
+        bool hit)
+    {
+        if (string.IsNullOrEmpty(id))
+            throw new ArgumentNullException(nameof(id));
+
+        if (Sink.IsNoop)
+            return;
+
+        JsonObject? data = null;
+
+        if (hit)
+        {
+            if (conditions == null)
+                throw new ArgumentNullException(nameof(conditions));
+
+            // An empty set of conditions is still a payload: {}, not null.
+            data = new JsonObject();
+            foreach (var kvp in conditions)
+                data[kvp.Key] = kvp.Value;
+        }
+
+        Sink.Write(GuidanceInfo.ConstructForRawWrite(GuidanceType.Boolean, maximize, id, message,
+            RawLocation(className, functionName, filePath, beginLine, beginColumn), hit, data));
+    }
+
+    private static LocationInfo RawLocation(string className, string functionName, string filePath,
+            int beginLine, int beginColumn) =>
+        new()
         {
             ClassName = className,
             MethodName = functionName,
@@ -155,8 +288,17 @@ public static class Assert
             BeginColumn = beginColumn
         };
 
-        Sink.Write(AssertionInfo.ConstructForRawWrite(
-            assertType, displayType, id, message, location, mustHit, hit, condition, details));
+    /// <summary>
+    /// The operand as a double, and whether the runtime could express it as one. Shared by the
+    /// numeric guidance methods and <see cref="RawNumericGuidance"/> so both measure the same gap.
+    /// </summary>
+    private static (bool Success, double Value) TryConvertToDouble<T>(T value)
+        where T : IConvertible
+    {
+        try { return (true, value.ToDouble(null)); }
+        catch (FormatException) { return (false, default); }
+        catch (InvalidCastException) { return (false, default); }
+        catch (OverflowException) { return (false, default); }
     }
 
     #endregion
@@ -310,30 +452,25 @@ public static class Assert
         var leftDouble = TryConvertToDouble(left);
         var rightDouble = TryConvertToDouble(right);
 
-        static (bool Success, double Value) TryConvertToDouble(T value)
-        {
-            try { return (true, Convert.ToDouble(value)); }
-            catch (FormatException) { return (false, default); }
-            catch (InvalidCastException) { return (false, default); }
-            catch (OverflowException) { return (false, default); }
-        }
-
         bool converted = leftDouble.Success && rightDouble.Success;
+        JsonObject? guidance = null;
 
         if (AssertionTracker.ShouldWrite(message, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetGuidanceData(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, MergeGuidanceData(details)));
 
-        if (converted && GuidanceTracker.ShouldNumericWrite(methodType.GetGuidanceMaximize(), message, leftDouble.Value, rightDouble.Value))
-            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, SetGuidanceData(null)));
+        if (converted && Sink.ShouldWriteNumericGuidance(methodType.GetGuidanceMaximize(), message, leftDouble.Value, rightDouble.Value))
+            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, (JsonObject?)MergeGuidanceData(null)));
 
-        JsonObject? SetGuidanceData(JsonObject? json)
+        object? MergeGuidanceData(JsonObject? json)
         {
             if (converted)
             {
-                json ??= new();
-
-                json["left"] = leftDouble.Value;
-                json["right"] = rightDouble.Value;
+                guidance ??= new JsonObject
+                {
+                    ["left"] = leftDouble.Value,
+                    ["right"] = rightDouble.Value
+                };
+                return json is null ? guidance : new DetailsOverlay(json, guidance);
             }
 
             return json;
@@ -383,24 +520,23 @@ public static class Assert
             throw new ArgumentNullException(nameof(message));
 
         bool condition = operation(conditions.Values);
+        JsonObject? guidance = null;
 
         if (AssertionTracker.ShouldWrite(message, condition))
-            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, SetGuidanceData(details)));
+            Sink.Write(AssertionInfo.ConstructForAssertWrite(methodType, message, condition, MergeGuidanceData(details)));
 
         if (GuidanceTracker.ShouldBooleanWrite())
-            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, SetGuidanceData(null)));
+            Sink.Write(GuidanceInfo.ConstructForAssertWrite(methodType, message, (JsonObject?)MergeGuidanceData(null)));
 
-        JsonObject? SetGuidanceData(JsonObject? json)
+        object? MergeGuidanceData(JsonObject? json)
         {
-            if (conditions.Count > 0)
+            if (guidance is null)
             {
-                json ??= new();
-
+                guidance = new JsonObject();
                 foreach (var kvp in conditions)
-                    json[kvp.Key] = kvp.Value;
+                    guidance[kvp.Key] = kvp.Value;
             }
-
-            return json;
+            return json is null ? guidance : new DetailsOverlay(json, guidance);
         }
     }
 

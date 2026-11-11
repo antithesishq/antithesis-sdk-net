@@ -8,7 +8,7 @@ internal static class GuidanceTracker
     internal static bool ShouldBooleanWrite() => true;
 
     internal static bool ShouldNumericWrite(bool maximize, string idIsTheMessage, double left, double right) =>
-        _numericTrackersByIdIsTheMessage.GetOrAdd(idIsTheMessage, _ => new NumericTracker(maximize)).ShouldWrite(left, right);
+        _numericTrackersByIdIsTheMessage.GetOrAdd(idIsTheMessage, static (_, maximize) => new NumericTracker(maximize), maximize).ShouldWrite(left, right);
 
     private static readonly ConcurrentDictionary<string, NumericTracker> _numericTrackersByIdIsTheMessage = new();
     
@@ -17,11 +17,12 @@ internal static class GuidanceTracker
         internal NumericTracker(bool maximize)
         {
             _maximize = maximize;
-            _mark = _maximize ? double.NegativeInfinity : double.PositiveInfinity;
         }
 
         private readonly bool _maximize;
-        private double _mark;
+
+        // Null until the first hit
+        private double? _mark;
 
         private readonly object _padlock = new();
 
@@ -33,18 +34,16 @@ internal static class GuidanceTracker
 
             lock (_padlock)
             {
-                if (_maximize && _mark >= diff)
-                    return false;
+                if (_mark is double mark)
+                {
+                    if (_maximize && mark >= diff)
+                        return false;
 
-                if (!_maximize && _mark <= diff)
-                    return false;
+                    if (!_maximize && mark <= diff)
+                        return false;
+                }
 
-                // Write NaN values, but don't let them update the mark.
-                //
-                // PositiveInfinity and NegativeInfinity can safely update the mark because they still behave "correctly" with
-                // comparison operators. See Antithesis.SDK.Tests/BCLSanityTests.
-                if (!double.IsNaN(diff))
-                    _mark = diff;
+                _mark = diff;
             }
 
             return true;

@@ -7,6 +7,15 @@ using System.Text.Json;
 // File handles (including Linux file handles!) live under this namespace. We are not actually using the Win32 API here
 using Microsoft.Win32.SafeHandles;
 
+internal interface IDetailsRecord
+{
+    string Context { get; }
+    // The details as they will be serialized, or null when the record carries none.
+    InspectedDetails? Details { get; }
+    // Drops the details; false when the record cannot be emitted without them.
+    bool TryOmitDetails();
+}
+
 internal interface ISink { void Write(string message); }
 
 internal static class Sink
@@ -19,6 +28,14 @@ internal static class Sink
 
     internal static void Write(object message) =>
         _singleton.Write(JsonSerializer.Serialize(message));
+
+    internal static void Write(AssertionInfoWrapper message) => WriteDetails(message);
+    internal static void Write(GuidanceInfoWrapper message) => WriteDetails(message);
+
+    internal static void WriteDetails(IDetailsRecord message) => DetailsWriter.Write(message, _singleton);
+
+    internal static bool ShouldWriteNumericGuidance(bool maximize, string id, double left, double right) =>
+        DetailsWriter.ShouldWriteNumericGuidance(maximize, id, left, right, _singleton);
 
     private static readonly ISink _singleton =
         FFI.FileExists

@@ -30,7 +30,7 @@ internal class SDKInfo
 internal class LanguageInfo
 {
     [JsonPropertyName("name")]
-    public string Name { get; } = "C#";
+    public string Name { get; } = ".NET";
 
     [JsonPropertyName("version")]
     public string Version { get; } = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;

@@ -1,6 +1,22 @@
 # Changelog
 
-## 3.0.x - 2026-08-28
+## 3.1.x - 2026-11-10
+
+### Breaking
+- The package now targets .NET 10 (the current LTS); .NET 6 through 9 are no longer supported.
+
+### Bug Fixes
+- Serialization failures report contextual `antithesis_error` records and preserve assertions and events without the failed details. Guidance that cannot be serialized is skipped, since omitting its operands would produce an invalid record.
+- Lifecycle and rich assertions no longer attach or mutate caller-owned details, allowing details to be reused.
+- Increased efficiency of many assertion methods.
+- `Catalog` now declares the guidance point a rich assertion carries, alongside its assertion. Previously it wrote only the
+assertion, so a rich assertion's guidance was reported at runtime having never been declared; every other Antithesis SDK
+declares both.
+
+### New
+- Details containing non-finite numbers are emitted with those numbers as the strings `"NaN"`, `"Infinity"` or `"-Infinity"`.
+
+## 3.0.1 - 2026-08-28
 
 ### Breaking
 - The `System.Random` subclass formerly named `Antithesis.SDK.Random` is now named `Antithesis.SDK.AntithesisRandom`.

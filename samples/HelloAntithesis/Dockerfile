@@ -1,6 +1,6 @@
 ###### Stage 1 of 2 - Build
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /app
 COPY . ./
 RUN dotnet restore WebService/WebService.csproj
@@ -9,7 +9,7 @@ RUN dotnet publish WebService/WebService.csproj --configuration Release --no-bui
 
 ##### Stage 2 of 2 - Production Image
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /app/out .
 

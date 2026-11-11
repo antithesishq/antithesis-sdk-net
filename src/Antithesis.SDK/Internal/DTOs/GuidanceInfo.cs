@@ -3,28 +3,57 @@ namespace Antithesis.SDK;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-internal class GuidanceInfoWrapper(GuidanceInfo guidance) 
+internal class GuidanceInfoWrapper(GuidanceInfo guidance) : IDetailsRecord
 {
     [JsonPropertyName("antithesis_guidance")]
     public GuidanceInfo Guidance => guidance;
+
+    [JsonIgnore]
+    public string Context => guidance.Id;
+    [JsonIgnore]
+    public InspectedDetails? Details => guidance.Data;
+    // A guidance hit without its data cannot be consumed by the fuzzer.
+    public bool TryOmitDetails() => false;
 }
 
 internal class GuidanceInfo
 {
+    internal static GuidanceInfoWrapper ConstructForCatalogWrite(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo) =>
+        new(
+            new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, locationInfo))
+            {
+                Hit = false,
+                // A declaration describes a guidance point; it carries no data.
+                Data = null
+            });
+
     internal static GuidanceInfoWrapper ConstructForAssertWrite(AssertionMethodType methodType, string idIsTheMessage, JsonObject? data) =>
         new(
             new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
             {
                 Hit = true,
-                Data = data
+                Data = InspectedDetails.From(data)
+            });
+
+    internal static GuidanceInfoWrapper ConstructForRawWrite(GuidanceType guidanceType, bool maximize,
+            string id, string message, LocationInfo locationInfo, bool hit, JsonObject? data) =>
+        new(
+            new(guidanceType, maximize, id, message, locationInfo)
+            {
+                Hit = hit,
+                // A declaration describes a guidance point; it carries no data.
+                Data = hit ? InspectedDetails.From(data) : null
             });
 
     private GuidanceInfo(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo)
+        : this(methodType.GetGuidanceType(), methodType.GetGuidanceMaximize(), idIsTheMessage, idIsTheMessage, locationInfo) { }
+
+    private GuidanceInfo(GuidanceType guidanceType, bool maximize, string id, string message, LocationInfo locationInfo)
     {
-        GuidanceType = methodType.GetGuidanceType();
-        GuidanceMaximize = methodType.GetGuidanceMaximize();
-        Id = idIsTheMessage;
-        Message = idIsTheMessage;
+        GuidanceType = guidanceType;
+        GuidanceMaximize = maximize;
+        Id = id;
+        Message = message;
         Location = locationInfo;
     }
 
@@ -39,13 +68,13 @@ internal class GuidanceInfo
 
     [JsonPropertyName("maximize")]
     public bool GuidanceMaximize { get; }
-    
+
     [JsonPropertyName("id")]
     public string Id { get; }
 
     [JsonPropertyName("message")]
     public string Message { get; }
-    
+
     [JsonPropertyName("location")]
     public LocationInfo Location { get; }
 
@@ -53,5 +82,6 @@ internal class GuidanceInfo
     public bool Hit { get; init; }
 
     [JsonPropertyName("guidance_data")]
-    public JsonObject? Data { get; init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public InspectedDetails? Data { get; init; }
 }

@@ -14,7 +14,7 @@ For general usage guidance see the [Antithesis .NET SDK Documentation](https://a
 
 ### Notes
 
-This .NET 6.0+ Antithesis.SDK package's only dependency is the Antithesis.SDK.SourceGenerators package. The
+This .NET 10+ Antithesis.SDK package's only dependency is the Antithesis.SDK.SourceGenerators package. The
 Antithesis.SDK.SourceGenerators package contains a .NET Incremental Source Generator that adds a C# file
 to each Assembly that references it. The file contains a ModuleInitializer that calls Antithesis.SDK.Catalog
 for each Antithesis.SDK.Assert method call found during compilation. This informs Antithesis of every assertion

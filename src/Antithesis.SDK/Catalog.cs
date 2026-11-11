@@ -142,5 +142,8 @@ public static class Catalog
             throw new ArgumentNullException(nameof(location));
 
         Sink.Write(AssertionInfo.ConstructForCatalogWrite(methodType, message, location));
+
+        if (methodType.HasGuidance())
+            Sink.Write(GuidanceInfo.ConstructForCatalogWrite(methodType, message, location));
     }
 }

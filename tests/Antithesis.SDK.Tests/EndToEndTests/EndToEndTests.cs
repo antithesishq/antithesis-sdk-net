@@ -59,7 +59,7 @@ public class EndToEndTests
         finally { DeleteTempOutputFile(); }
     }
 
-    private const string _sdkSentinel = @"{""antithesis_sdk"":{""language"":{""name"":""C#"",""version"":""";
+    private const string _sdkSentinel = @"{""antithesis_sdk"":{""language"":{""name"":"".NET"",""version"":""";
     private static readonly Regex _sdkVersionScrubber = new(@"(version"":"")([^""]+)("")");
 
     private static readonly Regex _stackTraceScrubber = new(@"(stack_trace"":"")([^""]+)("")");

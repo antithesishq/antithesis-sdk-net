@@ -1,10 +1,12 @@
 namespace Antithesis.SDK;
 
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 /// <summary>
 /// The Lifecycle class contains methods used to inform Antithesis that particular test phases or milestones have been reached.
 /// </summary>
+/// <remarks>If you include opaque CLR objects in your assertion details, the SDK may be unable to detect unsupported output from their serializers and emit the corresponding diagnostics.</remarks>
 public static class Lifecycle
 {
     /// <summary>
@@ -25,33 +27,71 @@ public static class Lifecycle
     /// <inheritdoc cref="SendEvent" path="/param"/>
     public static void SetupComplete(JsonObject? details = null)
     {
-        // Calling SendEvent here instead of Sink.Write'ing the full "antithesis_setup" JsonObject makes the code slightly more complicated;
-        // however, it is important for demonstrating that "antithesis_setup" is simply a known / special event.
         if (!Sink.IsNoop)
-            SendEvent(SetupCompleteJsonPropertyName, SetupCompleteJsonDetails(details));
+            Sink.WriteDetails(SetupCompleteJson(details));
     }
 
     internal const string SetupCompleteJsonPropertyName = "antithesis_setup";
 
-    internal static JsonObject SetupCompleteJsonDetails(JsonObject? details = null) =>
-        new()
-        {
-            ["status"] = "complete",
-            ["details"] = details
-        };
+    internal static SetupInfoWrapper SetupCompleteJson(JsonObject? details = null) => new(new SetupInfo(details));
 
     /// <summary>
     /// Indicates to Antithesis that a certain event has been reached. It sends a structured log message to Antithesis
     /// that you may later use to aid debugging.
     /// </summary>
     /// <param name="name">The name of the event being logged.</param>
-    /// <param name="details">Optional additional details to provide greater context for this event. Evaluated at runtime.</param>
+    /// <param name="details">Optional additional details, evaluated at runtime. Null means no details: setup omits the details key,
+    /// and a user event has an empty object payload. An explicitly empty object is preserved. Serialization failures
+    /// produce an antithesis_error record and the event is still emitted without the failed details.</param>
     public static void SendEvent(string? name, JsonObject? details = null)
     {
         if (!Sink.IsNoop)
-            Sink.Write(SendEventJson(name, details));
+            Sink.WriteDetails(SendEventJson(name, details));
     }
 
-    internal static JsonObject SendEventJson(string? name, JsonObject? details = null) =>
-        new() { [name ?? string.Empty] = details };
+    internal static EventInfo SendEventJson(string? name, object? details = null) => new(name, details);
+
+    internal sealed class SetupInfoWrapper(SetupInfo setup) : IDetailsRecord
+    {
+        [JsonPropertyName(SetupCompleteJsonPropertyName)]
+        public SetupInfo Setup => setup;
+
+        [JsonIgnore]
+        public string Context => "setup_complete";
+        [JsonIgnore]
+        public InspectedDetails? Details => setup.Details;
+        public bool TryOmitDetails()
+        {
+            setup.Details = null;
+            return true;
+        }
+    }
+
+    internal sealed class SetupInfo(JsonObject? details)
+    {
+        [JsonPropertyName("status")]
+        public string Status => "complete";
+        [JsonPropertyName("details")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public InspectedDetails? Details { get; internal set; } = InspectedDetails.From(details);
+    }
+
+    // A dictionary wraps a borrowed node without assigning its Parent.
+    internal sealed class EventInfo : Dictionary<string, InspectedDetails>, IDetailsRecord
+    {
+        private readonly string _name;
+        internal EventInfo(string? name, object? details)
+        {
+            _name = name ?? string.Empty;
+            this[_name] = new InspectedDetails(details ?? new JsonObject());
+        }
+
+        public string Context => _name;
+        public InspectedDetails? Details => this[_name];
+        public bool TryOmitDetails()
+        {
+            this[_name] = new InspectedDetails(new JsonObject());
+            return true;
+        }
+    }
 }

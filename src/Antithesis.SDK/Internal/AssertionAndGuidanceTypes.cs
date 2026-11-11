@@ -123,6 +123,23 @@ internal static class AssertionMethodTypeExtensions
         _ => throw new NotImplementedException(methodType.ToString())
     };
 
+    internal static bool HasGuidance(this AssertionMethodType methodType) => methodType switch
+    {
+        AssertionMethodType.AlwaysGreaterThan or
+        AssertionMethodType.AlwaysGreaterThanOrEqualTo or
+        AssertionMethodType.AlwaysLessThan or
+        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        AssertionMethodType.SometimesGreaterThan or
+        AssertionMethodType.SometimesGreaterThanOrEqualTo or
+        AssertionMethodType.SometimesLessThan or
+        AssertionMethodType.SometimesLessThanOrEqualTo or
+        AssertionMethodType.AlwaysSome or
+        AssertionMethodType.SometimesAll =>
+            true,
+
+        _ => false
+    };
+
     internal static GuidanceType GetGuidanceType(this AssertionMethodType methodType) => methodType switch
     {
         AssertionMethodType.AlwaysGreaterThan or
@@ -144,17 +161,21 @@ internal static class AssertionMethodTypeExtensions
 
     internal static bool GetGuidanceMaximize(this AssertionMethodType methodType) => methodType switch
     {
+        // Violating left > right means driving left - right down.
         AssertionMethodType.AlwaysGreaterThan or
         AssertionMethodType.AlwaysGreaterThanOrEqualTo or
-        AssertionMethodType.SometimesGreaterThan or
-        AssertionMethodType.SometimesGreaterThanOrEqualTo or
-        AssertionMethodType.AlwaysSome  =>
-            false,
-
-        AssertionMethodType.AlwaysLessThan or
-        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        // Satisfying left < right means the same.
         AssertionMethodType.SometimesLessThan or
         AssertionMethodType.SometimesLessThanOrEqualTo or
+        AssertionMethodType.AlwaysSome =>
+            false,
+
+        // Violating left < right means driving left - right up.
+        AssertionMethodType.AlwaysLessThan or
+        AssertionMethodType.AlwaysLessThanOrEqualTo or
+        // Satisfying left > right means the same.
+        AssertionMethodType.SometimesGreaterThan or
+        AssertionMethodType.SometimesGreaterThanOrEqualTo or
         AssertionMethodType.SometimesAll =>
             true,
 

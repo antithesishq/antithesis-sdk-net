@@ -12,3 +12,9 @@ GuidanceTrackerTests.BooleanWriteAlways();
 
 Lifecycle.SendEvent("GuidanceTrackerTests.NumericWriteAsMaxOrMinimizing");
 GuidanceTrackerTests.NumericWriteAsMaxOrMinimizing();
+
+Lifecycle.SendEvent("GuidanceTrackerTests.EveryMethodWritesItsOwnDirection");
+GuidanceTrackerTests.EveryMethodWritesItsOwnDirection();
+
+Lifecycle.SendEvent("GuidanceTrackerTests.EmptyConditionsStillWriteAnEmptyPayload");
+GuidanceTrackerTests.EmptyConditionsStillWriteAnEmptyPayload();

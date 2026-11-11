@@ -3,10 +3,20 @@ namespace Antithesis.SDK;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-internal class AssertionInfoWrapper(AssertionInfo assertion)
+internal class AssertionInfoWrapper(AssertionInfo assertion) : IDetailsRecord
 {
     [JsonPropertyName("antithesis_assert")]
     public AssertionInfo Assertion => assertion;
+
+    [JsonIgnore]
+    public string Context => assertion.Id;
+    [JsonIgnore]
+    public InspectedDetails? Details => assertion.Details;
+    public bool TryOmitDetails()
+    {
+        assertion.Details = null;
+        return true;
+    }
 }
 
 internal class AssertionInfo
@@ -19,17 +29,17 @@ internal class AssertionInfo
                 Condition = false
             });
 
-    internal static AssertionInfoWrapper ConstructForAssertWrite(AssertionMethodType methodType, string idIsTheMessage, bool condition, JsonObject? details) =>
+    internal static AssertionInfoWrapper ConstructForAssertWrite(AssertionMethodType methodType, string idIsTheMessage, bool condition, object? details) =>
         new(
             new(methodType, idIsTheMessage, LocationTracker.GetOrAdd(idIsTheMessage, LocationInfo.Unknown))
             {
                 Hit = true,
                 Condition = condition,
-                Details = details
+                Details = InspectedDetails.From(details)
             });
 
     internal static AssertionInfoWrapper ConstructForRawWrite(string assertType, string displayType,
-            string id, string message, LocationInfo locationInfo, bool mustHit, bool hit, bool condition, JsonObject? details) =>
+            string id, string message, LocationInfo locationInfo, bool mustHit, bool hit, bool condition, object? details) =>
         new(
             new()
             {
@@ -41,7 +51,7 @@ internal class AssertionInfo
                 MustHit = mustHit,
                 Hit = hit,
                 Condition = condition,
-                Details = details
+                Details = hit ? InspectedDetails.From(details) : null
             });
 
     private AssertionInfo(AssertionMethodType methodType, string idIsTheMessage, LocationInfo locationInfo)
@@ -81,5 +91,6 @@ internal class AssertionInfo
     public bool Condition { get; private init; }
 
     [JsonPropertyName("details")]
-    public JsonObject? Details { get; private init; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public InspectedDetails? Details { get; internal set; }
 }
